@@ -151,14 +151,28 @@ details.basics>summary .open-btn svg{width:16px;height:16px;transition:transform
 details.basics[open]>summary .open-btn svg{transform:rotate(180deg)}
 details.basics .bbody{padding-top:24px;display:flex;flex-direction:column;gap:28px}
 .bbody h3{font-size:16px}
-.faq{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--line)}
-details.q{border-bottom:1px solid var(--line)}
-details.q summary{list-style:none;cursor:pointer;padding:15px 4px;font-weight:600;font-size:15.5px;display:flex;gap:12px;align-items:flex-start}
+.faq{display:flex;flex-direction:column;gap:22px}
+.fgrp{display:flex;flex-direction:column;--g:var(--accent)}
+.fgrp.g-doc{--g:var(--ill)} .fgrp.g-day{--g:var(--ok)} .fgrp.g-tr{--g:var(--etc)}
+.glabel{display:inline-flex;align-items:center;gap:7px;font-size:12px;letter-spacing:.1em;font-weight:700;color:var(--g);text-transform:uppercase;margin-bottom:6px}
+.glabel i{width:8px;height:8px;border-radius:50%;background:var(--g)}
+details.q{border-top:1px solid var(--line);border-radius:0;transition:background .15s}
+details.q:last-child{border-bottom:1px solid var(--line)}
+details.q[open]{background:var(--hero);border-radius:12px;border-color:transparent;margin:4px 0}
+details.q[open]+details.q{border-top-color:transparent}
+details.q summary{list-style:none;cursor:pointer;padding:13px 12px 13px 0;display:flex;gap:12px;align-items:flex-start}
+details.q[open] summary{padding-left:14px}
 details.q summary::-webkit-details-marker{display:none}
-details.q summary::before{content:"Q";font-family:var(--display);color:var(--accent);font-weight:700;flex:none;line-height:1.65}
-details.q summary::after{content:"";margin-left:auto;flex:none;width:8px;height:8px;border-right:2px solid var(--ink-3);border-bottom:2px solid var(--ink-3);transform:rotate(45deg);margin-top:8px;transition:transform .2s}
-details.q[open] summary::after{transform:rotate(-135deg);margin-top:12px}
-details.q .a{padding:0 4px 16px 32px;font-size:14.5px;color:var(--ink-2);line-height:1.65}
+details.q summary::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:var(--g);margin-top:9px;opacity:.9}
+details.q .qt{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+details.q .qs{font-weight:700;font-size:15.5px;line-height:1.45}
+details.q .qp{font-size:13px;color:var(--ink-3);line-height:1.5}
+details.q[open] .qp{display:none}
+details.q .tg{flex:none;font-size:12.5px;color:var(--ink-3);padding-top:4px}
+details.q .tg b{display:none;font-weight:600;color:var(--g)} details.q[open] .tg b{display:inline} details.q[open] .tg i{display:none}
+details.q .tg i{font-style:normal}
+details.q .a{padding:0 14px 16px 34px;font-size:14.5px;color:var(--ink-2);line-height:1.7}
+details.q .a b{color:var(--ink);font-weight:700}
 .footer{display:flex;flex-direction:column;gap:16px;color:var(--ink-2);font-size:13.5px}
 .fbrand{display:flex;align-items:center;gap:10px}
 .fbrand .mark svg{width:24px;height:24px;display:block}
@@ -925,15 +939,21 @@ function homeHTML(){
 
   <section class="band"><div class="wrap sec">
     <span class="sec-label">참고</span>
-    <h2 class="sec-title">자주 묻는 질문</h2>
+    <h2 class="sec-title">이것도 궁금하셨죠?</h2>
     <div class="faq">
-      <details class="q"><summary>지각·조퇴·결과도 질병·미인정으로 나뉘나요?</summary><div class="a">네. 결석과 똑같이 사유에 따라 질병·미인정·기타로 나누어 횟수를 셉니다. 병원 진료로 늦으면 질병 지각, 학원 때문에 일찍 가면 미인정 조퇴입니다. 출석인정 사유(경조사, 체험학습 등)로 인한 지각·조퇴·결과는 횟수에 넣지 않습니다.</div></details>
-      <details class="q"><summary>개근은 어떤 기준인가요?</summary><div class="a">한 해 동안 결석·지각·조퇴·결과가 한 번도 없는 경우입니다. 출석인정 결석은 출석으로 보므로 개근에 영향이 없습니다. 개근상·정근상 수상 기준은 교육청과 학교 방침에 따라 다를 수 있습니다.</div></details>
-      <details class="q"><summary>며칠 이상 결석하면 유급이 되나요?</summary><div class="a">학년 수료에는 그 학년 수업일수(초등 190일 이상)의 3분의 2 이상 출석이 필요합니다. 출석인정 결석은 출석으로 계산됩니다. 지각·조퇴·결과는 횟수와 관계없이 수료에 영향을 주지 않습니다.</div></details>
-      <details class="q"><summary>결석신고서는 꼭 종이로 내야 하나요?</summary><div class="a">아니요. <a href="https://parents.neis.go.kr/" target="_blank" rel="noopener">나이스 학부모 서비스</a>로 낸 결석신고서와 증빙은 전자화문서로 인정되어 따로 출력·원본 제출이 필요 없습니다. 학부모 의견서나 담임 확인서는 신청 화면 해당란에 적는 것으로 갈음할 수 있습니다.<br><b>학교에 따라 종이 서류는 받지 않고 나이스 학부모 서비스로만 받는 곳도 있습니다.</b> 종이로 내기 전에 학교의 안내를 먼저 확인하세요.<div class="neis"><a href="https://parents.neis.go.kr/" target="_blank" rel="noopener">나이스 학부모 서비스 열기 ↗</a><span>parents.neis.go.kr · 로그인 후 「출결 신고」</span></div></div></details>
-      <details class="q"><summary>특기사항에는 무엇이 적히나요?</summary><div class="a">기타 결석은 하루라도 사유가 적힙니다. 질병·미인정 결석과 횟수가 많은 지각·조퇴·결과는 학교가 정한 기준(예: 연속 5일 이상, 10회 이상)에 따라 적을 수 있습니다. 출석인정 결석은 사유를 적지 않습니다. 해외 봉사·어학연수·교외 대회 참가처럼 생활기록부에 쓸 수 없는 내용은 특기사항에도 쓸 수 없습니다.</div></details>
-      <details class="q"><summary>방학 중 전학하면 개학일이 다른 기간은 어떻게 되나요?</summary><div class="a">새 학교가 전입 처리를 하기 전까지는 지금 학교 학생입니다. 지금 학교 개학일부터 전출 처리 전날까지 안 나오면 지금 학교의 결석(사유 없으면 미인정)으로 남습니다. 전입 처리를 지금 학교 개학일 전에 마치도록 새 학교와 미리 날짜를 맞추세요. <button class="flink" data-case="transfer" style="color:var(--accent);background:none;border:0;padding:0;font:inherit;text-decoration:underline;cursor:pointer">전학 공백 계산기 →</button></div></details>
-      <details class="q"><summary>전학 온 아이의 출결은 어떻게 합산되나요?</summary><div class="a">전출교와 전입교의 수업일수·결석·지각·조퇴·결과를 합산하되 겹치는 기간은 뺍니다. 전출일과 전입일이 같으면 전입일만 수업일수로 계산합니다.</div></details>
+      <div class="fgrp g-doc"><span class="glabel"><i></i>서류</span>
+      <details class="q"><summary><span class="qt"><span class="qs">결석신고서는 꼭 종이로 내야 하나요?</span><span class="qp">아니요. 나이스 학부모 서비스로 내면 됩니다. 학교에 따라 종이는 받지 않기도 합니다.</span></span><span class="tg"><i>펼치기</i><b>접기</b></span></summary><div class="a">아니요. <a href="https://parents.neis.go.kr/" target="_blank" rel="noopener">나이스 학부모 서비스</a>로 낸 결석신고서와 증빙은 전자화문서로 인정되어 따로 출력·원본 제출이 필요 없습니다. 학부모 의견서나 담임 확인서는 신청 화면 해당란에 적는 것으로 갈음할 수 있습니다.<br><b>학교에 따라 종이 서류는 받지 않고 나이스 학부모 서비스로만 받는 곳도 있습니다.</b> 종이로 내기 전에 학교의 안내를 먼저 확인하세요.<div class="neis"><a href="https://parents.neis.go.kr/" target="_blank" rel="noopener">나이스 학부모 서비스 열기 ↗</a><span>parents.neis.go.kr · 로그인 후 「출결 신고」</span></div></div></details>
+      <details class="q"><summary><span class="qt"><span class="qs">특기사항에는 무엇이 적히나요?</span><span class="qp">기타 결석은 하루라도 사유가 적히고, 출석인정 결석은 적히지 않습니다.</span></span><span class="tg"><i>펼치기</i><b>접기</b></span></summary><div class="a">기타 결석은 <b>하루라도 사유가 적힙니다</b>. 질병·미인정 결석과 횟수가 많은 지각·조퇴·결과는 학교가 정한 기준(예: 연속 5일 이상, 10회 이상)에 따라 적을 수 있습니다. 출석인정 결석은 사유를 적지 않습니다. 해외 봉사·어학연수·교외 대회 참가처럼 생활기록부에 쓸 수 없는 내용은 특기사항에도 쓸 수 없습니다.</div></details>
+      </div>
+      <div class="fgrp g-day"><span class="glabel"><i></i>일수</span>
+      <details class="q"><summary><span class="qt"><span class="qs">개근은 어떤 기준인가요?</span><span class="qp">한 해 동안 결석·지각·조퇴·결과가 한 번도 없는 경우입니다.</span></span><span class="tg"><i>펼치기</i><b>접기</b></span></summary><div class="a">한 해 동안 <b>결석·지각·조퇴·결과가 한 번도 없는</b> 경우입니다. 출석인정 결석은 출석으로 보므로 개근에 영향이 없습니다. 개근상·정근상 수상 기준은 교육청과 학교 방침에 따라 다를 수 있습니다.</div></details>
+      <details class="q"><summary><span class="qt"><span class="qs">며칠 이상 결석하면 유급이 되나요?</span><span class="qp">수업일수의 3분의 2 이상 출석해야 수료합니다. 출석인정 결석은 출석으로 칩니다.</span></span><span class="tg"><i>펼치기</i><b>접기</b></span></summary><div class="a">학년 수료에는 그 학년 수업일수(초등 190일 이상)의 <b>3분의 2 이상</b> 출석이 필요합니다. 출석인정 결석은 출석으로 계산됩니다. 지각·조퇴·결과는 횟수와 관계없이 수료에 영향을 주지 않습니다.</div></details>
+      <details class="q"><summary><span class="qt"><span class="qs">지각·조퇴·결과도 질병·미인정으로 나뉘나요?</span><span class="qp">네. 결석과 똑같이 사유에 따라 나누어 횟수를 셉니다.</span></span><span class="tg"><i>펼치기</i><b>접기</b></span></summary><div class="a">네. 결석과 똑같이 사유에 따라 질병·미인정·기타로 나누어 횟수를 셉니다. 병원 진료로 늦으면 질병 지각, 학원 때문에 일찍 가면 미인정 조퇴입니다. 출석인정 사유(경조사, 체험학습 등)로 인한 지각·조퇴·결과는 횟수에 넣지 않습니다.</div></details>
+      </div>
+      <div class="fgrp g-tr"><span class="glabel"><i></i>전학</span>
+      <details class="q"><summary><span class="qt"><span class="qs">방학 중 전학하면 개학일이 다른 기간은 어떻게 되나요?</span><span class="qp">전입 처리 전까지는 지금 학교 학생이라, 그 사이가 결석으로 남을 수 있습니다.</span></span><span class="tg"><i>펼치기</i><b>접기</b></span></summary><div class="a">새 학교가 전입 처리를 하기 전까지는 지금 학교 학생입니다. 지금 학교 개학일부터 전출 처리 전날까지 안 나오면 지금 학교의 결석(사유 없으면 미인정)으로 남습니다. 전입 처리를 지금 학교 개학일 전에 마치도록 새 학교와 미리 날짜를 맞추세요. <button class="flink" data-case="transfer" style="color:var(--accent);background:none;border:0;padding:0;font:inherit;text-decoration:underline;cursor:pointer">전학 공백 계산기 →</button></div></details>
+      <details class="q"><summary><span class="qt"><span class="qs">전학 온 아이의 출결은 어떻게 합산되나요?</span><span class="qp">전출교와 전입교 기록을 합산하되 겹치는 기간은 뺍니다.</span></span><span class="tg"><i>펼치기</i><b>접기</b></span></summary><div class="a">전출교와 전입교의 수업일수·결석·지각·조퇴·결과를 합산하되 <b>겹치는 기간은 뺍니다</b>. 전출일과 전입일이 같으면 전입일만 수업일수로 계산합니다.</div></details>
+      </div>
     </div>
   </div></section>
 
