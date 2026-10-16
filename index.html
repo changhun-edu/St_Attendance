@@ -151,28 +151,27 @@ details.basics>summary .open-btn svg{width:16px;height:16px;transition:transform
 details.basics[open]>summary .open-btn svg{transform:rotate(180deg)}
 details.basics .bbody{padding-top:24px;display:flex;flex-direction:column;gap:28px}
 .bbody h3{font-size:16px}
-.faq{display:flex;flex-direction:column;gap:22px}
-.fgrp{display:flex;flex-direction:column;--g:var(--accent)}
-.fgrp.g-doc{--g:var(--ill)} .fgrp.g-day{--g:var(--ok)} .fgrp.g-tr{--g:var(--etc)}
-.glabel{display:inline-flex;align-items:center;gap:7px;font-size:12px;letter-spacing:.1em;font-weight:700;color:var(--g);text-transform:uppercase;margin-bottom:6px}
-.glabel i{width:8px;height:8px;border-radius:50%;background:var(--g)}
-details.q{border-top:1px solid var(--line);border-radius:0;transition:background .15s}
-details.q:last-child{border-bottom:1px solid var(--line)}
-details.q[open]{background:var(--hero);border-radius:12px;border-color:transparent;margin:4px 0}
-details.q[open]+details.q{border-top-color:transparent}
-details.q summary{list-style:none;cursor:pointer;padding:13px 12px 13px 0;display:flex;gap:12px;align-items:flex-start}
-details.q[open] summary{padding-left:14px}
-details.q summary::-webkit-details-marker{display:none}
-details.q summary::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:var(--g);margin-top:9px;opacity:.9}
-details.q .qt{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
-details.q .qs{font-weight:700;font-size:15.5px;line-height:1.45}
-details.q .qp{font-size:13px;color:var(--ink-3);line-height:1.5}
-details.q[open] .qp{display:none}
-details.q .tg{flex:none;font-size:12.5px;color:var(--ink-3);padding-top:4px}
-details.q .tg b{display:none;font-weight:600;color:var(--g)} details.q[open] .tg b{display:inline} details.q[open] .tg i{display:none}
-details.q .tg i{font-style:normal}
-details.q .a{padding:0 14px 16px 34px;font-size:14.5px;color:var(--ink-2);line-height:1.7}
-details.q .a b{color:var(--ink);font-weight:700}
+.akit{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:560px){.akit{grid-template-columns:1fr}}
+details.ac{--g:var(--accent);background:var(--paper);border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:border-color .15s}
+details.ac.g-doc{--g:var(--ill)} details.ac.g-day{--g:var(--ok)} details.ac.g-tr{--g:var(--etc);background:var(--etc-bg);border-color:transparent}
+details.ac:hover{border-color:var(--g)}
+details.ac[open]{grid-column:1/-1;border-color:var(--g)}
+details.ac summary{list-style:none;cursor:pointer;padding:18px 18px 16px;display:flex;flex-direction:column;gap:8px;min-height:132px}
+details.ac summary::-webkit-details-marker{display:none}
+details.ac .ah{font-family:var(--display);font-size:19px;font-weight:700;line-height:1.35;letter-spacing:-.015em;color:var(--ink)}
+details.ac .ah::before{content:"";display:block;width:22px;height:3px;border-radius:2px;background:var(--g);margin-bottom:10px}
+details.ac .aq{font-size:13px;color:var(--ink-3);line-height:1.5;margin-top:auto}
+details.ac .ao{font-size:12.5px;font-weight:600;color:var(--g)}
+details.ac[open] .ao{display:none}
+details.ac .a{padding:0 18px 18px;font-size:14.5px;color:var(--ink-2);line-height:1.7;border-top:1px dashed var(--line);padding-top:14px;margin:0 18px 0;padding-left:0;padding-right:0}
+details.ac .a b{color:var(--ink);font-weight:700}
+details.ac .a .calc-cta b{color:#fff}
+.ac.more{display:flex;flex-direction:column;gap:8px;min-height:132px;padding:18px 18px 16px;text-align:left;cursor:pointer;background:var(--accent-soft);border:1px dashed var(--accent);border-radius:16px;--g:var(--accent)}
+.ac.more .ah{font-family:var(--display);font-size:19px;font-weight:700;line-height:1.35;letter-spacing:-.015em;color:var(--ink)}
+.ac.more .ah::before{content:"";display:block;width:22px;height:3px;border-radius:2px;background:var(--g);margin-bottom:10px}
+.ac.more .aq{font-size:13px;color:var(--ink-3);line-height:1.5;margin-top:auto}
+.ac.more .ao{font-size:12.5px;font-weight:600;color:var(--g)}
 .footer{display:flex;flex-direction:column;gap:16px;color:var(--ink-2);font-size:13.5px}
 .fbrand{display:flex;align-items:center;gap:10px}
 .fbrand .mark svg{width:24px;height:24px;display:block}
@@ -448,7 +447,7 @@ body.hide-bar main{padding-bottom:0}
 .calc-cta .ci{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.2);display:grid;place-items:center;flex:none}
 .calc-cta .ci svg{width:20px;height:20px}
 .calc-cta .ct{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
-.calc-cta b,details.q .a .calc-cta b{font-size:15px;font-weight:700;color:#fff}
+.calc-cta b,details.ac .a .calc-cta b{font-size:15px;font-weight:700;color:#fff}
 .calc-cta small{font-size:12.5px;color:#fff;opacity:.92}
 .calc-cta .ar{width:18px;height:18px;flex:none;opacity:.9}
 .calc-cta:hover{filter:brightness(1.06)}
@@ -947,21 +946,16 @@ function homeHTML(){
 
   <section class="band"><div class="wrap sec">
     <span class="sec-label">참고</span>
-    <h2 class="sec-title">이것도 궁금하셨죠?</h2>
-    <div class="faq">
-      <div class="fgrp g-doc"><span class="glabel"><i></i>서류</span>
-      <details class="q"><summary><span class="qt"><span class="qs">결석신고서는 꼭 종이로 내야 하나요?</span><span class="qp">아니요. 나이스 학부모 서비스로 내면 됩니다. 학교에 따라 종이는 받지 않기도 합니다.</span></span><span class="tg"><i>펼치기</i><b>접기</b></span></summary><div class="a">아니요. <a href="https://parents.neis.go.kr/" target="_blank" rel="noopener">나이스 학부모 서비스</a>로 낸 결석신고서와 증빙은 전자화문서로 인정되어 따로 출력·원본 제출이 필요 없습니다. 학부모 의견서나 담임 확인서는 신청 화면 해당란에 적는 것으로 갈음할 수 있습니다.<br><b>학교에 따라 종이 서류는 받지 않고 나이스 학부모 서비스로만 받는 곳도 있습니다.</b> 종이로 내기 전에 학교의 안내를 먼저 확인하세요.<div class="neis"><a href="https://parents.neis.go.kr/" target="_blank" rel="noopener">나이스 학부모 서비스 열기 ↗</a><span>parents.neis.go.kr · 로그인 후 「출결 신고」</span></div></div></details>
-      <details class="q"><summary><span class="qt"><span class="qs">특기사항에는 무엇이 적히나요?</span><span class="qp">기타 결석은 하루라도 사유가 적히고, 출석인정 결석은 적히지 않습니다.</span></span><span class="tg"><i>펼치기</i><b>접기</b></span></summary><div class="a">기타 결석은 <b>하루라도 사유가 적힙니다</b>. 질병·미인정 결석과 횟수가 많은 지각·조퇴·결과는 학교가 정한 기준(예: 연속 5일 이상, 10회 이상)에 따라 적을 수 있습니다. 출석인정 결석은 사유를 적지 않습니다. 해외 봉사·어학연수·교외 대회 참가처럼 생활기록부에 쓸 수 없는 내용은 특기사항에도 쓸 수 없습니다.</div></details>
-      </div>
-      <div class="fgrp g-day"><span class="glabel"><i></i>일수</span>
-      <details class="q"><summary><span class="qt"><span class="qs">개근은 어떤 기준인가요?</span><span class="qp">한 해 동안 결석·지각·조퇴·결과가 한 번도 없는 경우입니다.</span></span><span class="tg"><i>펼치기</i><b>접기</b></span></summary><div class="a">한 해 동안 <b>결석·지각·조퇴·결과가 한 번도 없는</b> 경우입니다. 출석인정 결석은 출석으로 보므로 개근에 영향이 없습니다. 개근상·정근상 수상 기준은 교육청과 학교 방침에 따라 다를 수 있습니다.</div></details>
-      <details class="q"><summary><span class="qt"><span class="qs">며칠 이상 결석하면 유급이 되나요?</span><span class="qp">수업일수의 3분의 2 이상 출석해야 수료합니다. 출석인정 결석은 출석으로 칩니다.</span></span><span class="tg"><i>펼치기</i><b>접기</b></span></summary><div class="a">학년 수료에는 그 학년 수업일수(초등 190일 이상)의 <b>3분의 2 이상</b> 출석이 필요합니다. 출석인정 결석은 출석으로 계산됩니다. 지각·조퇴·결과는 횟수와 관계없이 수료에 영향을 주지 않습니다.</div></details>
-      <details class="q"><summary><span class="qt"><span class="qs">지각·조퇴·결과도 질병·미인정으로 나뉘나요?</span><span class="qp">네. 결석과 똑같이 사유에 따라 나누어 횟수를 셉니다.</span></span><span class="tg"><i>펼치기</i><b>접기</b></span></summary><div class="a">네. 결석과 똑같이 사유에 따라 질병·미인정·기타로 나누어 횟수를 셉니다. 병원 진료로 늦으면 질병 지각, 학원 때문에 일찍 가면 미인정 조퇴입니다. 출석인정 사유(경조사, 체험학습 등)로 인한 지각·조퇴·결과는 횟수에 넣지 않습니다.</div></details>
-      </div>
-      <div class="fgrp g-tr"><span class="glabel"><i></i>전학</span>
-      <details class="q"><summary><span class="qt"><span class="qs">방학 중 전학하면 개학일이 다른 기간은 어떻게 되나요?</span><span class="qp">전입 처리 전까지는 지금 학교 학생이라, 그 사이가 결석으로 남을 수 있습니다.</span></span><span class="tg"><i>펼치기</i><b>접기</b></span></summary><div class="a">새 학교가 전입 처리를 하기 전까지는 지금 학교 학생입니다. 지금 학교 개학일부터 전출 처리 전날까지 안 나오면 지금 학교의 결석(사유 없으면 미인정)으로 남습니다. 전입 처리를 지금 학교 개학일 전에 마치도록 새 학교와 미리 날짜를 맞추세요.<button class="calc-cta" data-case="transfer"><span class="ci"><svg aria-hidden="true"><use href="#i-calc"/></svg></span><span class="ct"><b>전학 공백 계산기</b><small>두 학교 날짜를 넣으면 결석으로 남는 날이 바로 나옵니다</small></span><svg class="ar" aria-hidden="true"><use href="#i-chev"/></svg></button></div></details>
-      <details class="q"><summary><span class="qt"><span class="qs">전학 온 아이의 출결은 어떻게 합산되나요?</span><span class="qp">전출교와 전입교 기록을 합산하되 겹치는 기간은 뺍니다.</span></span><span class="tg"><i>펼치기</i><b>접기</b></span></summary><div class="a">전출교와 전입교의 수업일수·결석·지각·조퇴·결과를 합산하되 <b>겹치는 기간은 뺍니다</b>. 전출일과 전입일이 같으면 전입일만 수업일수로 계산합니다.</div></details>
-      </div>
+    <h2 class="sec-title">자주 받는 질문, 결론부터</h2>
+    <div class="akit">
+      <details class="ac g-doc"><summary><span class="ah">종이 없이<br>나이스로 냅니다</span><span class="aq">결석신고서는 꼭 종이로 내야 하나요?</span><span class="ao">펼치기</span></summary><div class="a">아니요. <a href="https://parents.neis.go.kr/" target="_blank" rel="noopener">나이스 학부모 서비스</a>로 낸 결석신고서와 증빙은 전자화문서로 인정되어 따로 출력·원본 제출이 필요 없습니다. 학부모 의견서나 담임 확인서는 신청 화면 해당란에 적는 것으로 갈음할 수 있습니다.<br><b>학교에 따라 종이 서류는 받지 않고 나이스 학부모 서비스로만 받는 곳도 있습니다.</b> 종이로 내기 전에 학교의 안내를 먼저 확인하세요.<div class="neis"><a href="https://parents.neis.go.kr/" target="_blank" rel="noopener">나이스 학부모 서비스 열기 ↗</a><span>parents.neis.go.kr · 로그인 후 「출결 신고」</span></div></div></details>
+      <details class="ac g-doc"><summary><span class="ah">기타 결석은 하루라도<br>사유가 적힙니다</span><span class="aq">특기사항에는 무엇이 적히나요?</span><span class="ao">펼치기</span></summary><div class="a">기타 결석은 <b>하루라도 사유가 적힙니다</b>. 질병·미인정 결석과 횟수가 많은 지각·조퇴·결과는 학교가 정한 기준(예: 연속 5일 이상, 10회 이상)에 따라 적을 수 있습니다. 출석인정 결석은 사유를 적지 않습니다. 해외 봉사·어학연수·교외 대회 참가처럼 생활기록부에 쓸 수 없는 내용은 특기사항에도 쓸 수 없습니다.</div></details>
+      <details class="ac g-day"><summary><span class="ah">결석·지각·조퇴·결과<br>모두 0이면 개근</span><span class="aq">개근은 어떤 기준인가요?</span><span class="ao">펼치기</span></summary><div class="a">한 해 동안 <b>결석·지각·조퇴·결과가 한 번도 없는</b> 경우입니다. 출석인정 결석은 출석으로 보므로 개근에 영향이 없습니다. 개근상·정근상 수상 기준은 교육청과 학교 방침에 따라 다를 수 있습니다.</div></details>
+      <details class="ac g-day"><summary><span class="ah">수업일수의 2/3<br>출석이 기준입니다</span><span class="aq">며칠 이상 결석하면 유급이 되나요?</span><span class="ao">펼치기</span></summary><div class="a">학년 수료에는 그 학년 수업일수(초등 190일 이상)의 <b>3분의 2 이상</b> 출석이 필요합니다. 출석인정 결석은 출석으로 계산됩니다. 지각·조퇴·결과는 횟수와 관계없이 수료에 영향을 주지 않습니다.</div></details>
+      <details class="ac g-day"><summary><span class="ah">지각·조퇴·결과도<br>사유별로 나뉩니다</span><span class="aq">지각·조퇴·결과도 질병·미인정으로 나뉘나요?</span><span class="ao">펼치기</span></summary><div class="a">네. 결석과 똑같이 사유에 따라 질병·미인정·기타로 나누어 횟수를 셉니다. 병원 진료로 늦으면 질병 지각, 학원 때문에 일찍 가면 미인정 조퇴입니다. 출석인정 사유(경조사, 체험학습 등)로 인한 지각·조퇴·결과는 횟수에 넣지 않습니다.</div></details>
+      <details class="ac g-tr"><summary><span class="ah">전입 처리 전까진<br>지금 학교 학생입니다</span><span class="aq">방학 중 전학하면 개학일이 다른 기간은 어떻게 되나요?</span><span class="ao">펼치기</span></summary><div class="a">새 학교가 전입 처리를 하기 전까지는 지금 학교 학생입니다. 지금 학교 개학일부터 전출 처리 전날까지 안 나오면 지금 학교의 결석(사유 없으면 미인정)으로 남습니다. 전입 처리를 지금 학교 개학일 전에 마치도록 새 학교와 미리 날짜를 맞추세요.<button class="calc-cta" data-case="transfer"><span class="ci"><svg aria-hidden="true"><use href="#i-calc"/></svg></span><span class="ct"><b>전학 공백 계산기</b><small>두 학교 날짜를 넣으면 결석으로 남는 날이 바로 나옵니다</small></span><svg class="ar" aria-hidden="true"><use href="#i-chev"/></svg></button></div></details>
+      <details class="ac g-tr"><summary><span class="ah">두 학교 기록을<br>합산합니다</span><span class="aq">전학 온 아이의 출결은 어떻게 합산되나요?</span><span class="ao">펼치기</span></summary><div class="a">전출교와 전입교의 수업일수·결석·지각·조퇴·결과를 합산하되 <b>겹치는 기간은 뺍니다</b>. 전출일과 전입일이 같으면 전입일만 수업일수로 계산합니다.</div></details>
+      <button class="ac more" data-tosearch><span class="ah">다른 질문이<br>있으신가요?</span><span class="aq">사유를 말하듯 검색하면 해당 안내로 바로 갑니다</span><span class="ao">검색창으로 ↑</span></button>
     </div>
   </div></section>
 
@@ -1232,6 +1226,7 @@ function bind(){
   document.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>go({v:'group',g:b.dataset.g}));
   document.querySelectorAll('[data-home]').forEach(b=>b.onclick=()=>go({v:'home'}));
   document.querySelectorAll('[data-today]').forEach(b=>b.onclick=()=>go({v:'today'}));
+  document.querySelectorAll('[data-tosearch]').forEach(b=>b.onclick=()=>{const q=$('#q'); if(q){q.scrollIntoView({block:'center',behavior:'smooth'}); setTimeout(()=>q.focus(),400);}});
   document.querySelectorAll('[data-seg]').forEach(b=>b.onclick=()=>{const t=b.dataset.seg==='t'; document.querySelectorAll('[data-seg]').forEach(x=>x.classList.toggle('on',x===b)); const r=$('#caseroot'); if(r) r.classList.toggle('teacher',t); try{localStorage.setItem('teacherOpen',t?'1':'0')}catch(e){}});
   const sh=$('#share'); if(sh) sh.onclick=()=>{
     const url=withSc(location.origin+location.pathname+'?case='+sh.dataset.id);
