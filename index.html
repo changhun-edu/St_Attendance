@@ -444,6 +444,14 @@ body.hide-bar main{padding-bottom:0}
 .example blockquote{margin:0;font-family:var(--display);font-size:15px;line-height:1.75;color:var(--ink-2);max-width:36em}
 .share.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);padding:11px 18px 11px 14px;font-size:14.5px;font-weight:600;margin-top:6px}
 .share.primary.done{background:var(--ok);border-color:var(--ok);color:#fff}
+.calc-cta{display:flex;align-items:center;gap:12px;width:100%;text-align:left;margin-top:12px;padding:12px 14px;border:0;border-radius:12px;background:var(--etc);color:#fff;cursor:pointer;box-shadow:var(--shadow)}
+.calc-cta .ci{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.2);display:grid;place-items:center;flex:none}
+.calc-cta .ci svg{width:20px;height:20px}
+.calc-cta .ct{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.calc-cta b,details.q .a .calc-cta b{font-size:15px;font-weight:700;color:#fff}
+.calc-cta small{font-size:12.5px;color:#fff;opacity:.92}
+.calc-cta .ar{width:18px;height:18px;flex:none;opacity:.9}
+.calc-cta:hover{filter:brightness(1.06)}
 .neis{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin-top:10px;padding:10px 14px;border-radius:10px;background:var(--accent-soft)}
 .neis a{color:var(--accent);font-weight:600;text-decoration:none;font-size:14.5px}
 .neis a:hover{text-decoration:underline}
@@ -951,7 +959,7 @@ function homeHTML(){
       <details class="q"><summary><span class="qt"><span class="qs">지각·조퇴·결과도 질병·미인정으로 나뉘나요?</span><span class="qp">네. 결석과 똑같이 사유에 따라 나누어 횟수를 셉니다.</span></span><span class="tg"><i>펼치기</i><b>접기</b></span></summary><div class="a">네. 결석과 똑같이 사유에 따라 질병·미인정·기타로 나누어 횟수를 셉니다. 병원 진료로 늦으면 질병 지각, 학원 때문에 일찍 가면 미인정 조퇴입니다. 출석인정 사유(경조사, 체험학습 등)로 인한 지각·조퇴·결과는 횟수에 넣지 않습니다.</div></details>
       </div>
       <div class="fgrp g-tr"><span class="glabel"><i></i>전학</span>
-      <details class="q"><summary><span class="qt"><span class="qs">방학 중 전학하면 개학일이 다른 기간은 어떻게 되나요?</span><span class="qp">전입 처리 전까지는 지금 학교 학생이라, 그 사이가 결석으로 남을 수 있습니다.</span></span><span class="tg"><i>펼치기</i><b>접기</b></span></summary><div class="a">새 학교가 전입 처리를 하기 전까지는 지금 학교 학생입니다. 지금 학교 개학일부터 전출 처리 전날까지 안 나오면 지금 학교의 결석(사유 없으면 미인정)으로 남습니다. 전입 처리를 지금 학교 개학일 전에 마치도록 새 학교와 미리 날짜를 맞추세요. <button class="flink" data-case="transfer" style="color:var(--accent);background:none;border:0;padding:0;font:inherit;text-decoration:underline;cursor:pointer">전학 공백 계산기 →</button></div></details>
+      <details class="q"><summary><span class="qt"><span class="qs">방학 중 전학하면 개학일이 다른 기간은 어떻게 되나요?</span><span class="qp">전입 처리 전까지는 지금 학교 학생이라, 그 사이가 결석으로 남을 수 있습니다.</span></span><span class="tg"><i>펼치기</i><b>접기</b></span></summary><div class="a">새 학교가 전입 처리를 하기 전까지는 지금 학교 학생입니다. 지금 학교 개학일부터 전출 처리 전날까지 안 나오면 지금 학교의 결석(사유 없으면 미인정)으로 남습니다. 전입 처리를 지금 학교 개학일 전에 마치도록 새 학교와 미리 날짜를 맞추세요.<button class="calc-cta" data-case="transfer"><span class="ci"><svg aria-hidden="true"><use href="#i-calc"/></svg></span><span class="ct"><b>전학 공백 계산기</b><small>두 학교 날짜를 넣으면 결석으로 남는 날이 바로 나옵니다</small></span><svg class="ar" aria-hidden="true"><use href="#i-chev"/></svg></button></div></details>
       <details class="q"><summary><span class="qt"><span class="qs">전학 온 아이의 출결은 어떻게 합산되나요?</span><span class="qp">전출교와 전입교 기록을 합산하되 겹치는 기간은 뺍니다.</span></span><span class="tg"><i>펼치기</i><b>접기</b></span></summary><div class="a">전출교와 전입교의 수업일수·결석·지각·조퇴·결과를 합산하되 <b>겹치는 기간은 뺍니다</b>. 전출일과 전입일이 같으면 전입일만 수업일수로 계산합니다.</div></details>
       </div>
     </div>
