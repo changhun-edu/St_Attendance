@@ -430,6 +430,10 @@ body.hide-bar main{padding-bottom:0}
 .example blockquote{margin:0;font-family:var(--display);font-size:15px;line-height:1.75;color:var(--ink-2);max-width:36em}
 .share.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);padding:11px 18px 11px 14px;font-size:14.5px;font-weight:600;margin-top:6px}
 .share.primary.done{background:var(--ok);border-color:var(--ok);color:#fff}
+.neis{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin-top:10px;padding:10px 14px;border-radius:10px;background:var(--accent-soft)}
+.neis a{color:var(--accent);font-weight:600;text-decoration:none;font-size:14.5px}
+.neis a:hover{text-decoration:underline}
+.neis span{font-size:12.5px;color:var(--ink-3)}
 .back{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:8px 14px 8px 10px;font-size:14px;cursor:pointer}
 .back svg{width:16px;height:16px}
 .empty{padding:28px;text-align:center;color:var(--ink-3);font-size:14.5px;border:1px dashed var(--line);border-radius:14px}
@@ -604,7 +608,7 @@ const CASES = [
   docs:['3일 이상 또는 자주 결석: 의사 진단서 또는 의견서(병명·진료기간이 적힌 소견서, 진료확인서)','2일 이내 가끔 결석: 학부모 의견서, 처방전, 담임교사 확인서 중 하나'],
   deadline:'결석을 시작한 날부터 5일 이내 (부득이한 경우 학교장이 정한 기한)',
   record:'결석일수 "질병"란에 일수가 기록됩니다. 사유는 학교 기준에 따라 적을 수 있지만, 병명은 개인정보 보호를 위해 적지 않는 것이 원칙입니다.',
-  tip:'나이스 학부모 서비스로 결석신고서를 내면 학부모 의견서는 따로 쓰지 않고 신청 화면의 해당란에 적는 것으로 갈음할 수 있습니다.',
+  tip:'나이스 학부모 서비스(parents.neis.go.kr)로 결석신고서를 내면 학부모 의견서는 따로 쓰지 않고 신청 화면의 해당란에 적는 것으로 갈음할 수 있습니다. 학교에 따라 종이 서류는 받지 않는 곳도 있으니 학교 안내를 먼저 확인하세요.',
   calc:'deadline',
   deep:{law:'별표 8 제2호 다목 1)·2)', note:'"5일 이내"는 결석을 시작한 날 기준. 질병 지각·조퇴·결과도 같은 기준으로 질병 처리.', remark:'학교가 정한 기준(예: 연속 5일 이상)에 해당하면 특기사항에 "감기(5일)"처럼 입력. 병명 노출 주의.', nice:'학적 › 출결관리 › 출결관리 › 일일출결관리(담임용)'}},
  {id:'disease', g:['ill','dis'], kind:'ok', title:'법정 감염병에 걸렸어요', sub:'독감, 수두, 유행성 눈병, 코로나19 등',
@@ -926,7 +930,7 @@ function homeHTML(){
       <details class="q"><summary>지각·조퇴·결과도 질병·미인정으로 나뉘나요?</summary><div class="a">네. 결석과 똑같이 사유에 따라 질병·미인정·기타로 나누어 횟수를 셉니다. 병원 진료로 늦으면 질병 지각, 학원 때문에 일찍 가면 미인정 조퇴입니다. 출석인정 사유(경조사, 체험학습 등)로 인한 지각·조퇴·결과는 횟수에 넣지 않습니다.</div></details>
       <details class="q"><summary>개근은 어떤 기준인가요?</summary><div class="a">한 해 동안 결석·지각·조퇴·결과가 한 번도 없는 경우입니다. 출석인정 결석은 출석으로 보므로 개근에 영향이 없습니다. 개근상·정근상 수상 기준은 교육청과 학교 방침에 따라 다를 수 있습니다.</div></details>
       <details class="q"><summary>며칠 이상 결석하면 유급이 되나요?</summary><div class="a">학년 수료에는 그 학년 수업일수(초등 190일 이상)의 3분의 2 이상 출석이 필요합니다. 출석인정 결석은 출석으로 계산됩니다. 지각·조퇴·결과는 횟수와 관계없이 수료에 영향을 주지 않습니다.</div></details>
-      <details class="q"><summary>결석신고서는 꼭 종이로 내야 하나요?</summary><div class="a">나이스 학부모 서비스로 낸 결석신고서와 증빙은 전자화문서로 인정되어 따로 출력·원본 제출이 필요 없습니다. 학부모 의견서나 담임 확인서는 신청 화면 해당란에 적는 것으로 갈음할 수 있습니다.</div></details>
+      <details class="q"><summary>결석신고서는 꼭 종이로 내야 하나요?</summary><div class="a">아니요. <a href="https://parents.neis.go.kr/" target="_blank" rel="noopener">나이스 학부모 서비스</a>로 낸 결석신고서와 증빙은 전자화문서로 인정되어 따로 출력·원본 제출이 필요 없습니다. 학부모 의견서나 담임 확인서는 신청 화면 해당란에 적는 것으로 갈음할 수 있습니다.<br><b>학교에 따라 종이 서류는 받지 않고 나이스 학부모 서비스로만 받는 곳도 있습니다.</b> 종이로 내기 전에 학교의 안내를 먼저 확인하세요.<div class="neis"><a href="https://parents.neis.go.kr/" target="_blank" rel="noopener">나이스 학부모 서비스 열기 ↗</a><span>parents.neis.go.kr · 로그인 후 「출결 신고」</span></div></div></details>
       <details class="q"><summary>특기사항에는 무엇이 적히나요?</summary><div class="a">기타 결석은 하루라도 사유가 적힙니다. 질병·미인정 결석과 횟수가 많은 지각·조퇴·결과는 학교가 정한 기준(예: 연속 5일 이상, 10회 이상)에 따라 적을 수 있습니다. 출석인정 결석은 사유를 적지 않습니다. 해외 봉사·어학연수·교외 대회 참가처럼 생활기록부에 쓸 수 없는 내용은 특기사항에도 쓸 수 없습니다.</div></details>
       <details class="q"><summary>방학 중 전학하면 개학일이 다른 기간은 어떻게 되나요?</summary><div class="a">새 학교가 전입 처리를 하기 전까지는 지금 학교 학생입니다. 지금 학교 개학일부터 전출 처리 전날까지 안 나오면 지금 학교의 결석(사유 없으면 미인정)으로 남습니다. 전입 처리를 지금 학교 개학일 전에 마치도록 새 학교와 미리 날짜를 맞추세요. <button class="flink" data-case="transfer" style="color:var(--accent);background:none;border:0;padding:0;font:inherit;text-decoration:underline;cursor:pointer">전학 공백 계산기 →</button></div></details>
       <details class="q"><summary>전학 온 아이의 출결은 어떻게 합산되나요?</summary><div class="a">전출교와 전입교의 수업일수·결석·지각·조퇴·결과를 합산하되 겹치는 기간은 뺍니다. 전출일과 전입일이 같으면 전입일만 수업일수로 계산합니다.</div></details>
@@ -1003,7 +1007,7 @@ function todayHTML(){
     <ol class="tline">
       <li class="now"><span class="n">1</span><div class="b"><span class="when">지금</span><h3>아침에 담임 선생님께 알립니다</h3><p>등교 시각 전에 전화나 문자, 학급 소통앱으로 결석 사실과 사유를 알립니다. 미세먼지로 인한 결석은 이 사전 연락이 있어야 질병 결석으로 인정됩니다.</p></div></li>
       <li><span class="n">2</span><div class="b"><span class="when">오늘 중</span><h3>어떤 결석인지 확인합니다</h3><p>사유에 따라 출석인정·질병·기타·미인정으로 나뉘고 필요한 서류가 다릅니다. 아래 사유 목록이나 처음 화면의 검색에서 찾아보세요.</p></div></li>
-      <li><span class="n">3</span><div class="b"><span class="when">오늘 중</span><h3>결석신고서를 냅니다</h3><p>나이스 학부모 서비스에서 내면 전자문서로 인정되어 종이 출력이나 원본 제출이 필요 없습니다. 학부모 의견서가 필요한 경우도 신청 화면의 해당란에 적는 것으로 갈음됩니다.</p></div></li>
+      <li><span class="n">3</span><div class="b"><span class="when">오늘 중</span><h3>결석신고서를 냅니다</h3><p><a href="https://parents.neis.go.kr/" target="_blank" rel="noopener">나이스 학부모 서비스</a>에서 내면 전자문서로 인정되어 종이 출력이나 원본 제출이 필요 없습니다. 학부모 의견서가 필요한 경우도 신청 화면의 해당란에 적는 것으로 갈음됩니다. <b>학교에 따라 종이 서류는 받지 않는 곳도 있으니</b> 학교 안내를 먼저 확인하세요.</p><div class="neis"><a href="https://parents.neis.go.kr/" target="_blank" rel="noopener">나이스 학부모 서비스 열기 ↗</a><span>parents.neis.go.kr</span></div></div></li>
       <li><span class="n">4</span><div class="b"><span class="when">5일 안에</span><h3>증빙 서류를 냅니다</h3><p>질병 결석은 결석을 시작한 날부터 5일 안에 서류를 내야 합니다. 2일 이내의 가끔 있는 결석은 학부모 의견서·처방전·담임 확인서 중 하나면 되고, 그보다 길면 의사 진단서나 의견서가 필요합니다.</p>${calcHTML('deadline')}</div></li>
     </ol>
   </div></section>
