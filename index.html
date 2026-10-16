@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="초등학교 결석 사유별 처리 구분, 필요 서류, 제출 기한, 생활기록부 기재 여부를 검색하고 계산하는 출결 안내 사이트">
+<meta name="theme-color" content="#2a4a73">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Crect x='1' y='1' width='24' height='24' rx='6' fill='%23fff' stroke='%232a4a73' stroke-width='1.6'/%3E%3Ccircle cx='8.5' cy='8.5' r='3.4' fill='%231f7a4d'/%3E%3Ccircle cx='17.5' cy='8.5' r='3.4' fill='%232b5fa6'/%3E%3Ccircle cx='8.5' cy='17.5' r='3.4' fill='%239a6400'/%3E%3Ccircle cx='17.5' cy='17.5' r='3.4' fill='%23b8342a'/%3E%3C/svg%3E">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>출결 한눈에</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one 720px column; header and body share it. Home = search + 6 doors + reference. Case = one card, parent summary on top, teacher detail folded. */
+:root{
+  --bg:#f4f5f8; --paper:#ffffff; --ink:#1b2330; --ink-2:#4b5566; --ink-3:#7c8595; --line:#dde1e8; --line-2:#eceef3;
+  --accent:#2a4a73; --accent-ink:#ffffff; --accent-soft:#e6ecf5;
+  --sand:#f3eee4; --sand-2:#e9e2d3; --sand-ink:#5c5141; --hero:#f7f3ea; --foot:#e8eaef;
+  --t-ill:#eef3fa; --t-fam:#f6f0e8; --t-trip:#eef5ef; --t-dis:#f3eff8; --t-pub:#eef4f5; --t-etc:#f3f1ee;
+  --ok:#1f7a4d; --ok-bg:#e3f3ea; --ill:#2b5fa6; --ill-bg:#e4ecf8; --no:#b8342a; --no-bg:#f9e5e2; --etc:#9a6400; --etc-bg:#f8efd9;
+  --display:"Gowun Batang","Nanum Myeongjo","Apple Myungjo","AppleMyungjo",Batang,"Noto Serif KR",Georgia,serif;
+  --body:"IBM Plex Sans KR","Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --shadow:0 1px 2px rgba(27,35,48,.06),0 6px 18px -8px rgba(27,35,48,.14);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#13171e; --paper:#1b2029; --ink:#e9ecf1; --ink-2:#b4bbc7; --ink-3:#7f8898; --line:#2d3441; --line-2:#242a35;
+  --accent:#8db1e3; --accent-ink:#0f1722; --accent-soft:#1f2a3a;
+  --sand:#221f1a; --sand-2:#2e2a23; --sand-ink:#cfc4b0; --hero:#1a1f2a; --foot:#0f1218;
+  --t-ill:#1b2330; --t-fam:#272219; --t-trip:#1a251d; --t-dis:#241f2c; --t-pub:#1a2527; --t-etc:#232220;
+  --ok:#6fcf98; --ok-bg:#15301f; --ill:#8db4ee; --ill-bg:#172538; --no:#f09087; --no-bg:#3a1b18; --etc:#e6b85c; --etc-bg:#352a12;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 20px -8px rgba(0,0,0,.5); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#13171e; --paper:#1b2029; --ink:#e9ecf1; --ink-2:#b4bbc7; --ink-3:#7f8898; --line:#2d3441; --line-2:#242a35;
+  --accent:#8db1e3; --accent-ink:#0f1722; --accent-soft:#1f2a3a;
+  --sand:#221f1a; --sand-2:#2e2a23; --sand-ink:#cfc4b0; --hero:#1a1f2a; --foot:#0f1218;
+  --t-ill:#1b2330; --t-fam:#272219; --t-trip:#1a251d; --t-dis:#241f2c; --t-pub:#1a2527; --t-etc:#232220;
+  --ok:#6fcf98; --ok-bg:#15301f; --ill:#8db4ee; --ill-bg:#172538; --no:#f09087; --no-bg:#3a1b18; --etc:#e6b85c; --etc-bg:#352a12;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 20px -8px rgba(0,0,0,.5); color-scheme:dark}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;word-break:keep-all;overflow-wrap:anywhere}
+a{color:var(--accent)}
+button{font:inherit;color:inherit}
+h1,h2,h3,h4{margin:0;text-wrap:balance;font-weight:700}
+p{margin:0}
+.wrap{max-width:720px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* header */
+.hdr{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--hero) 90%,transparent);backdrop-filter:blur(10px);border-bottom:2px solid var(--accent)}
+.hdr .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.brand{display:flex;align-items:center;gap:10px;background:none;border:0;padding:0;cursor:pointer}
+.brand .mark{width:26px;height:26px;display:block;flex:none}
+.brand .mark svg{width:26px;height:26px;display:block}
+.brand .txt{display:flex;flex-direction:column;align-items:flex-start;line-height:1.15}
+.brand .name{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:-.015em;color:var(--ink)}
+.brand .tag{font-size:11px;color:var(--ink-3);letter-spacing:.06em;margin-top:2px}
+.hdr .sub{font-size:12px;color:var(--ink-3);letter-spacing:.04em}
+.hdr .today-pill{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--accent);color:var(--accent);background:none;border-radius:999px;padding:6px 12px 6px 10px;font-size:13.5px;font-weight:600;cursor:pointer}
+.hdr .today-pill svg{width:15px;height:15px}
+.hdr .today-pill:hover{background:var(--accent);color:var(--accent-ink)}
+.todaybar{display:none}
+@media (max-width:600px){
+  .hdr .today-pill{display:none}
+  .todaybar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(10px);border-top:1px solid var(--line-2)}
+  .todaybar button{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;height:48px;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font-size:15.5px;font-weight:600;cursor:pointer;box-shadow:var(--shadow)}
+  .todaybar button svg{width:18px;height:18px}
+  main{padding-bottom:72px}
+}
+.hdr button:focus-visible,button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.view{display:flex;flex-direction:column;gap:32px}
+.view.wrap{padding-block:24px 56px}
+.band>.wrap{padding-block:40px}
+.band.hero{background:var(--hero)}
+.band.hero>.wrap{padding-block:36px 28px}
+.band.sand{background:var(--sand)}
+.band.sand>.wrap{padding-block:28px}
+.band.foot{background:var(--foot)}
+.band.foot>.wrap{padding-block:28px 40px}
+.sec-label{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.sec-title{font-size:18px;font-weight:700;letter-spacing:-.005em}
+
+/* hero */
+.hero-in{display:flex;flex-direction:column;gap:20px}
+.hero h1{font-family:var(--display);font-size:clamp(28px,6.4vw,40px);line-height:1.25;letter-spacing:-.015em}
+.hero h1 em{font-style:normal;color:var(--accent);border-bottom:3px solid var(--accent);padding-bottom:1px}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.chiprow{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-top:-10px;padding-bottom:2px}
+.chiprow::-webkit-scrollbar{display:none}
+.chiprow .chip{flex:none;background:transparent;border-color:var(--sand-2);color:var(--sand-ink)}
+.chiprow .chip:hover{border-color:var(--accent);color:var(--accent)}
+.chiprow .lbl{flex:none;font-size:12.5px;color:var(--ink-3);align-self:center;padding-right:2px}
+
+/* search */
+.search{position:relative}
+.search input{-webkit-appearance:none;appearance:none;width:100%;height:52px;border:1.5px solid var(--line);border-radius:14px;background:var(--paper);padding:0 44px 0 46px;font:inherit;font-size:16px;color:var(--ink);box-shadow:var(--shadow)}
+.search input::placeholder{color:var(--ink-3)}
+.search svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:var(--ink-3)}
+.search .clr{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:36px;height:36px;border:0;background:none;color:var(--ink-3);cursor:pointer;border-radius:8px}
+.search .clr:hover{background:var(--line-2)}
+.results{display:flex;flex-direction:column;gap:8px}
+.hint{font-size:13px;color:var(--ink-3)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;color:var(--ink-2)}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+
+/* doors */
+.sec{display:flex;flex-direction:column;gap:14px}
+.sec h2:not(.sec-title){font-family:var(--display);font-size:21px;letter-spacing:-.01em}
+.sec .sec-label+.sec-title{margin-top:-8px;margin-bottom:4px}
+.sec .lead{color:var(--ink-2);font-size:15px}
+.doors{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.door{display:flex;flex-direction:column;gap:8px;align-items:flex-start;text-align:left;background:var(--t);border:1px solid transparent;border-radius:16px;padding:18px 16px 16px;cursor:pointer;transition:transform .12s,border-color .12s,box-shadow .12s;min-height:120px}
+.door:hover{border-color:var(--accent);transform:translateY(-1px);box-shadow:var(--shadow)}
+.door .ico{width:40px;height:40px;border-radius:12px;background:var(--paper);color:var(--accent);display:grid;place-items:center;box-shadow:0 1px 2px rgba(27,35,48,.08)}
+.door .ico svg{width:24px;height:24px}
+.door .ico svg *{stroke-width:2.4}
+.door b{font-size:17px;font-weight:700;line-height:1.3;letter-spacing:-.01em}
+.door small{color:var(--ink-2);font-size:13.5px;line-height:1.45}
+.door .dots{display:flex;gap:4px;margin-top:auto;padding-top:6px;flex-wrap:wrap}
+.door .dots i{display:inline-flex;align-items:center;gap:4px;font-style:normal;font-size:11.5px;font-weight:600;letter-spacing:.02em}
+.door .dots i::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.d-ok{color:var(--ok)} .d-ill{color:var(--ill)} .d-no{color:var(--no)} .d-etc{color:var(--etc)}
+.fourdots{display:inline-flex;gap:3px;margin-left:4px;vertical-align:middle}
+.fourdots i{width:9px;height:9px;border-radius:50%;display:block}
+.todaycard{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:16px 18px;border:0;border-radius:14px;background:var(--accent);color:var(--accent-ink);cursor:pointer;box-shadow:var(--shadow)}
+.todaycard .ico{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.18);display:grid;place-items:center;flex:none}
+.todaycard .ico svg{width:22px;height:22px}
+.todaycard .t{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.todaycard b{font-size:16.5px;font-weight:600}
+.todaycard small{font-size:13.5px;opacity:.85}
+.todaycard>svg{width:20px;height:20px;flex:none;opacity:.8}
+.steps{display:flex;flex-direction:column;gap:0;border:1px solid var(--line);border-radius:16px;background:var(--paper);overflow:hidden}
+.step{display:grid;grid-template-columns:40px 1fr;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line-2)}
+.step:last-child{border-bottom:0}
+.step .n{width:32px;height:32px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:15px}
+.step .b{display:flex;flex-direction:column;gap:6px;min-width:0}
+.step h3{font-size:16px}
+.step p{font-size:14.5px;color:var(--ink-2)}
+.share{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:7px 14px 7px 11px;font-size:13.5px;cursor:pointer;color:var(--ink-2)}
+.share svg{width:16px;height:16px}
+.share.done{border-color:var(--ok);color:var(--ok)}
+.head-actions{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+details.basics>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px}
+details.basics>summary::-webkit-details-marker{display:none}
+details.basics>summary .st{display:flex;flex-direction:column;gap:4px}
+details.basics>summary h2{font-family:var(--display);font-size:20px;color:var(--sand-ink)}
+details.basics>summary span{font-size:13.5px;color:var(--ink-3)}
+details.basics>summary .open-btn{margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;color:var(--sand-ink);border:1px solid var(--sand-2);border-radius:999px;padding:6px 12px;background:var(--paper)}
+details.basics>summary .open-btn svg{width:16px;height:16px;transition:transform .2s}
+details.basics[open]>summary .open-btn svg{transform:rotate(180deg)}
+details.basics .bbody{padding-top:24px;display:flex;flex-direction:column;gap:28px}
+.bbody h3{font-size:16px}
+.faq{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--line)}
+details.q{border-bottom:1px solid var(--line)}
+details.q summary{list-style:none;cursor:pointer;padding:15px 4px;font-weight:600;font-size:15.5px;display:flex;gap:12px;align-items:flex-start}
+details.q summary::-webkit-details-marker{display:none}
+details.q summary::before{content:"Q";font-family:var(--display);color:var(--accent);font-weight:700;flex:none;line-height:1.65}
+details.q summary::after{content:"";margin-left:auto;flex:none;width:8px;height:8px;border-right:2px solid var(--ink-3);border-bottom:2px solid var(--ink-3);transform:rotate(45deg);margin-top:8px;transition:transform .2s}
+details.q[open] summary::after{transform:rotate(-135deg);margin-top:12px}
+details.q .a{padding:0 4px 16px 32px;font-size:14.5px;color:var(--ink-2);line-height:1.65}
+.footer{display:flex;flex-direction:column;gap:16px;color:var(--ink-2);font-size:13.5px}
+.fbrand{display:flex;align-items:center;gap:10px}
+.fbrand .mark svg{width:24px;height:24px;display:block}
+.fbrand b{font-family:var(--display);font-size:17px;color:var(--ink)}
+.fbrand span:last-child{font-size:13px;color:var(--ink-3)}
+.fnotice{display:flex;gap:10px;align-items:flex-start;line-height:1.6}
+.fnotice svg{width:18px;height:18px;flex:none;margin-top:3px;color:var(--accent)}
+.fnotice b{color:var(--ink)}
+.fmeta{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-3)}
+.fmeta i{width:3px;height:3px;border-radius:50%;background:var(--ink-3);display:inline-block}
+.fmeta a,.fmeta .flink{color:var(--ink-2);text-decoration:underline;text-underline-offset:3px;background:none;border:0;padding:0;font:inherit;cursor:pointer}
+.fmeta a:hover,.fmeta .flink:hover{color:var(--accent)}
+.footgrid{display:grid;grid-template-columns:1fr 1fr;gap:20px;font-size:13px;color:var(--ink-2)}
+@media (max-width:520px){.footgrid{grid-template-columns:1fr}}
+.footgrid b{display:block;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px}
+.footgrid .unofficial{grid-column:1/-1;display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:10px;background:var(--paper);border:1px solid var(--line);color:var(--ink);font-size:13.5px;line-height:1.55}
+.footgrid .unofficial svg{width:18px;height:18px;flex:none;margin-top:1px;color:var(--accent)}
+.footgrid .unofficial b{display:inline;font-size:inherit;letter-spacing:0;text-transform:none;color:var(--ink);margin:0}
+.disclaim{font-size:12.5px;color:var(--ink-3);line-height:1.55;padding-top:4px}
+.footgrid .by{grid-column:1/-1;font-family:var(--display);color:var(--ink-3);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+
+/* case rows */
+.rows{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:14px;background:var(--paper);overflow:hidden}
+.row{display:flex;align-items:center;gap:12px;width:100%;padding:13px 14px;border:0;border-bottom:1px solid var(--line-2);background:none;text-align:left;cursor:pointer}
+.row:last-child{border-bottom:0}
+.row:hover{background:var(--accent-soft)}
+.row .t{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.row .t b{font-weight:600;font-size:15.5px}
+.row .t span{font-size:13px;color:var(--ink-3)}
+.row .arr{color:var(--ink-3);flex:none;width:18px;height:18px;display:block}
+.row .arr svg{width:18px;height:18px;display:block}
+.crumb svg{width:14px;height:14px;flex:none}
+svg{max-width:100%}
+.row mark{background:transparent;color:var(--accent);font-weight:600}
+
+/* badge */
+.badge{display:inline-flex;align-items:center;gap:6px;flex:none;border-radius:999px;padding:3px 10px;font-size:12.5px;font-weight:600;letter-spacing:.01em;white-space:nowrap}
+.badge::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.b-ok{color:var(--ok);background:var(--ok-bg)} .b-ill{color:var(--ill);background:var(--ill-bg)} .b-no{color:var(--no);background:var(--no-bg)} .b-etc{color:var(--etc);background:var(--etc-bg)}
+.badge.lg{font-size:14px;padding:6px 14px}
+
+/* case page */
+.crumb{display:flex;align-items:center;gap:6px;font-size:13.5px;color:var(--ink-3)}
+.crumb button{background:none;border:0;padding:0;color:var(--accent);cursor:pointer;font-weight:500}
+.case{background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.case-head{padding:24px 22px 20px;display:flex;flex-direction:column;gap:14px;border-bottom:1px solid var(--line-2)}
+.case-head h1{font-family:var(--display);font-size:clamp(23px,5vw,28px);line-height:1.3}
+.case-head .big{font-size:17px;line-height:1.6;color:var(--ink)}
+.verdict{display:flex;flex-direction:column;gap:6px;padding:14px 16px;border-radius:12px}
+.verdict.ok{background:var(--ok-bg)} .verdict.ill{background:var(--ill-bg)} .verdict.no{background:var(--no-bg)} .verdict.etc{background:var(--etc-bg)}
+.verdict .vt{font-size:12px;letter-spacing:.1em;font-weight:600;text-transform:uppercase;opacity:.8}
+.verdict .vb{font-size:18px;font-weight:700;font-family:var(--display)}
+.verdict.ok .vb{color:var(--ok)} .verdict.ill .vb{color:var(--ill)} .verdict.no .vb{color:var(--no)} .verdict.etc .vb{color:var(--etc)}
+.verdict .vs{font-size:14px;color:var(--ink-2)}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid var(--line-2)}
+@media (max-width:480px){.facts{grid-template-columns:1fr}}
+.fact{padding:16px 22px;display:flex;flex-direction:column;gap:4px;border-right:1px solid var(--line-2);border-bottom:1px solid var(--line-2)}
+.fact:nth-child(2n){border-right:0}
+@media (max-width:480px){.fact{border-right:0}}
+.fact .k{font-size:12px;letter-spacing:.08em;color:var(--ink-3);font-weight:600;text-transform:uppercase}
+.fact .v{font-size:15px;line-height:1.55}
+.fact .v b{font-weight:600}
+.fact.wide{grid-column:1/-1;border-right:0}
+.ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.ul li::marker{color:var(--ink-3)}
+.note{display:flex;gap:10px;padding:12px 14px;border-radius:10px;background:var(--bg);font-size:14px;color:var(--ink-2);line-height:1.55}
+.note svg{flex:none;width:18px;height:18px;margin-top:2px;color:var(--ink-3)}
+.case-body{padding:20px 22px;display:flex;flex-direction:column;gap:18px}
+.linkout{display:flex;align-items:center;gap:14px;padding:16px;border-radius:14px;background:var(--accent);color:var(--accent-ink);text-decoration:none}
+.sites{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:520px){.sites{grid-template-columns:1fr}}
+.site{display:flex;align-items:center;gap:14px;padding:16px;border-radius:16px;background:var(--paper);border:1px solid var(--line);text-decoration:none;color:var(--ink);transition:border-color .12s,transform .12s}
+.site:hover{border-color:var(--accent);transform:translateY(-1px)}
+.site .ico{width:44px;height:44px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.site .ico svg{width:24px;height:24px}
+.site .lt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.site b{font-size:16px;font-weight:700}
+.site small{font-size:13px;color:var(--ink-2);line-height:1.4}
+.site .go{flex:none;width:18px;height:18px;color:var(--ink-3)}
+.site .go svg{width:18px;height:18px}
+.gbanner{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;background:var(--paper);border:1.5px solid var(--accent);color:var(--ink);text-decoration:none;margin-bottom:4px}
+.gbanner .lt{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.gbanner b{font-size:15px;color:var(--accent)}
+.gbanner small{font-size:13px;color:var(--ink-2)}
+.gbanner svg{width:18px;height:18px;flex:none;color:var(--accent)}
+.season{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:1.5px solid var(--etc);background:var(--etc-bg);color:var(--ink);border-radius:14px;padding:12px 14px;cursor:pointer}
+.season .sico{width:28px;height:28px;border-radius:50%;background:var(--etc);color:#fff;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:16px;flex:none}
+.season .st{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.season b{font-size:15px}
+.season small{font-size:13px;color:var(--ink-2)}
+.season svg{width:18px;height:18px;flex:none;color:var(--etc)}
+
+.linkout .lt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.linkout b{font-size:16px;font-weight:600}
+.linkout small{font-size:13px;opacity:.85}
+.linkout svg{flex:none;width:20px;height:20px}
+details.deep{border:1px solid var(--line);border-radius:12px;background:var(--bg)}
+details.deep summary{list-style:none;cursor:pointer;padding:13px 16px;display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px}
+details.deep summary::-webkit-details-marker{display:none}
+details.deep summary .tag{font-size:11.5px;letter-spacing:.08em;color:var(--ink-3);font-weight:600;border:1px solid var(--line);border-radius:6px;padding:1px 7px}
+details.deep summary svg{margin-left:auto;width:18px;height:18px;color:var(--ink-3);transition:transform .2s}
+details.deep[open] summary svg{transform:rotate(180deg)}
+details.deep .dbody{padding:0 16px 16px;display:flex;flex-direction:column;gap:12px;font-size:14.5px;color:var(--ink-2)}
+.dl{display:grid;grid-template-columns:88px 1fr;gap:6px 12px;font-size:14px}
+.dl dt{color:var(--ink-3);font-weight:600}
+.dl dd{margin:0;color:var(--ink-2)}
+.cite{font-family:var(--display);font-size:13.5px;color:var(--ink-3);border-left:2px solid var(--line);padding-left:10px}
+.path{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12.5px;background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:2px 6px}
+.rel{display:flex;flex-direction:column;gap:8px}
+.rel h3{font-size:14px;color:var(--ink-3);font-weight:600;letter-spacing:.04em}
+
+/* calculator */
+.calc{border:1px solid var(--line);border-radius:14px;background:var(--bg);padding:16px;display:flex;flex-direction:column;gap:12px}
+.calc h3{font-size:15.5px;display:flex;align-items:center;gap:8px}
+.calc h3 svg{width:18px;height:18px;color:var(--accent)}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:13px;color:var(--ink-2);font-weight:500}
+.field input,.field select{height:44px;border:1px solid var(--line);border-radius:10px;background:var(--paper);padding:0 12px;font:inherit;font-size:16px;color:var(--ink);width:100%}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media (max-width:420px){.grid3{grid-template-columns:1fr}}
+.out{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.out .big{font-family:var(--display);font-size:24px;font-weight:700;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.out .big.ok{color:var(--ok)} .out .big.no{color:var(--no)}
+.out .sm{font-size:13.5px;color:var(--ink-2)}
+.days{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.day{font-size:12.5px;border-radius:7px;padding:3px 8px;background:var(--ok-bg);color:var(--ok);font-variant-numeric:tabular-nums}
+.day.skip{background:var(--line-2);color:var(--ink-3);text-decoration:line-through}
+.toggle{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ink-2)}
+.toggle input{width:18px;height:18px;accent-color:var(--accent)}
+.meter{height:10px;border-radius:999px;background:var(--line-2);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--ok);border-radius:999px;transition:width .3s}
+.meter i.warn{background:var(--etc)} .meter i.over{background:var(--no)}
+
+/* reference */
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th,.tbl td{text-align:left;padding:10px 10px;border-bottom:1px solid var(--line-2);vertical-align:top}
+.tbl th{font-size:12px;letter-spacing:.06em;color:var(--ink-3);text-transform:uppercase;font-weight:600}
+.tbl td:first-child{white-space:nowrap}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--paper)}
+.tl{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.tl>svg{width:100%;height:auto;display:block}
+.legend{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media (max-width:520px){.legend{grid-template-columns:1fr}}
+.legend div{display:flex;flex-direction:column;gap:2px;font-size:14px}
+.legend b{font-weight:600}
+.legend span{color:var(--ink-2);font-size:13.5px}
+.fourway{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media (max-width:520px){.fourway{grid-template-columns:1fr}}
+.fw{border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.fw.ok{background:var(--ok-bg)} .fw.ill{background:var(--ill-bg)} .fw.no{background:var(--no-bg)} .fw.etc{background:var(--etc-bg)}
+.fw b{font-family:var(--display);font-size:17px}
+.fw.ok b{color:var(--ok)} .fw.ill b{color:var(--ill)} .fw.no b{color:var(--no)} .fw.etc b{color:var(--etc)}
+.fw span{font-size:13.5px;color:var(--ink-2);line-height:1.5}
+/* 안쪽 화면 */
+.band.tint{background:var(--t)}
+.band.tint>.wrap{padding-block:16px 24px;display:flex;flex-direction:column;gap:16px}
+.crumb{display:flex;align-items:center;gap:6px;font-size:13.5px;color:var(--ink-3);flex-wrap:wrap}
+.crumb button{background:none;border:0;padding:0;color:var(--accent);cursor:pointer;font-weight:500;font-size:13.5px}
+.crumb span{color:var(--ink-2);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60vw}
+.ghead{display:flex;align-items:center;gap:14px}
+.ghead .ico{width:52px;height:52px;border-radius:14px;background:var(--paper);color:var(--accent);display:grid;place-items:center;flex:none;box-shadow:0 1px 2px rgba(27,35,48,.08)}
+.ghead .ico svg{width:28px;height:28px}
+.ghead .ico svg *{stroke-width:2.4}
+.ghead h1{font-family:var(--display);font-size:26px;letter-spacing:-.015em;line-height:1.2}
+.ghead p{font-size:14px;color:var(--ink-2);margin-top:2px}
+.ctitle{font-family:var(--display);font-size:clamp(24px,5.6vw,30px);line-height:1.28;letter-spacing:-.015em}
+.verdict-line{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:10px 14px;border-radius:10px;background:var(--paper);border-left:4px solid currentColor}
+.verdict-line.ok{color:var(--ok)} .verdict-line.ill{color:var(--ill)} .verdict-line.no{color:var(--no)} .verdict-line.etc{color:var(--etc)}
+.verdict-line b{font-family:var(--display);font-size:17px;font-weight:700}
+.verdict-line span{font-size:14px;color:var(--ink-2)}
+.cbody{padding-block:24px 28px;display:flex;flex-direction:column;gap:18px}
+.cbody .big{font-size:17px;line-height:1.65}
+.todo{border:1.5px solid var(--accent);border-radius:14px;background:var(--paper);overflow:hidden}
+.todo-h{display:flex;align-items:center;gap:8px;background:var(--accent);color:var(--accent-ink);padding:9px 14px;font-size:13.5px;font-weight:600;letter-spacing:.02em}
+.todo-h svg{width:16px;height:16px}
+.chk{list-style:none;margin:0;padding:12px 14px 6px;display:flex;flex-direction:column;gap:8px}
+.chk li{position:relative;padding-left:26px;font-size:15px;line-height:1.55}
+.chk li::before{content:"";position:absolute;left:0;top:4px;width:16px;height:16px;border:1.5px solid var(--accent);border-radius:5px}
+.chk li::after{content:"";position:absolute;left:5px;top:7px;width:6px;height:9px;border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(45deg);opacity:.5}
+.todo-due{display:flex;align-items:baseline;gap:10px;padding:10px 14px 14px;border-top:1px dashed var(--line)}
+.todo-due .k{font-size:12px;letter-spacing:.08em;color:var(--ink-3);font-weight:600;flex:none}
+.todo-due b{font-size:16px;font-weight:700;color:var(--accent);line-height:1.45}
+.recbox{display:flex;flex-direction:column;gap:4px;padding:0 0 0 14px;border-left:3px solid var(--line)}
+.recbox .k{font-size:12px;letter-spacing:.08em;color:var(--ink-3);font-weight:600;text-transform:uppercase}
+.recbox p{font-size:15px;color:var(--ink-2)}
+.seg{display:inline-flex;align-self:flex-start;background:var(--line-2);border-radius:999px;padding:3px;margin-top:6px}
+.seg button{border:0;background:none;border-radius:999px;padding:7px 16px;font-size:14px;font-weight:600;color:var(--ink-3);cursor:pointer}
+.seg button.on{background:var(--paper);color:var(--ink);box-shadow:var(--shadow)}
+.tpanel{display:flex;flex-direction:column;gap:14px;padding:16px;border-radius:12px;background:var(--bg);border:1px solid var(--line)}
+.dlv{margin:0;display:flex;flex-direction:column;gap:12px}
+.dlv div{display:flex;flex-direction:column;gap:3px}
+.dlv dt{font-size:12px;letter-spacing:.08em;color:var(--ink-3);font-weight:600;text-transform:uppercase}
+.dlv dd{margin:0;font-size:14.5px;color:var(--ink-2);line-height:1.6}
+.row .bar{width:4px;align-self:stretch;border-radius:2px;flex:none;background:var(--line-2);margin:-2px 0}
+.row.k-ok .bar{background:var(--ok)} .row.k-ill .bar{background:var(--ill)} .row.k-no .bar{background:var(--no)} .row.k-etc .bar{background:var(--etc)}
+.k-ok-t{color:var(--ok)} .k-ill-t{color:var(--ill)} .k-no-t{color:var(--no)} .k-etc-t{color:var(--etc)}
+.hchips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px;margin:0 -16px;padding-left:16px;padding-right:16px}
+.hchips::-webkit-scrollbar{display:none}
+.hchip{flex:none;display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:8px 14px 8px 10px;font-size:13.5px;cursor:pointer;color:var(--ink)}
+.hchip i{width:8px;height:8px;border-radius:50%;background:var(--ink-3)}
+.hchip.k-ok i{background:var(--ok)} .hchip.k-ill i{background:var(--ill)} .hchip.k-no i{background:var(--no)} .hchip.k-etc i{background:var(--etc)}
+.hchip:hover{border-color:var(--accent)}
+.tline{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.tline li{display:grid;grid-template-columns:36px 1fr;gap:14px;position:relative;padding-bottom:28px}
+.tline li::before{content:"";position:absolute;left:17px;top:36px;bottom:0;width:2px;background:var(--line)}
+.tline li:last-child::before{display:none}
+.tline li:last-child{padding-bottom:0}
+.tline .n{width:36px;height:36px;border-radius:50%;background:var(--paper);border:2px solid var(--line);color:var(--ink-3);display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:16px;position:relative;z-index:1}
+.tline li.now .n{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.tline .b{display:flex;flex-direction:column;gap:6px;min-width:0;padding-top:4px}
+.tline .when{font-size:11.5px;letter-spacing:.08em;font-weight:700;color:var(--ink-3);text-transform:uppercase}
+.tline li.now .when{color:var(--accent)}
+.tline h3{font-size:17px}
+.tline p{font-size:14.5px;color:var(--ink-2)}
+.tline .calc{margin-top:10px}
+body.hide-bar .todaybar{display:none}
+body.hide-bar main{padding-bottom:0}
+.band.sand .calc{background:var(--paper);border-color:var(--sand-2)}
+
+/* 오픈소스 라이선스 */
+.lic-btn{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:25;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--paper);color:var(--ink-2);border-radius:999px;padding:8px 14px 8px 11px;font-size:12.5px;font-weight:600;cursor:pointer;box-shadow:var(--shadow)}
+.lic-btn:hover{color:var(--accent);border-color:var(--accent)}
+.lic-btn .i{font-family:var(--display);font-size:14px;line-height:1}
+@media (max-width:600px){.lic-btn{bottom:calc(80px + env(safe-area-inset-bottom,0px))}body.hide-bar .lic-btn{bottom:calc(16px + env(safe-area-inset-bottom,0px))}}
+.modal[hidden]{display:none}
+.modal{position:fixed;inset:0;z-index:40;background:rgba(10,14,20,.55);display:flex;align-items:flex-end;justify-content:center;padding:0}
+@media (min-width:600px){.modal{align-items:center;padding:24px}}
+.modal-box{background:var(--paper);color:var(--ink);width:100%;max-width:720px;max-height:min(88vh,900px);border-radius:20px 20px 0 0;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+@media (min-width:600px){.modal-box{border-radius:18px}}
+.modal-h{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line-2)}
+.modal-h h2{font-family:var(--display);font-size:19px}
+.modal-h button{border:0;background:var(--line-2);width:34px;height:34px;border-radius:50%;cursor:pointer;display:grid;place-items:center;color:var(--ink-2)}
+.modal-h button svg{width:18px;height:18px}
+.modal-b{overflow-y:auto;padding:18px 20px calc(24px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:20px;font-size:14px;line-height:1.65;color:var(--ink-2)}
+.modal-b h3{font-size:15px;color:var(--ink);margin-top:4px}
+.lic-item{border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.lic-item b{color:var(--ink);font-size:15px}
+.lic-item .meta{font-size:13px}
+.lic-item .meta code{font-family:ui-monospace,Menlo,monospace;font-size:12px;background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:1px 6px}
+.lic-full{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:11.5px;line-height:1.55;white-space:pre-wrap;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:14px;color:var(--ink-2);overflow-x:auto}
+.lic-note{font-size:13px;color:var(--ink-3)}
+
+/* 사유 카드 v3 */
+.crumb-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.crumb-row .seg{margin-top:0;background:color-mix(in srgb,var(--ink) 8%,transparent)}
+.verdict-face{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;padding:14px 18px;border-radius:14px}
+.verdict-face.ok{background:var(--ok-bg);color:var(--ok)} .verdict-face.ill{background:var(--ill-bg);color:var(--ill)} .verdict-face.no{background:var(--no-bg);color:var(--no)} .verdict-face.etc{background:var(--etc-bg);color:var(--etc)}
+.verdict-face b{font-family:var(--display);font-size:22px;font-weight:700;letter-spacing:-.01em}
+.verdict-face span{font-size:14.5px;color:var(--ink-2)}
+.prose{max-width:36em}
+.cbody .lead{font-size:18px;font-weight:700;line-height:1.55;letter-spacing:-.01em;color:var(--ink)}
+.cbody .rest{font-size:15.5px;color:var(--ink-2);margin-top:6px;line-height:1.7}
+.dia{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:10px 8px 4px;max-width:560px}
+.dia svg{width:100%;height:auto;display:block}
+.todo.act .todo-h{background:var(--etc);color:#fff}
+.todo.act{border-color:var(--etc)}
+.stp{margin:0;padding:12px 14px 6px;list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:10px}
+.stp li{counter-increment:s;position:relative;padding-left:34px;font-size:15px;line-height:1.55}
+.stp li::before{content:counter(s);position:absolute;left:0;top:1px;width:24px;height:24px;border-radius:50%;background:var(--etc-bg);color:var(--etc);font-family:var(--display);font-weight:700;font-size:13px;display:grid;place-items:center}
+.todo.act .todo-due b{color:var(--etc)}
+.nodocs{display:flex;gap:8px;align-items:flex-start;font-size:14.5px;color:var(--ink-3);padding:4px 0}
+.nodocs svg{width:17px;height:17px;flex:none;margin-top:3px}
+.tnote{display:none;flex-direction:column;gap:4px;padding:10px 14px;border-radius:10px;background:var(--accent-soft);border-left:3px solid var(--accent);font-size:14px;color:var(--ink-2);line-height:1.6}
+.case-root.teacher .tnote{display:flex}
+.tnote .tl-k{font-size:11.5px;letter-spacing:.08em;font-weight:700;color:var(--accent);text-transform:uppercase}
+.example{margin:0;display:flex;flex-direction:column;gap:6px;padding:0 0 0 16px;border-left:3px solid var(--etc)}
+.example figcaption{font-size:11.5px;letter-spacing:.08em;font-weight:700;color:var(--etc);text-transform:uppercase}
+.example blockquote{margin:0;font-family:var(--display);font-size:15px;line-height:1.75;color:var(--ink-2);max-width:36em}
+.share.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);padding:11px 18px 11px 14px;font-size:14.5px;font-weight:600;margin-top:6px}
+.share.primary.done{background:var(--ok);border-color:var(--ok);color:#fff}
+.back{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:8px 14px 8px 10px;font-size:14px;cursor:pointer}
+.back svg{width:16px;height:16px}
+.empty{padding:28px;text-align:center;color:var(--ink-3);font-size:14.5px;border:1px dashed var(--line);border-radius:14px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+</head>
+<body>
+<header class="hdr"><div class="wrap">
+  <button class="brand" id="brand" aria-label="홈으로"><span class="mark"><svg viewBox="0 0 26 26" aria-hidden="true"><rect x="1" y="1" width="24" height="24" rx="6" fill="none" stroke="var(--accent)" stroke-width="1.6"/><circle cx="8.5" cy="8.5" r="3.4" fill="var(--ok)"/><circle cx="17.5" cy="8.5" r="3.4" fill="var(--ill)"/><circle cx="8.5" cy="17.5" r="3.4" fill="var(--etc)"/><circle cx="17.5" cy="17.5" r="3.4" fill="var(--no)"/></svg></span><span class="txt"><span class="name">출결 한눈에</span><span class="tag">초등 출결, 묻기 전에 한눈에</span></span></button>
+  <button class="today-pill" data-today><svg aria-hidden="true"><use href="#i-calc"/></svg>오늘 결석했어요</button>
+</div></header>
+
+<main><div id="app"></div></main>
+
+<div class="modal" id="licmodal" hidden role="dialog" aria-modal="true" aria-labelledby="lictitle">
+  <div class="modal-box">
+    <div class="modal-h"><h2 id="lictitle">출처와 라이선스</h2><button type="button" id="licclose" aria-label="닫기"><svg aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <div class="modal-b">
+      <h3>안내 내용의 출처</h3>
+      <div class="lic-item"><b>2026학년도 학교생활기록부 기재요령(초등학교) 07 출결상황</b><span class="meta">「학교생활기록 작성 및 관리지침」 별표 8 · 교육부</span></div>
+      <p class="lic-note">등교·하교시각, 체험학습 허용 일수, 특기사항 기재 기준은 학교마다 다릅니다. 최종 판단은 학교장이 합니다.</p>
+      <p>이 사이트는 외부 자바스크립트 라이브러리 없이 작성되었으며, 아래 글꼴 두 종을 Google Fonts를 통해 불러옵니다. 아이콘은 직접 그린 SVG입니다.</p>
+      <h3>사용한 오픈소스</h3>
+      <div class="lic-item"><b>고운바탕 (Gowun Batang)</b><span class="meta">저작권자: The Gowun Batang Project Authors (양희재) · 라이선스: <code>SIL Open Font License 1.1</code></span></div>
+      <div class="lic-item"><b>IBM Plex Sans KR</b><span class="meta">저작권자: IBM Corp. · 라이선스: <code>SIL Open Font License 1.1</code></span></div>
+      <h3>SIL Open Font License 1.1 전문</h3>
+      <pre class="lic-full">Copyright 2020 The Gowun Batang Project Authors (https://github.com/yangheeryu/Gowun-Batang)
+Copyright 2020 IBM Corp. (IBM Plex Sans KR)
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+This license is copied below, and is also available with a FAQ at:
+https://openfontlicense.org
+
+-----------------------------------------------------------
+SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
+-----------------------------------------------------------
+
+PREAMBLE
+The goals of the Open Font License (OFL) are to stimulate worldwide
+development of collaborative font projects, to support the font creation
+efforts of academic and linguistic communities, and to provide a free and
+open framework in which fonts may be shared and improved in partnership
+with others.
+
+The OFL allows the licensed fonts to be used, studied, modified and
+redistributed freely as long as they are not sold by themselves. The
+fonts, including any derivative works, can be bundled, embedded,
+redistributed and/or sold with any software provided that any reserved
+names are not used by derivative works. The fonts and derivatives,
+however, cannot be released under any other type of license. The
+requirement for fonts to remain under this license does not apply
+to any document created using the fonts or their derivatives.
+
+DEFINITIONS
+"Font Software" refers to the set of files released by the Copyright
+Holder(s) under this license and clearly marked as such. This may
+include source files, build scripts and documentation.
+
+"Reserved Font Name" refers to any names specified as such after the
+copyright statement(s).
+
+"Original Version" refers to the collection of Font Software components as
+distributed by the Copyright Holder(s).
+
+"Modified Version" refers to any derivative made by adding to, deleting,
+or substituting -- in part or in whole -- any of the components of the
+Original Version, by changing formats or by porting the Font Software to a
+new environment.
+
+"Author" refers to any designer, engineer, programmer, technical
+writer or other person who contributed to the Font Software.
+
+PERMISSION &amp; CONDITIONS
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of the Font Software, to use, study, copy, merge, embed, modify,
+redistribute, and sell modified and unmodified copies of the Font
+Software, subject to the following conditions:
+
+1) Neither the Font Software nor any of its individual components,
+in Original or Modified Versions, may be sold by itself.
+
+2) Original or Modified Versions of the Font Software may be bundled,
+redistributed and/or sold with any software, provided that each copy
+contains the above copyright notice and this license. These can be
+included either as stand-alone text files, human-readable headers or
+in the appropriate machine-readable metadata fields within text or
+binary files as long as those fields can be easily viewed by the user.
+
+3) No Modified Version of the Font Software may use the Reserved Font
+Name(s) unless explicit written permission is granted by the corresponding
+Copyright Holder. This restriction only applies to the primary font name as
+presented to the users.
+
+4) The name(s) of the Copyright Holder(s) or the Author(s) of the Font
+Software shall not be used to promote, endorse or advertise any
+Modified Version, except to acknowledge the contribution(s) of the
+Copyright Holder(s) and the Author(s) or with their explicit written
+permission.
+
+5) The Font Software, modified or unmodified, in part or in whole,
+must be distributed entirely under this license, and must not be
+distributed under any other license. The requirement for fonts to
+remain under this license does not apply to any document created
+using the Font Software.
+
+TERMINATION
+This license becomes null and void if any of the above conditions are
+not met.
+
+DISCLAIMER
+THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+OF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL THE
+COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL
+DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
+OTHER DEALINGS IN THE FONT SOFTWARE.</pre>
+      <h3>그 밖의 저작물</h3>
+      <p>안내 내용은 「2026학년도 학교생활기록부 기재요령(초등학교)」과 「학교생활기록 작성 및 관리지침」(교육부)을 읽기 쉽게 풀어 쓴 것입니다. 국가가 작성한 공공저작물로, 저작권법 제24조의2에 따라 자유롭게 이용할 수 있습니다. 사이트의 구성·문구·디자인은 제작자(최창훈)의 창작물입니다.</p>
+      <p class="lic-note">Apache-2.0, MIT, BSD-3-Clause, ISC 라이선스로 배포되는 구성요소는 사용하지 않았습니다.</p>
+    </div>
+  </div>
+</div>
+<div class="todaybar"><button data-today><svg aria-hidden="true"><use href="#i-calc"/></svg>오늘 결석했어요</button></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-out" viewBox="0 0 24 24"><path d="M14 5h5v5M19 5l-8 8M18 14v5H5V6h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 11v5M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-calc" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 7h8M8 12h3M13 12h3M8 16h3M13 16h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-sick" viewBox="0 0 24 24"><path d="M12 3v18M3 12h18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+  <symbol id="i-fam" viewBox="0 0 24 24"><circle cx="8" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="16" cy="9" r="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 20c0-3 2.2-5 5-5s5 2 5 5M13 19c0-2.2 1.4-4 3.5-4s3.5 1.8 3.5 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-trip" viewBox="0 0 24 24"><path d="M3 18 9 6l4 8 2-3 6 7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="17" cy="6" r="2" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-virus" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 4h12l-2 4 2 4H5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-dots" viewBox="0 0 24 24"><circle cx="6" cy="12" r="1.8" fill="currentColor"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/><circle cx="18" cy="12" r="1.8" fill="currentColor"/></symbol>
+</svg>
+
+<script>
+/* ---------- 데이터 ---------- */
+const GROUPS = [
+  {id:'ill',   ico:'i-sick',  name:'아파요',           desc:'감기·수술, 병원 통원, 미세먼지, 생리통'},
+  {id:'fam',   ico:'i-fam',   name:'가족 일',          desc:'장례·결혼·입양, 가족 간병·집안일'},
+  {id:'trip',  ico:'i-trip',  name:'여행·체험학습',    desc:'가족여행, 교환학습, 해외 어학연수'},
+  {id:'dis',   ico:'i-virus', name:'감염병·날씨',      desc:'독감·수두 등 감염병, 등교중지, 폭우·폭설'},
+  {id:'pub',   ico:'i-flag',  name:'운동부·학폭·교권', desc:'대회·훈련 참가, 학교폭력·교권 조치, 선도프로그램'},
+  {id:'etc',   ico:'i-dots',  name:'학원·무단·그 밖',  desc:'학원 수업, 방학 중 전학, 그냥 안 감, 공납금'},
+];
+const SC = new URLSearchParams(location.search).get('sc') || '';
+const withSc = u => SC ? u + (u.includes('?') ? '&' : '?') + 'sc=' + encodeURIComponent(SC) : u;
+const KIND = {
+  ok:{label:'출석으로 인정돼요',   full:'출석인정 결석', cls:'ok',  short:'출석인정'},
+  ill:{label:'질병 결석으로 처리돼요', full:'질병 결석',  cls:'ill', short:'질병'},
+  no:{label:'미인정 결석으로 처리돼요', full:'미인정 결석', cls:'no',  short:'미인정'},
+  etc:{label:'기타 결석으로 처리돼요', full:'기타 결석',  cls:'etc', short:'기타'},
+};
+const LINK_DISEASE = {href:'https://infectious-diseases.vercel.app/', title:'감염병 등교중지 안내', sub:'병명 검색 · 등교중지 기간 · 출석인정 절차'};
+const LINK_TRIP = {href:withSc('https://educational-travel.vercel.app/'), title:'교외체험학습 안내', sub:'신청 기한 계산 · 사유 적절성 자가진단'};
+const SYN = {'돌아가':'사망','돌아가셨':'사망','상을':'사망','초상':'사망','상가':'사망','장례식':'장례','열':'감기','아파':'질병','아프':'질병','아픔':'질병','놀러':'여행','해외여행':'여행','친가':'조부모','외가':'외조부모','코로나':'감염병','독감':'감염병','입원':'병원','다쳐':'치료','다쳤':'치료','안가':'출석 거부','안감':'출석 거부','결혼식':'결혼','무단':'태만','학폭':'학교폭력','운동':'선수','시합':'대회','경기':'대회','이사':'전학','전출':'전학','전입':'전학'};
+
+const CASES = [
+ {id:'illness', g:['ill'], kind:'ill', title:'아파서 결석했어요', sub:'감기, 수술, 입원 등 일반 질병',
+  kw:['감기','수술','입원','병원','아픔','질병','진단서','의견서','처방전','독감','열','몸살'],
+  summary:'아파서 못 간 날은 질병 결석입니다. 결석을 시작한 날부터 5일 안에 서류를 내고 학교장 승인을 받으면 됩니다.',
+  docs:['3일 이상 또는 자주 결석: 의사 진단서 또는 의견서(병명·진료기간이 적힌 소견서, 진료확인서)','2일 이내 가끔 결석: 학부모 의견서, 처방전, 담임교사 확인서 중 하나'],
+  deadline:'결석을 시작한 날부터 5일 이내 (부득이한 경우 학교장이 정한 기한)',
+  record:'결석일수 "질병"란에 일수가 기록됩니다. 사유는 학교 기준에 따라 적을 수 있지만, 병명은 개인정보 보호를 위해 적지 않는 것이 원칙입니다.',
+  tip:'나이스 학부모 서비스로 결석신고서를 내면 학부모 의견서는 따로 쓰지 않고 신청 화면의 해당란에 적는 것으로 갈음할 수 있습니다.',
+  calc:'deadline',
+  deep:{law:'별표 8 제2호 다목 1)·2)', note:'"5일 이내"는 결석을 시작한 날 기준. 질병 지각·조퇴·결과도 같은 기준으로 질병 처리.', remark:'학교가 정한 기준(예: 연속 5일 이상)에 해당하면 특기사항에 "감기(5일)"처럼 입력. 병명 노출 주의.', nice:'학적 › 출결관리 › 출결관리 › 일일출결관리(담임용)'}},
+ {id:'disease', g:['ill','dis'], kind:'ok', title:'법정 감염병에 걸렸어요', sub:'독감, 수두, 유행성 눈병, 코로나19 등',
+  kw:['감염병','독감','인플루엔자','수두','코로나','눈병','수족구','장염','등교중지','전염'],
+  summary:'법정 감염병(학교장이 확산 방지를 위해 인정한 비법정 감염병 포함)으로 못 간 날은 출석으로 인정됩니다.',
+  docs:['진단서 또는 의사 소견서 (병명·격리기간 확인)'], deadline:'학교 안내에 따라 제출',
+  record:'출석인정 결석은 출석으로 처리되며 특기사항에 사유를 적지 않습니다.',
+  link:LINK_DISEASE,
+  deep:{law:'별표 8 제2호 나목 1)', note:'병명별 등교중지 기간과 절차는 연결된 사이트에서 확인.', remark:'사유 미기재(출석인정 결석 공통).', nice:'학적 › 출결관리 › 출결관리 › 일일출결관리(담임용) › 출석인정 결석'}},
+ {id:'dust', g:['ill'], kind:'ill', title:'미세먼지가 나빠서 못 갔어요', sub:'천식·아토피 등 기저질환이 있는 민감군',
+  kw:['미세먼지','초미세먼지','천식','아토피','알레르기','호흡기','민감군','나쁨'],
+  summary:'기저질환(천식, 아토피, 알레르기, 호흡기·심혈관 질환 등)이 있는 민감군 학생이 조건을 모두 갖추면 질병 결석으로 처리됩니다.',
+  docs:['학기 초: 미세먼지와의 관련성이 적힌 의사 진단서(소견서) 1회 제출','결석 당일: 등교 전 학교에 전화·문자로 미리 연락'],
+  deadline:'결석한 날부터 5일 이내 결석신고서 (학기 초 낸 진단서로 증빙 갈음 가능)',
+  record:'결석일수 "질병"란에 기록됩니다.',
+  checks:['의사 진단서로 민감군(기저질환) 확인됨','등교시간대 거주지나 학교 주변 미세먼지·초미세먼지가 "나쁨" 이상','학부모가 학교에 사전 연락함'],
+  tip:'실시간 농도는 에어코리아(airkorea.or.kr)에서 확인할 수 있습니다.',
+  deep:{law:'별표 8 제2호 다목 4)', note:'세 조건을 모두 충족할 때만 질병 결석. 하나라도 빠지면 일반 결석 사유로 판단.', remark:'학교 기준에 따라 사유 기재 가능.', nice:'일일출결관리(담임용) › 질병'}},
+ {id:'chronic', g:['ill'], kind:'ill', title:'오래 치료받아야 해요', sub:'만성질환, 장기 치료',
+  kw:['만성','장기','치료','통원','암','투석','정기진료'],
+  summary:'의사 진단서로 장기 치료가 필요하다고 확인되면, 진단서를 붙인 결석신고서로 질병 결석 처리됩니다. 학기 초에 낸 진단서로 그 학기 증빙을 갈음할 수 있습니다.',
+  docs:['의사 진단서 또는 의견서(학기 초 1회)','결석 시마다 결석신고서'],
+  deadline:'결석한 날부터 5일 이내',
+  record:'결석일수 "질병"란에 기록됩니다. 병원 정기진료로 인한 지각·조퇴도 질병으로 처리됩니다.',
+  rel:['hospital'],
+  deep:{law:'별표 8 제2호 다목 5)', note:'3개월 이상 장기결석이 예상되면 병원학교·원격수업(위탁학생) 전환을 검토.', remark:'"병원 정기진료로 인한 질병지각(12회)"처럼 기재 가능.', nice:'일일출결관리(담임용) › 질병'}},
+ {id:'hospital', g:['ill'], kind:'ok', title:'병원학교·원격수업을 받고 있어요', sub:'건강장애 학생, 3개월 이상 입원·요양',
+  kw:['병원학교','원격수업','건강장애','입원','장기결석','위탁','화상','교통사고'],
+  summary:'건강장애로 선정되어 병원학교나 원격수업을 받는 기간은 출석으로 인정됩니다. 건강장애 선정 대상이 아니어도 3개월 이상 치료가 필요한 큰 부상이면 교육청 허가로 같은 처리가 가능합니다.',
+  docs:['진단서 + 담임교사 의견 (학교가 교육청에 공문으로 신청)'], deadline:'치료 시작 전후 학교와 협의',
+  record:'위탁학생으로 관리되어 병원학교·원격수업 기관의 출석 확인을 반영합니다. 교과 성적은 미인정, 비교과는 인정됩니다.',
+  deep:{law:'별표 8 제5호, 기재요령 ➍ 기타', note:'절차: 학교장 신청 → 교육청 등록 → 기관의 출석 확인 → 학교장 출석 인정. 복귀 시 등록 해지 공문.', remark:'위탁학생 등록 시 교육구분 "병원학교" 또는 "원격수업".', nice:'학적 › 위탁학생관리 › 위탁학생등록 (학기 단위)'}},
+ {id:'period', g:['ill'], kind:'ok', title:'생리통이 심해서 못 갔어요', sub:'여학생, 월 1일',
+  kw:['생리','생리통','월경','여학생'],
+  summary:'생리통이 극심해 출석이 어려운 경우 월 1일은 "기타 부득이한 사유"로 보아 출석으로 인정됩니다. 진단서는 요구하지 않습니다.',
+  docs:['담임교사 의견서 또는 학부모 의견서면 충분'], deadline:'학교 안내에 따라 제출',
+  record:'출석인정 결석으로 특기사항에 사유를 적지 않습니다.',
+  tip:'의료 확인(진단서, 소견서, 처방전)을 요구하는 것은 지양하도록 되어 있습니다.',
+  deep:{law:'별표 8 제2호 나목 7)', note:'월 1일 산정 기준(지각·조퇴·결과 포함 여부)은 학업성적관리위원회를 거쳐 학교장이 정함.', remark:'사유 미기재.', nice:'일일출결관리(담임용) › 출석인정 결석'}},
+
+ {id:'family', g:['fam'], kind:'ok', title:'가족 경조사가 있어요', sub:'결혼, 장례, 입양',
+  kw:['결혼','장례','사망','상','돌아가','입양','경조사','조부모','할머니','할아버지','외할머니','외할아버지','형제','자매','삼촌','고모','이모'],
+  summary:'가까운 가족의 결혼·사망·입양은 정해진 일수만큼 출석으로 인정됩니다. 토요일·공휴일·재량휴업일은 일수에 넣지 않습니다.',
+  docs:['학교 안내에 따른 결석신고서 (증빙은 학교 기준)'], deadline:'학교 안내에 따라 제출',
+  record:'출석인정 결석은 출석으로 처리되며 사유를 적지 않습니다.',
+  calc:'family',
+  deep:{law:'별표 8 제2호 나목 6)', note:'사유가 발생한 날을 포함해 전후로 쓰는 것이 원칙. 사망은 그날을 빼고 다음 날부터 처리할 수 있음. 기간 안에 학생이 상황에 따라 등교해도 됨.', remark:'사유 미기재.', nice:'일일출결관리(담임용) › 출석인정 결석'}},
+ {id:'care', g:['fam'], kind:'etc', title:'가족 간병·집안일 때문이에요', sub:'봉양, 가사 조력, 간병',
+  kw:['간병','봉양','가사','집안일','돌봄','동생','부모 입원'],
+  summary:'부모·가족 봉양, 가사 조력, 간병처럼 부득이한 개인 사정으로 학교장이 인정하면 기타 결석입니다. 하루라도 사유가 생활기록부에 적힙니다.',
+  docs:['결석신고서 + 사정을 확인할 수 있는 자료 (학교 기준)'], deadline:'학교 안내에 따라 제출',
+  record:'결석일수 "기타"란에 기록되고, 특기사항에 "가사조력(1일)"처럼 사유가 반드시 적힙니다.',
+  deep:{law:'별표 8 제2호 마목 1)', note:'학교장 인정이 전제. 인정되지 않으면 미인정 결석.', remark:'기타결석은 1일이라도 사유 입력. 예: 부모간병(3일), 가사조력(1일).', nice:'학적 › 출결관리 › 출결관리 › 출결특기사항등록'}},
+
+ {id:'trip', g:['trip'], kind:'ok', title:'가족 여행·체험학습을 가요', sub:'학교장 허가 교외체험학습',
+  kw:['여행','체험학습','가족여행','교외체험','현장체험','친척','답사','향토행사','해외여행'],
+  summary:'미리 신청해 학교장 허가를 받은 교외체험학습은 학칙이 정한 일수 안에서 출석으로 인정됩니다. 다녀온 뒤 보고서를 내야 처리가 끝납니다.',
+  docs:['사전: 신청서 + 학습계획서','사후: 교외체험학습 보고서'], deadline:'출발 며칠 전까지 신청 (학교마다 다름 · 아래 사이트에서 계산)',
+  record:'출석인정 결석으로 사유를 적지 않습니다. 생활기록부 어느 항목에도 체험학습 내용을 입력하지 않습니다.',
+  link:LINK_TRIP, rel:['tripover'],
+  deep:{law:'별표 8 제2호 나목 3)', note:'절차: 신청 → 학교장 심사·승인 통보 → 실시 → 보고서 제출 → 면담 등 사실 확인 → 출석인정. 감염병 위기경보 "심각" 단계에서만 가정학습 사유 허용.', remark:'사유 미기재. 학생선수 훈련·대회를 체험학습으로 출석인정 처리하는 것은 불가.', nice:'일일출결관리(담임용) › 출석인정 결석'}},
+ {id:'tripover', g:['trip'], kind:'no', title:'허용 일수를 넘겨 여행했어요', sub:'학칙 기간 초과',
+  kw:['초과','넘겨','허용일수','기간 초과'],
+  summary:'학칙으로 정한 교외체험학습 일수를 넘긴 날은 미인정 결석으로 처리됩니다.',
+  docs:['따로 낼 서류는 없습니다'], deadline:'낼 서류가 없으니 기한도 없습니다',
+  record:'결석일수 "미인정"란에 기록됩니다. 학교 기준에 따라 특기사항에 사유가 적힐 수 있습니다.',
+  deep:{law:'별표 8 제2호 라목 7)', note:'허용 일수는 학칙으로 정함. 초과분만 미인정.', remark:'학교 기준에 따라 사유 입력 가능.', nice:'일일출결관리(담임용) › 미인정'}},
+ {id:'exchange', g:['trip'], kind:'ok', title:'다른 학교에서 교환학습을 해요', sub:'국내 교환학습',
+  kw:['교환학습','교환','시골','농촌유학','다른 학교'],
+  summary:'학부모가 신청하고 두 학교장이 협의한 국내 교환학습 기간은 위탁학생으로 관리되어 출석·성적 모두 인정됩니다.',
+  docs:['교환학습 신청서'], deadline:'학교 간 협의 일정에 따름',
+  record:'위탁학교의 학교생활기록이 재적교로 통보되어 반영됩니다.',
+  deep:{law:'별표 8 제2호 나목 3), ➍ 기타 표', note:'절차: 학부모 신청 → 학교장 상호 협의 → 통보 → 실시 → 위탁학교 기록을 재적교에 통보.', remark:'위탁학생 등록 시 교육구분 "기타".', nice:'학적 › 위탁학생관리 › 위탁학생등록'}},
+ {id:'abroad', g:['trip','etc'], kind:'no', title:'해외 어학연수를 가요', sub:'어학연수, 단기 유학',
+  kw:['어학연수','유학','해외','영어','캠프','미인정유학'],
+  summary:'해외 어학연수로 빠진 날은 미인정 결석입니다. 특기사항에 "해외 어학연수"라고 적는 것도 허용되지 않습니다.',
+  docs:['따로 낼 서류는 없습니다'], deadline:'낼 서류가 없으니 기한도 없습니다',
+  record:'결석일수 "미인정"란에 기록됩니다. 장기화되어 정원 외 학적관리가 되면 특기사항에 "미인정유학(64일)"처럼 적을 수 있습니다.',
+  deep:{law:'별표 8 제2호 라목 7), 기재요령 ➌ 나', note:'해외 봉사활동·어학연수·교외 대회 참가는 생활기록부에 입력할 수 없는 내용.', remark:'원칙 미기재. 정원 외 관리 사유로만 "미인정유학(일수)" 가능.', nice:'일일출결관리(담임용) › 미인정'}},
+
+ {id:'disaster', g:['dis'], kind:'ok', title:'폭우·폭설·지진으로 못 갔어요', sub:'천재지변',
+  kw:['폭우','폭설','태풍','지진','해일','홍수','재난','천재지변','날씨'],
+  summary:'지진, 폭우, 폭설, 폭풍, 해일 같은 천재지변으로 못 간 날은 출석으로 인정됩니다.',
+  docs:['학교 안내에 따름 (보통 별도 서류 없음)'], deadline:'학교가 처리하므로 따로 낼 것이 없습니다',
+  record:'출석인정 결석으로 사유를 적지 않습니다.',
+  deep:{law:'별표 8 제2호 나목 1)', note:'학교장이 천재지변 여부를 판단.', remark:'사유 미기재.', nice:'일일출결관리(담임용) › 출석인정 결석'}},
+ {id:'stop', g:['dis'], kind:'ok', title:'학교에서 등교중지를 받았어요', sub:'학교보건법 제8조',
+  kw:['등교중지','격리','학교보건법'],
+  summary:'학교보건법에 따라 학교장이 등교중지를 명한 기간은 출석으로 인정됩니다.',
+  docs:['학교 안내에 따름'], deadline:'학교가 처리하므로 따로 낼 것이 없습니다',
+  record:'출석인정 결석으로 사유를 적지 않습니다.',
+  link:LINK_DISEASE,
+  deep:{law:'별표 8 제2호 나목 3)', note:'감염병별 등교중지 기간은 연결 사이트 참조.', remark:'사유 미기재.', nice:'일일출결관리(담임용) › 출석인정 결석'}},
+
+ {id:'athlete', g:['pub'], kind:'ok', title:'대회·훈련에 참가해요', sub:'학교·시도·국가 대표 학생선수',
+  kw:['대회','훈련','선수','운동부','체육','국가대표','소년체전','경기','전지훈련'],
+  summary:'학교장 허가를 받은 학생선수의 대회·훈련 결석은 한 해 20일(초등학교)까지 출석으로 인정됩니다. 국가대표·전국(소년)체육대회는 학업성적관리위원회 심의를 거쳐 20일에 넣지 않을 수 있습니다.',
+  docs:['대한체육회 등에서 인정하는 공문(기간·장소·명단)'], deadline:'참가 전 학교장 허가',
+  record:'출석인정 결석으로 사유를 적지 않습니다. 교외 대회 참가 내용은 생활기록부에 입력할 수 없습니다.',
+  calc:'athlete',
+  deep:{law:'별표 8 제2호 나목 3) 학생선수', note:'지각·조퇴·결과는 6시간(수업시간) 누적 시 1일로 환산. 20일 한도는 출석인정 산정용이며 진급·수료용 출석일수 산정과는 무관. 체험학습으로 대체 처리 불가.', remark:'사유 미기재.', nice:'일일출결관리(담임용) › 출석인정 결석'}},
+ {id:'bully-victim', g:['pub'], kind:'ok', title:'학교폭력 피해로 못 갔어요', sub:'피해학생 보호, 심의위원회 참석',
+  kw:['학교폭력','학폭','피해','심의위원회','보호조치','의견진술'],
+  summary:'학교폭력 피해로 못 간 것을 학교가 전담기구를 거쳐 확인하면 출석으로 인정됩니다. 보호조치 기간, 심의위원회 참석일도 같습니다.',
+  docs:['학교 전담기구의 사실 확인 (학교가 처리)'], deadline:'학교가 처리하므로 따로 낼 것이 없습니다',
+  record:'출석인정 결석으로 사유를 적지 않습니다.',
+  rel:['bully-offender'],
+  deep:{law:'별표 8 제2호 나목 8)', note:'심의위 개최·보호조치 요청 이전의 결석도 학교장이 인정하면 출석인정. 피·가해 학생 모두 심의위 참석일은 출석인정.', remark:'사유 미기재.', nice:'일일출결관리(담임용) › 출석인정 결석'}},
+ {id:'bully-offender', g:['pub'], kind:'ok', title:'학교폭력 조치(사회봉사·특별교육)를 받아요', sub:'가해학생 4호·5호 조치',
+  kw:['가해','사회봉사','특별교육','심리치료','조치','4호','5호'],
+  summary:'사회봉사(4호), 특별교육이수·심리치료(5호)로 빠진 날은 출석으로 인정됩니다. 다만 4~6학년은 조치 내용이 출결 특기사항에 적힙니다.',
+  docs:['조치 결정 통지 (학교가 처리)'], deadline:'학교가 처리하므로 따로 낼 것이 없습니다',
+  record:'출석인정 결석이지만, 4~6학년은 특기사항에 조치 내용과 결정 일자가 반드시 기록됩니다.',
+  rel:['suspend'],
+  deep:{law:'별표 8 제2호 나목 8), 기재요령 [4~6학년]', note:'조치결정 일자는 교육지원청 내부결재일. 행정심판·소송 중이어도 먼저 입력하고 변경 시 수정(최초 일자는 유지).', remark:'예: "학교폭력예방 및 대책에 관한 법률 제17조제1항제4호에 따른 사회봉사 조치 20시간(2023.06.02.)"', nice:'학적 › 출결관리 › 출결관리 › 출결특기사항등록'}},
+ {id:'suspend', g:['pub'], kind:'no', title:'출석정지를 받았어요', sub:'학교폭력 6호, 교권 침해, 학칙 위반',
+  kw:['출석정지','6호','징계','정학'],
+  summary:'출석정지 기간은 미인정 결석입니다. 학교폭력 6호 조치는 4~6학년의 경우 특기사항에 조치 내용이 기록됩니다.',
+  docs:['조치 결정 통지 (학교가 처리)'], deadline:'학교가 처리하므로 따로 낼 것이 없습니다',
+  record:'결석일수 "미인정"란에 기록됩니다. 출석정지 자체의 사유는 특기사항에 적지 않지만, 4~6학년 학교폭력 조치사항은 적습니다.',
+  deep:{law:'별표 8 제2호 라목 1)~3), 기재요령 ➌', note:'학폭법 제17조제1항제6호, 교원지위법 제25조제2항제4호, 초·중등교육법 시행령 제31조제1항제4호 출석정지 모두 미인정.', remark:'예: "…제17조제1항제6호에 따른 출석정지 조치 5일(2025.04.15.)"', nice:'출결특기사항등록'}},
+ {id:'teacher-right', g:['pub'], kind:'ok', title:'교권보호 관련 분리조치·특별교육이에요', sub:'교원지위법에 따른 조치',
+  kw:['교권','분리조치','교권보호위원회','교원지위법','특별교육'],
+  summary:'불가피하게 학교 밖에서 분리조치를 받거나, 지역교권보호위원회 참석, 사회봉사·특별교육·심리치료로 빠진 날은 출석으로 인정됩니다.',
+  docs:['조치 결정 통지 (학교가 처리)'], deadline:'학교가 처리하므로 따로 낼 것이 없습니다',
+  record:'출석인정 결석으로 사유를 적지 않습니다. 단, 교권 침해에 따른 출석정지는 미인정입니다.',
+  rel:['suspend'],
+  deep:{law:'별표 8 제2호 나목 12)', note:'보호자 인계 요청에 따른 가정학습(초·중등교육법 제20조의4제4항)도 출석인정. 전학 조치 이행 중 중간 학교장 허락 가정학습도 출석인정.', remark:'사유 미기재.', nice:'일일출결관리(담임용) › 출석인정 결석'}},
+ {id:'police', g:['pub'], kind:'ok', title:'경찰 선도프로그램에 참여해요', sub:'사랑의 교실, 마음나눔교실, 희망동행교실',
+  kw:['경찰','선도','사랑의 교실','소년','보호관찰','법원','대안교육'],
+  summary:'경찰관서의 선도프로그램 참여, 법원 소년부 조사·심리, 보호관찰소 교육 기간은 출석으로 인정됩니다.',
+  docs:['해당 기관의 참여 확인 (학교가 처리)'], deadline:'학교가 처리하므로 따로 낼 것이 없습니다',
+  record:'출석인정 결석으로 사유를 적지 않습니다.',
+  deep:{law:'별표 8 제2호 나목 2)·9)', note:'소년분류심사원 위탁·1개월 이내 소년원 송치, 대안교육과정 이수도 출석인정(참고자료 5).', remark:'사유 미기재.', nice:'일일출결관리(담임용) › 출석인정 결석'}},
+ {id:'public', g:['pub'], kind:'ok', title:'공적 의무로 빠져요', sub:'증인 출두, 투표, 학업중단 숙려제',
+  kw:['증인','법원 출두','투표','선거','숙려','공적'],
+  summary:'증인 출두 등 공적 의무, 투표에 직접 필요한 시간, 학업중단 숙려 기간은 출석으로 인정됩니다.',
+  docs:['해당 기관의 확인 서류'], deadline:'학교 안내에 따름',
+  record:'출석인정 결석으로 사유를 적지 않습니다.',
+  deep:{law:'별표 8 제2호 나목 2)·5)·10)', note:'사전투표는 교육활동에 지장 없는 시간에 참여하도록 안내하며, 그로 인한 결석은 출석인정 불가. 숙려 기간은 시도교육감 기준.', remark:'사유 미기재.', nice:'일일출결관리(담임용) › 출석인정 결석'}},
+
+ {id:'academy', g:['etc'], kind:'no', title:'학원 수업 때문에 빠졌어요', sub:'예술·체육 학원 포함',
+  kw:['학원','레슨','예체능','피아노','무용','태권도','과외'],
+  summary:'학원 수강(예술·체육계 포함)으로 빠진 날은 미인정 결석입니다.',
+  docs:['따로 낼 서류는 없습니다'], deadline:'낼 서류가 없으니 기한도 없습니다',
+  record:'결석일수 "미인정"란에 기록됩니다. 학교 기준에 따라 사유가 적힐 수 있습니다.',
+  deep:{law:'별표 8 제2호 라목 7)', note:'합당하지 않은 사유의 대표 예시.', remark:'학교 기준에 따라 사유 입력 가능.', nice:'일일출결관리(담임용) › 미인정'}},
+ {id:'truancy', g:['etc'], kind:'no', title:'그냥 안 갔어요', sub:'태만, 가출, 출석 거부',
+  kw:['무단','태만','가출','출석 거부','안 감','결석 거부'],
+  summary:'태만, 가출, 출석 거부처럼 고의로 빠진 날은 미인정 결석입니다.',
+  docs:['따로 낼 서류는 없습니다'], deadline:'낼 서류가 없으니 기한도 없습니다',
+  record:'결석일수 "미인정"란에 기록됩니다. 장기화되면 미인정결석 학생 관리 절차가 시작됩니다.',
+  deep:{law:'별표 8 제2호 라목 6)', note:'미인정결석 학생 관리는 별도 지침(담임·담당자·관리자 단계) 참조.', remark:'학교 기준에 따라 사유 입력 가능.', nice:'일일출결관리(담임용) › 미인정'}},
+ {id:'crime', g:['etc','pub'], kind:'no', title:'수사·재판으로 빠졌어요', sub:'범법행위로 인한 책임 있는 사유',
+  kw:['수사','체포','구속','경찰 조사','범법','교도소'],
+  summary:'범법행위의 피의자로 수사기관 출석, 체포, 구속 등으로 빠진 날은 미인정 결석입니다. 나중에 최종 무죄가 확정되면 출석인정 결석으로 바뀝니다.',
+  docs:['따로 낼 서류는 없습니다'], deadline:'낼 서류가 없으니 기한도 없습니다',
+  record:'결석일수 "미인정"란에 기록됩니다.',
+  deep:{law:'별표 8 제2호 라목 5)', note:'항소심·상고심 진행 중은 제외하고, 최종 무죄판결 시 출석인정으로 변경 입력.', remark:'학교 기준에 따라 사유 입력 가능.', nice:'일일출결관리(담임용) › 미인정'}},
+ {id:'homestudy', g:['etc','pub'], kind:'no', title:'학교가 정한 가정학습 기간이에요', sub:'초·중등교육법 시행령 제31조제6항',
+  kw:['가정학습','징계','학칙','가정 학습'],
+  summary:'학칙 위반 등으로 학교가 결정한 가정학습 기간(초·중등교육법 시행령 제31조제6항)은 미인정 결석입니다. 감염병 위기 시 체험학습 사유로 승인받은 가정학습과는 다릅니다.',
+  docs:['학교 결정에 따름'], deadline:'학교가 처리하므로 따로 낼 것이 없습니다',
+  record:'결석일수 "미인정"란에 기록됩니다.',
+  rel:['trip','handover'],
+  deep:{law:'별표 8 제2호 라목 4)', note:'체험학습 사유의 가정학습(출석인정)과 혼동 주의. 보호자 인계 요청에 따른 가정학습은 출석인정.', remark:'출석정지와 달리 별도 제한 없음. 학교 기준에 따라 사유 입력 가능.', nice:'일일출결관리(담임용) › 미인정'}},
+ {id:'handover', g:['pub','fam'], kind:'ok', title:'학교 요청으로 아이를 데려와 집에서 지내요', sub:'보호자 인계 요청에 따른 가정학습',
+  kw:['인계','데려','집에서','보호자','가정학습','수업 방해'],
+  summary:'학교가 초·중등교육법 제20조의4에 따라 보호자에게 학생 인계를 요청해 집에서 가정학습을 한 날은 출석으로 인정됩니다.',
+  docs:['학교의 인계 요청 기록 (학교가 처리)'], deadline:'학교가 처리하므로 따로 낼 것이 없습니다',
+  record:'출석인정 결석으로 사유를 적지 않습니다.',
+  rel:['homestudy','teacher-right'],
+  deep:{law:'별표 8 제2호 나목 12)', note:'초·중등교육법 제20조의4제4항 보호자 인계 요청에 따른 가정학습.', remark:'사유 미기재.', nice:'일일출결관리(담임용) › 출석인정 결석'}},
+ {id:'protect', g:['fam','pub'], kind:'ok', title:'시청·구청 보호기관에서 지내고 있어요', sub:'아동학대·가정폭력 분리보호',
+  kw:['분리보호','아동학대','가정폭력','보호기관','쉼터','지자체','구청','시청'],
+  summary:'아동학대·가정폭력 예방을 위해 지방자치단체가 분리보호하는 기간은 위탁학생으로 관리되어 출석으로 처리됩니다. 학적 변동 없이 다른 학교에서 교육을 받을 수도 있습니다.',
+  docs:['지자체의 보호 통보 (학교가 처리)'], deadline:'학교가 처리하므로 따로 낼 것이 없습니다',
+  record:'위탁학생으로 관리되어 수업일수와 비교과는 인정, 교과 성적은 미인정입니다. 보호기관 이름이 드러나지 않도록 봉사활동 장소 등은 재적교로 입력합니다.',
+  deep:{law:'별표 8 제5호, ➍ 기타 표(지방자치단체)', note:'학습 결손 방지를 위해 교육감(교육장)이 지정한 학교에서 학적변동 없이 교육 지원 가능. 교육부 학생맞춤통합지원과-1026(2024.8.30.) 참조.', remark:'위탁학생 등록 시 교육구분 "기타". 기관명 비노출.', nice:'학적 › 위탁학생관리 › 위탁학생등록'}},
+ {id:'transfer', g:['etc'], kind:'no', title:'방학 중에 전학 가요', sub:'두 학교 개학일이 다르면 결석이 생깁니다',
+  kw:['전학','이사','전출','전입','개학','방학','학적','전학 간다'],
+  summary:'전학은 "전학 간다"고 말한 날이 아니라 나이스에서 전출·전입이 처리된 날에 끝납니다. 새 학교가 전입을 받아 처리하기 전까지는 지금 학교 학생이라서, 지금 학교 개학일부터 전출 처리 전날까지 안 나오면 지금 학교의 결석으로 남습니다. 사유가 없으면 미인정 결석입니다.',
+  docs:['따로 낼 서류는 없습니다'], steps:['새 학교에 미리 연락해 전입 처리일을 지금 학교 개학일 이전으로 맞춥니다.','그게 어려우면 지금 학교에 사정을 알리고, 개학일 등교 또는 처리 방법을 상의합니다.'],
+  deadline:'지금 학교 개학일 전날까지',
+  record:'전출교와 전입교의 수업일수·결석은 합산되므로, 이 기간의 미인정 결석은 그대로 생활기록부에 남습니다. 미리 막는 것이 최선입니다.',
+  example:'7월 방학식 날 2학기에 전학한다고 담임에게 알렸습니다. 지금 학교는 8월 21일, 새 학교는 8월 27일 개학이었습니다. 담임은 전학 갔으니 안 오는 게 당연하다고 여겼고, 학부모는 새 학교가 개학 전이니 안 가는 게 당연하다고 여겼습니다. 새 학교 개학일에 전입 처리되자 8월 21일~26일이 지금 학교의 미인정 결석으로 남았습니다.',
+  calc:'transfer',
+  deep:{law:'기재요령 ➍ 전·입학생 출결 합산, 별표 8 제2호 라목', note:'학부모가 전학을 예고해도 전입교의 전학 요청(전입 처리)이 오기 전에는 학적을 넘길 수 없음. 개학 전에 전입 처리가 안 됐으면 학부모에게 개학일 등교 또는 전입 일정 조정을 안내. 전출일과 전입일이 같으면 전입일만 수업일수로 계산. 공백 기간을 기타결석(학교장 인정)으로 볼 수 있는지는 학교·교육청 해석에 따르므로 사전 안내가 우선.', remark:'미인정 처리 시 학교 기준에 따라 사유 입력 가능.', nice:'학적 › 전출입관리 › 전출 / 일일출결관리(담임용)'}},
+ {id:'fee', g:['etc'], kind:'etc', title:'공납금을 못 내서 빠졌어요', sub:'공납금 미납',
+  kw:['공납금','미납','급식비','수업료'],
+  summary:'공납금 미납을 사유로 빠진 날은 기타 결석입니다. 하루라도 사유가 적힙니다.',
+  docs:['학교 안내에 따름'], deadline:'학교가 처리하므로 따로 낼 것이 없습니다',
+  record:'결석일수 "기타"란에 기록되고 특기사항에 사유가 적힙니다.',
+  deep:{law:'별표 8 제2호 마목 2)', note:'', remark:'기타결석은 1일이라도 사유 입력.', nice:'출결특기사항등록'}},
+ {id:'other', g:['etc'], kind:'etc', title:'그 밖의 합당한 사유예요', sub:'학교장이 인정하는 경우',
+  kw:['기타','합당','학교장 인정','부득이','사정'],
+  summary:'위 어디에도 해당하지 않지만 합당한 사유라고 학교장이 인정하면 기타 결석입니다. 학교장이 인정하지 않으면 미인정 결석이 됩니다.',
+  docs:['결석신고서 + 사정을 확인할 수 있는 자료'], deadline:'학교 안내에 따라 제출',
+  record:'결석일수 "기타"란에 기록되고 특기사항에 사유가 반드시 적힙니다.',
+  deep:{law:'별표 8 제2호 마목 4)', note:'상위 법령·행정규칙에서 출석으로 인정하도록 한 경우는 출석인정 결석으로 처리 가능(나목 12).', remark:'기타결석은 1일이라도 사유 입력.', nice:'출결특기사항등록'}},
+];
+
+/* 2026~2027 공휴일 (대체공휴일 포함) */
+const HOLIDAYS = new Set(['2026-01-01','2026-02-16','2026-02-17','2026-02-18','2026-03-01','2026-03-02','2026-05-01','2026-05-05','2026-05-24','2026-05-25','2026-06-03','2026-06-06','2026-08-15','2026-08-17','2026-09-24','2026-09-25','2026-09-26','2026-09-28','2026-10-03','2026-10-05','2026-10-09','2026-12-25',
+ '2027-01-01','2027-02-06','2027-02-07','2027-02-08','2027-02-09','2027-03-01','2027-05-05','2027-05-13','2027-06-06','2027-06-07','2027-08-15','2027-08-16','2027-09-14','2027-09-15','2027-09-16','2027-10-03','2027-10-04','2027-10-09','2027-10-11','2027-12-25','2027-12-27']);
+const FAMILY = [
+  {v:'wed',  t:'형제·자매·부·모의 결혼', d:1, death:false},
+  {v:'adopt',t:'학생 본인의 입양', d:20, death:false},
+  {v:'d5',   t:'부모·조부모·외조부모 사망', d:5, death:true},
+  {v:'d3a',  t:'증조부모·외증조부모(부모의 조부모·외조부모) 사망', d:3, death:true},
+  {v:'d3b',  t:'형제·자매 및 그 배우자 사망', d:3, death:true},
+  {v:'d3c',  t:'부모의 형제·자매(삼촌·고모·이모·외삼촌 등) 및 그 배우자 사망', d:3, death:true},
+];
+
+/* ---------- 유틸 ---------- */
+const $ = s=>document.querySelector(s);
+const esc = s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const svg = id=>`<svg aria-hidden="true"><use href="#${id}"/></svg>`;
+const badge=(k,lg)=>`<span class="badge b-${KIND[k].cls}${lg?' lg':''}">${KIND[k].short}</span>`;
+const fmt=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const kfmt=d=>`${d.getMonth()+1}월 ${d.getDate()}일(${'일월화수목금토'[d.getDay()]})`;
+const parse=s=>{const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+const today=()=>{const d=new Date();d.setHours(0,0,0,0);return d};
+
+/* ---------- 라우팅 (URL 변경 없음, 뒤로가기 지원) ---------- */
+let state={v:'home'};
+function go(next,replace){
+  state=next;
+  if(replace) history.replaceState(next,'' ,location.pathname+location.search);
+  else history.pushState(next,'',location.pathname+location.search);
+  render(); window.scrollTo({top:0});
+}
+window.addEventListener('popstate',e=>{ state=e.state||{v:'home'}; render(); });
+
+/* ---------- 렌더 ---------- */
+function render(){
+  const app=$('#app');
+  if(state.v==='home') app.innerHTML=homeHTML();
+  else if(state.v==='group') app.innerHTML=groupHTML(state.g);
+  else if(state.v==='case') app.innerHTML=caseHTML(state.id);
+  else if(state.v==='today') app.innerHTML=todayHTML();
+  document.body.classList.toggle('hide-bar', state.v==='case'||state.v==='today');
+  bind();
+}
+
+function seasonBanner(){
+  const m=new Date().getMonth()+1, d=new Date().getDate();
+  const on=(m===6&&d>=20)||m===7||m===8||(m===12&&d>=15)||m===1||m===2;
+  if(!on) return '';
+  return `<button class="season" data-case="transfer"><span class="sico">!</span><span class="st"><b>방학 중에 전학하나요?</b><small>두 학교 개학일이 다르면 그 사이가 결석으로 남을 수 있어요</small></span>${svg('i-chev')}</button>`;
+}
+function doorHTML(g){
+  const order=['ok','ill','etc','no'];
+  const kinds=[...new Set(CASES.filter(c=>c.g.includes(g.id)).map(c=>c.kind))].sort((a,b)=>order.indexOf(a)-order.indexOf(b));
+  return `<button class="door" data-g="${g.id}" style="--t:var(--t-${g.id})"><span class="ico">${svg(g.ico)}</span><b>${g.name}</b><small>${g.desc}</small><span class="dots">${kinds.map(k=>`<i class="d-${KIND[k].cls}">${KIND[k].short}</i>`).join('')}</span></button>`;
+}
+function homeHTML(){
+  return `
+  <section class="band hero"><div class="wrap hero-in">
+    <h1>이 사유로 빠지면<br><em>어떻게 처리</em>되나요?</h1>
+    <div class="search">
+      ${svg('i-search')}
+      <input id="q" type="search" placeholder="말하듯 적어보세요 · 열이 나요" autocomplete="off" value="${esc(state.q||'')}">
+      <button class="clr" id="qclr" aria-label="지우기" ${state.q?'':'hidden'}>${svg('i-x')}</button>
+    </div>
+    <div class="chiprow"><span class="lbl">예시</span>${['할머니 장례','독감','가족여행','학원','미세먼지','대회 참가','생리통'].map(c=>`<button class="chip" data-chip="${c}">${c}</button>`).join('')}</div>
+    <div id="results" class="results"></div>
+    ${seasonBanner()}
+  </div></section>
+
+  <section class="band"><div class="wrap sec">
+    <span class="sec-label">사유로 찾기</span>
+    <h2 class="sec-title">무슨 일로 못 갔나요?</h2>
+    <div class="doors">${GROUPS.map(doorHTML).join('')}</div>
+  </div></section>
+
+  <section class="band"><div class="wrap sec" style="padding-top:0">
+    <span class="sec-label">자세한 안내는 여기서</span>
+    <h2 class="sec-title">감염병과 체험학습은 전용 사이트가 있습니다</h2>
+    <div class="sites">
+      <a class="site" href="${LINK_DISEASE.href}" target="_blank" rel="noopener"><span class="ico">${svg('i-virus')}</span><span class="lt"><b>${LINK_DISEASE.title}</b><small>${LINK_DISEASE.sub}</small></span><span class="go">${svg('i-out')}</span></a>
+      <a class="site" href="${LINK_TRIP.href}" target="_blank" rel="noopener"><span class="ico">${svg('i-trip')}</span><span class="lt"><b>학교장 허가 교외체험학습 안내</b><small>${LINK_TRIP.sub}</small></span><span class="go">${svg('i-out')}</span></a>
+    </div>
+  </div></section>
+
+  <section class="band sand"><div class="wrap">
+  <details class="basics">
+    <summary><div class="st"><h2>출결 기본 상식 <span class="fourdots"><i style="background:var(--ok)"></i><i style="background:var(--ill)"></i><i style="background:var(--etc)"></i><i style="background:var(--no)"></i></span></h2><span>결석 네 가지 구분 · 지각·조퇴·결과의 차이</span></div><span class="open-btn">펼치기${svg('i-down')}</span></summary>
+    <div class="bbody">
+    <div class="sec">
+    <h3>결석은 네 가지로 나뉩니다</h3>
+    <p class="lead">같은 "빠진 날"이라도 사유에 따라 생활기록부에 남는 방식이 다릅니다.</p>
+    <div class="fourway">
+      <div class="fw ok"><b>출석인정 결석</b><span>출석한 것으로 봅니다. 결석일수에 들어가지 않고 사유도 적지 않습니다. 감염병, 경조사, 체험학습, 대회 참가 등.</span></div>
+      <div class="fw ill"><b>질병 결석</b><span>아파서 빠진 날. 결석일수 "질병"란에 일수가 남습니다. 사유는 학교 기준에 따라 적을 수 있지만 병명은 피합니다.</span></div>
+      <div class="fw etc"><b>기타 결석</b><span>간병, 가사 조력 등 학교장이 인정한 부득이한 사정. 하루라도 특기사항에 사유가 반드시 적힙니다.</span></div>
+      <div class="fw no"><b>미인정 결석</b><span>학원, 어학연수, 기간 초과 여행, 무단결석, 출석정지. 결석일수 "미인정"란에 남습니다.</span></div>
+    </div>
+    </div>
+    <div class="sec">
+    <h3>지각·조퇴·결과는 무엇이 다른가요?</h3>
+    <div class="tl">${timelineSVG()}
+      <div class="legend">
+        <div><b>지각</b><span>등교시각 이후, 하교시각 전에 학교에 온 경우</span></div>
+        <div><b>조퇴</b><span>등교시각과 하교시각 사이에 집에 간 경우</span></div>
+        <div><b>결과</b><span>학교에는 있었지만 수업시간 일부·전부에 빠진 경우</span></div>
+      </div>
+      <div class="note">${svg('i-info')}<span>등교·하교시각은 학교장이 정하므로 학교마다 다릅니다. 같은 날 지각·조퇴·결과가 함께 생기면 한 가지로만 처리하고, 결과는 하루에 몇 번이어도 1회로 셉니다. 횟수가 수료에 영향을 주지는 않습니다.</span></div>
+    </div>
+    </div>
+    </div>
+  </details>
+  </div></section>
+
+  <section class="band"><div class="wrap sec">
+    <span class="sec-label">참고</span>
+    <h2 class="sec-title">자주 묻는 질문</h2>
+    <div class="faq">
+      <details class="q"><summary>지각·조퇴·결과도 질병·미인정으로 나뉘나요?</summary><div class="a">네. 결석과 똑같이 사유에 따라 질병·미인정·기타로 나누어 횟수를 셉니다. 병원 진료로 늦으면 질병 지각, 학원 때문에 일찍 가면 미인정 조퇴입니다. 출석인정 사유(경조사, 체험학습 등)로 인한 지각·조퇴·결과는 횟수에 넣지 않습니다.</div></details>
+      <details class="q"><summary>개근은 어떤 기준인가요?</summary><div class="a">한 해 동안 결석·지각·조퇴·결과가 한 번도 없는 경우입니다. 출석인정 결석은 출석으로 보므로 개근에 영향이 없습니다. 개근상·정근상 수상 기준은 교육청과 학교 방침에 따라 다를 수 있습니다.</div></details>
+      <details class="q"><summary>며칠 이상 결석하면 유급이 되나요?</summary><div class="a">학년 수료에는 그 학년 수업일수(초등 190일 이상)의 3분의 2 이상 출석이 필요합니다. 출석인정 결석은 출석으로 계산됩니다. 지각·조퇴·결과는 횟수와 관계없이 수료에 영향을 주지 않습니다.</div></details>
+      <details class="q"><summary>결석신고서는 꼭 종이로 내야 하나요?</summary><div class="a">나이스 학부모 서비스로 낸 결석신고서와 증빙은 전자화문서로 인정되어 따로 출력·원본 제출이 필요 없습니다. 학부모 의견서나 담임 확인서는 신청 화면 해당란에 적는 것으로 갈음할 수 있습니다.</div></details>
+      <details class="q"><summary>특기사항에는 무엇이 적히나요?</summary><div class="a">기타 결석은 하루라도 사유가 적힙니다. 질병·미인정 결석과 횟수가 많은 지각·조퇴·결과는 학교가 정한 기준(예: 연속 5일 이상, 10회 이상)에 따라 적을 수 있습니다. 출석인정 결석은 사유를 적지 않습니다. 해외 봉사·어학연수·교외 대회 참가처럼 생활기록부에 쓸 수 없는 내용은 특기사항에도 쓸 수 없습니다.</div></details>
+      <details class="q"><summary>방학 중 전학하면 개학일이 다른 기간은 어떻게 되나요?</summary><div class="a">새 학교가 전입 처리를 하기 전까지는 지금 학교 학생입니다. 지금 학교 개학일부터 전출 처리 전날까지 안 나오면 지금 학교의 결석(사유 없으면 미인정)으로 남습니다. 전입 처리를 지금 학교 개학일 전에 마치도록 새 학교와 미리 날짜를 맞추세요. <button class="flink" data-case="transfer" style="color:var(--accent);background:none;border:0;padding:0;font:inherit;text-decoration:underline;cursor:pointer">전학 공백 계산기 →</button></div></details>
+      <details class="q"><summary>전학 온 아이의 출결은 어떻게 합산되나요?</summary><div class="a">전출교와 전입교의 수업일수·결석·지각·조퇴·결과를 합산하되 겹치는 기간은 뺍니다. 전출일과 전입일이 같으면 전입일만 수업일수로 계산합니다.</div></details>
+    </div>
+  </div></section>
+
+  <section class="band foot"><div class="wrap footer">
+    <div class="fbrand"><span class="mark"><svg viewBox="0 0 26 26" aria-hidden="true"><rect x="1" y="1" width="24" height="24" rx="6" fill="none" stroke="var(--accent)" stroke-width="1.6"/><circle cx="8.5" cy="8.5" r="3.4" fill="var(--ok)"/><circle cx="17.5" cy="8.5" r="3.4" fill="var(--ill)"/><circle cx="8.5" cy="17.5" r="3.4" fill="var(--etc)"/><circle cx="17.5" cy="17.5" r="3.4" fill="var(--no)"/></svg></span><b>출결 한눈에</b><span>초등학교 출결을 한눈에</span></div>
+    <div class="fnotice">${svg('i-info')}<p><b>교육청·학교의 공식 사이트가 아닙니다.</b> 현직 교사가 기재요령을 읽기 쉽게 정리한 비영리 참고 자료로, 교육부·교육청과 관계가 없고 법적 효력이 없습니다. 실제 처리는 자녀가 다니는 학교의 안내가 우선하며, 확실하지 않으면 담임 선생님께 확인하세요.</p></div>
+    <div class="fmeta"><span>만든이 2026 최창훈</span><i></i><a href="https://edu-hub-alpha-ten.vercel.app/" target="_blank" rel="noopener">학교 연장통의 도구</a><i></i><span>비영리</span><i></i><button type="button" class="flink" data-lic>출처·라이선스 보기</button></div>
+  </div></section>`;
+}
+
+function timelineSVG(){
+  return `<svg viewBox="0 0 680 150" role="img" aria-label="하루 등교 시간표 위에 지각·조퇴·결과를 표시한 그림">
+    <defs><style>.tx{font-family:var(--body);font-size:12.5px;fill:var(--ink-2)}.tb{font-family:var(--display);font-size:13.5px;font-weight:700}</style></defs>
+    <line x1="40" y1="78" x2="640" y2="78" stroke="var(--line)" stroke-width="2"/>
+    <rect x="120" y="70" width="440" height="16" rx="8" fill="var(--accent-soft)"/>
+    <line x1="120" y1="58" x2="120" y2="98" stroke="var(--accent)" stroke-width="2"/>
+    <line x1="560" y1="58" x2="560" y2="98" stroke="var(--accent)" stroke-width="2"/>
+    <text x="120" y="46" text-anchor="middle" class="tx" fill="var(--ink)">등교시각</text>
+    <text x="560" y="46" text-anchor="middle" class="tx" fill="var(--ink)">하교시각</text>
+    <text x="340" y="48" text-anchor="middle" class="tx">수업시간</text>
+    <path d="M150 78 L150 116" stroke="var(--ill)" stroke-width="2" stroke-dasharray="3 3"/>
+    <circle cx="150" cy="78" r="6" fill="var(--ill)"/>
+    <text x="150" y="134" text-anchor="middle" class="tb" fill="var(--ill)">지각</text>
+    <text x="150" y="147" text-anchor="middle" class="tx">늦게 등교</text>
+    <path d="M340 78 L340 116" stroke="var(--etc)" stroke-width="2" stroke-dasharray="3 3"/>
+    <rect x="300" y="72" width="80" height="12" rx="6" fill="var(--etc)" opacity=".85"/>
+    <text x="340" y="134" text-anchor="middle" class="tb" fill="var(--etc)">결과</text>
+    <text x="340" y="147" text-anchor="middle" class="tx">수업 일부 빠짐</text>
+    <path d="M500 78 L500 116" stroke="var(--no)" stroke-width="2" stroke-dasharray="3 3"/>
+    <circle cx="500" cy="78" r="6" fill="var(--no)"/>
+    <text x="500" y="134" text-anchor="middle" class="tb" fill="var(--no)">조퇴</text>
+    <text x="500" y="147" text-anchor="middle" class="tx">일찍 하교</text>
+  </svg>`;
+}
+
+function crumbHTML(parts){ /* parts: [{label, go}] 마지막은 현재 */
+  return `<nav class="crumb">${parts.map((x,i)=>i<parts.length-1?`<button ${x.go}>${esc(x.label)}</button>${svg('i-chev')}`:`<span>${esc(x.label)}</span>`).join('')}</nav>`;
+}
+function rowHTML(c,q){
+  let t=esc(c.title), s=esc(c.sub);
+  if(q){const re=new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'); t=t.replace(re,'<mark>$1</mark>'); s=s.replace(re,'<mark>$1</mark>');}
+  return `<button class="row k-${KIND[c.kind].cls}" data-case="${c.id}"><span class="bar"></span><span class="t"><b>${t}</b><span>${s}</span></span>${badge(c.kind)}<span class="arr">${svg('i-chev')}</span></button>`;
+}
+const KORDER=['ok','ill','etc','no'];
+function groupHTML(gid){
+  const g=GROUPS.find(x=>x.id===gid); const list=CASES.filter(c=>c.g.includes(gid));
+  let body;
+  if(list.length>6){
+    body=KORDER.map(k=>{const l=list.filter(c=>c.kind===k); return l.length?`<div class="rel"><h3 class="k-${KIND[k].cls}-t">${KIND[k].full}</h3><div class="rows">${l.map(c=>rowHTML(c)).join('')}</div></div>`:''}).join('');
+  } else body=`<div class="rows">${list.map(c=>rowHTML(c)).join('')}</div>`;
+  return `
+  <section class="band tint" style="--t:var(--t-${g.id})"><div class="wrap">
+    ${crumbHTML([{label:'처음',go:'data-home'},{label:g.name}])}
+    <div class="ghead"><span class="ico">${svg(g.ico)}</span><div><h1>${g.name}</h1><p>${g.desc}</p></div></div>
+  </div></section>
+  <section class="band"><div class="wrap sec">
+    ${gid==='dis'?`<a class="gbanner" href="${LINK_DISEASE.href}" target="_blank" rel="noopener">${svg('i-virus')}<span class="lt"><b>병명별 등교중지 기간은 「감염병 등교중지 안내」에서</b><small>${LINK_DISEASE.sub}</small></span>${svg('i-out')}</a>`:''}
+    ${gid==='trip'?`<a class="gbanner" href="${LINK_TRIP.href}" target="_blank" rel="noopener">${svg('i-trip')}<span class="lt"><b>신청 기한과 사유 자가진단은 「교외체험학습 안내」에서</b><small>${LINK_TRIP.sub}</small></span>${svg('i-out')}</a>`:''}
+    <span class="sec-label">어떤 경우인가요?</span>
+    ${body}
+  </div></section>`;
+}
+
+function todayHTML(){
+  return `
+  <section class="band tint" style="--t:var(--accent-soft)"><div class="wrap">
+    ${crumbHTML([{label:'처음',go:'data-home'},{label:'오늘 결석했어요'}])}
+    <div class="ghead"><span class="ico">${svg('i-calc')}</span><div><h1>오늘 결석했어요</h1><p>지금 할 일부터 5일 안에 할 일까지, 순서대로</p></div></div>
+  </div></section>
+  <section class="band"><div class="wrap sec">
+    <ol class="tline">
+      <li class="now"><span class="n">1</span><div class="b"><span class="when">지금</span><h3>아침에 담임 선생님께 알립니다</h3><p>등교 시각 전에 전화나 문자, 학급 소통앱으로 결석 사실과 사유를 알립니다. 미세먼지로 인한 결석은 이 사전 연락이 있어야 질병 결석으로 인정됩니다.</p></div></li>
+      <li><span class="n">2</span><div class="b"><span class="when">오늘 중</span><h3>어떤 결석인지 확인합니다</h3><p>사유에 따라 출석인정·질병·기타·미인정으로 나뉘고 필요한 서류가 다릅니다. 아래 사유 목록이나 처음 화면의 검색에서 찾아보세요.</p></div></li>
+      <li><span class="n">3</span><div class="b"><span class="when">오늘 중</span><h3>결석신고서를 냅니다</h3><p>나이스 학부모 서비스에서 내면 전자문서로 인정되어 종이 출력이나 원본 제출이 필요 없습니다. 학부모 의견서가 필요한 경우도 신청 화면의 해당란에 적는 것으로 갈음됩니다.</p></div></li>
+      <li><span class="n">4</span><div class="b"><span class="when">5일 안에</span><h3>증빙 서류를 냅니다</h3><p>질병 결석은 결석을 시작한 날부터 5일 안에 서류를 내야 합니다. 2일 이내의 가끔 있는 결석은 학부모 의견서·처방전·담임 확인서 중 하나면 되고, 그보다 길면 의사 진단서나 의견서가 필요합니다.</p>${calcHTML('deadline')}</div></li>
+    </ol>
+  </div></section>
+  <section class="band"><div class="wrap sec" style="padding-top:0">
+    <span class="sec-label">결석 사유별 안내 보기</span>
+    <div class="rows">${['illness','disease','family','trip'].map(i=>rowHTML(CASES.find(c=>c.id===i))).join('')}</div>
+    <p class="disclaim">교육청·학교 공식 안내가 아닌 참고 자료입니다. 학교의 안내가 우선합니다.</p>
+  </div></section>`;
+}
+
+function splitLead(t){ const m=t.match(/^(.*?[다요]\.)\s*(.*)$/s); return m?[m[1],m[2]]:[t,'']; }
+function diagramHTML(c){
+  const T=(x,y,s,cls,anchor='middle')=>`<text x="${x}" y="${y}" text-anchor="${anchor}" class="${cls}">${s}</text>`;
+  const st=`<defs><style>.dl{font-family:var(--body);font-size:19px;fill:var(--ink-2)}.db{font-family:var(--display);font-size:22px;font-weight:700;fill:var(--ink)}</style></defs>`;
+  if(c.calc==='deadline') return `<svg viewBox="0 0 680 120" role="img" aria-label="결석 시작일부터 5일 안에 서류를 내는 흐름">${st}
+    <line x1="60" y1="64" x2="620" y2="64" stroke="var(--line)" stroke-width="2"/>
+    <rect x="120" y="56" width="400" height="16" rx="8" fill="var(--ill-bg)"/>
+    <circle cx="120" cy="64" r="8" fill="var(--ill)"/><circle cx="520" cy="64" r="8" fill="var(--accent)"/>
+    ${T(120,38,'결석 시작','db')}${T(520,38,'서류 마감','db')}${T(320,46,'5일 이내','dl')}
+    ${T(120,100,'학교에 먼저 알림','dl')}${T(520,100,'나이스 또는 종이 제출','dl')}</svg>`;
+  if(c.calc==='family') return `<svg viewBox="0 0 680 120" role="img" aria-label="경조사 발생일부터 정해진 일수만큼 출석이 인정되는 흐름">${st}
+    <line x1="60" y1="64" x2="620" y2="64" stroke="var(--line)" stroke-width="2"/>
+    ${[0,1,2,3,4,5,6].map(i=>{const x=120+i*70; const skip=i===2||i===3; return `<rect x="${x-28}" y="52" width="56" height="24" rx="6" fill="${skip?'var(--line-2)':'var(--ok-bg)'}"/>${T(x,69,skip?(i===2?'토':'일'):['1일','2일','','','3일','4일','5일'][i],'dl')}`}).join('')}
+    <circle cx="120" cy="64" r="5" fill="var(--ok)"/>
+    ${T(120,36,'사유 발생일','db')}${T(540,36,'인정 일수만큼','db')}
+    ${T(340,104,'토·일·공휴일은 건너뜁니다','dl')}</svg>`;
+  if(c.calc==='transfer') return `<svg viewBox="0 0 680 130" role="img" aria-label="지금 학교 개학일부터 전입 처리일 전까지가 결석으로 남는 흐름">${st}
+    <rect x="60" y="56" width="560" height="18" rx="9" fill="var(--line-2)"/>
+    <rect x="200" y="56" width="260" height="18" rx="9" fill="var(--no-bg)"/>
+    <rect x="460" y="56" width="160" height="18" rx="9" fill="var(--ok-bg)"/>
+    <line x1="200" y1="44" x2="200" y2="86" stroke="var(--no)" stroke-width="2"/>
+    <line x1="460" y1="44" x2="460" y2="86" stroke="var(--ok)" stroke-width="2"/>
+    ${T(200,34,'지금 학교 개학','db')}${T(460,34,'새 학교 전입 처리','db')}
+    <text x="330" y="71" text-anchor="middle" class="db" style="fill:var(--no);font-size:19px">지금 학교의 결석</text>
+    
+    ${T(340,110,'학적은 전입 처리된 날에 넘어갑니다','dl')}</svg>`;
+  return '';
+}
+function caseHTML(id){
+  const c=CASES.find(x=>x.id===id); const k=KIND[c.kind]; const g=GROUPS.find(x=>x.id===c.g[0]);
+  const rel=(c.rel||[]).map(r=>CASES.find(x=>x.id===r)).filter(Boolean);
+  const sib=CASES.filter(x=>x.id!==c.id && x.g.includes(g.id) && !rel.includes(x));
+  let tmode=false; try{tmode=localStorage.getItem('teacherOpen')==='1'}catch(e){}
+  const verdictSub = c.kind==='ok'?'출석으로 봅니다 · 결석일수에 들어가지 않아요' : c.kind==='ill'?'결석일수 "질병"란에 남아요' : c.kind==='etc'?'결석일수 "기타"란에 남고, 사유가 적혀요' : '결석일수 "미인정"란에 남아요';
+  const [lead,rest]=splitLead(c.summary);
+  const noDocs=c.docs.length===1 && /따로 낼 서류는 없습니다/.test(c.docs[0]);
+  let todo;
+  if(c.steps) todo=`<div class="todo act"><div class="todo-h">${svg('i-info')}해야 할 일</div><ol class="stp">${c.steps.map(d=>`<li>${esc(d)}</li>`).join('')}</ol><div class="todo-due"><span class="k">언제까지</span><b>${esc(c.deadline)}</b></div></div>`;
+  else if(noDocs) todo=`<p class="nodocs">${svg('i-info')}따로 낼 서류는 없습니다. ${/학교가 처리/.test(c.deadline)?'학교에서 처리합니다.':''}</p>`;
+  else todo=`<div class="todo"><div class="todo-h">${svg('i-info')}내야 할 것</div><ul class="chk">${c.docs.map(d=>`<li>${esc(d)}</li>`).join('')}</ul><div class="todo-due"><span class="k">기한</span><b>${esc(c.deadline)}</b></div></div>`;
+  const tnote=(label,body)=>`<div class="tnote"><span class="tl-k">선생님 메모 · ${label}</span><div>${body}</div></div>`;
+  const dia=diagramHTML(c);
+  return `
+  <div class="case-root${tmode?' teacher':''}" id="caseroot">
+  <section class="band tint" style="--t:var(--t-${g.id})"><div class="wrap">
+    <div class="crumb-row">${crumbHTML([{label:'처음',go:'data-home'},{label:g.name,go:`data-g="${g.id}"`},{label:c.title}])}
+      <div class="seg" role="tablist"><button class="${tmode?'':'on'}" data-seg="p">학부모용</button><button class="${tmode?'on':''}" data-seg="t">선생님용</button></div></div>
+    <h1 class="ctitle">${esc(c.title)}</h1>
+    <div class="verdict-face ${k.cls}"><b>${k.full}</b><span>${verdictSub}</span></div>
+  </div></section>
+
+  <section class="band"><div class="wrap cbody">
+    <div class="prose">
+      <p class="lead">${esc(lead)}</p>
+      ${rest?`<p class="rest">${esc(rest)}</p>`:''}
+      ${c.checks?`<ul class="ul" style="font-size:15px">${c.checks.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}
+    </div>
+    ${dia?`<div class="dia">${dia}</div>`:''}
+    ${tnote('근거', esc(c.deep.law)+(c.deep.note?`<br>${esc(c.deep.note)}`:''))}
+    ${todo}
+    ${tnote('나이스 입력', `<span class="path">${esc(c.deep.nice)}</span>`)}
+    ${c.link?`<a class="linkout" href="${c.link.href}" target="_blank" rel="noopener"><span class="lt"><b>${c.link.title}</b><small>${c.link.sub}</small></span>${svg('i-out')}</a>`:''}
+    <div class="recbox prose"><span class="k">생활기록부에는</span><p>${esc(c.record)}</p></div>
+    ${tnote('특기사항 입력', esc(c.deep.remark))}
+    ${c.tip?`<div class="note prose">${svg('i-info')}<span>${esc(c.tip)}</span></div>`:''}
+    ${c.example?`<figure class="example"><figcaption>실제 사례</figcaption><blockquote>${esc(c.example)}</blockquote></figure>`:''}
+    <button class="share primary" id="share" data-id="${c.id}">${svg('i-out')}이 안내 주소 복사해서 보내기</button>
+  </div></section>
+
+  ${c.calc?`<section class="band sand"><div class="wrap">${calcHTML(c.calc)}</div></section>`:''}
+
+  <section class="band"><div class="wrap sec">
+    ${rel.length?`<div class="rel"><h3>함께 보기</h3><div class="rows">${rel.map(r=>rowHTML(r)).join('')}</div></div>`:''}
+    ${sib.length?`<div class="rel"><h3>「${g.name}」의 다른 사유</h3><div class="hchips">${sib.map(r=>`<button class="hchip k-${KIND[r.kind].cls}" data-case="${r.id}"><i></i>${esc(r.title)}</button>`).join('')}</div></div>`:''}
+  </div></section>
+  <section class="band foot"><div class="wrap"><p class="disclaim" style="padding:0">교육청·학교 공식 안내가 아닌 참고 자료입니다. 학교마다 세부 기준이 다를 수 있으니 최종 처리는 담임 선생님께 확인하세요. <span class="cite" style="border:0;padding:0;display:inline">근거: 2026 학교생활기록부 기재요령(초등학교) 48~60쪽</span></p></div></section>
+  </div>`;
+}
+
+/* ---------- 계산기 ---------- */
+function calcHTML(type){
+  const t=fmt(today());
+  if(type==='deadline') return `<div class="calc" data-calc="deadline">
+    <h3>${svg('i-calc')}서류 제출 기한 계산</h3>
+    <div class="field"><label for="dl-start">결석을 시작한 날</label><input type="date" id="dl-start" value="${t}"></div>
+    <div class="field"><label for="dl-days">연속 결석 일수 (수업일 기준)</label><select id="dl-days"><option value="1">1일</option><option value="2">2일</option><option value="3">3일 이상</option></select></div>
+    <div class="out" id="dl-out"></div></div>`;
+  if(type==='family') return `<div class="calc" data-calc="family">
+    <h3>${svg('i-calc')}경조사 인정 기간 계산</h3>
+    <div class="field"><label for="fm-who">누구의 어떤 일인가요?</label><select id="fm-who">${FAMILY.map(f=>`<option value="${f.v}">${f.t} · ${f.d}일</option>`).join('')}</select></div>
+    <div class="field"><label for="fm-date">사유가 생긴 날</label><input type="date" id="fm-date" value="${t}"></div>
+    <label class="toggle" id="fm-nextwrap"><input type="checkbox" id="fm-next">그날은 빼고 다음 날부터 계산 (사망의 경우 가능)</label>
+    <div class="field"><label for="fm-extra">추가로 빼는 날 (재량휴업일, YYYY-MM-DD, 쉼표로 구분)</label><input type="text" id="fm-extra" placeholder="예) 2026-05-06, 2026-10-02"></div>
+    <div class="out" id="fm-out"></div></div>`;
+  if(type==='transfer') return `<div class="calc" data-calc="transfer">
+    <h3>${svg('i-calc')}전학 공백 계산</h3>
+    <div class="grid2">
+      <div class="field"><label for="tr-cur">지금 학교 개학일</label><input type="date" id="tr-cur" value="${fmt(today())}"></div>
+      <div class="field"><label for="tr-new">새 학교 전입 처리 예정일</label><input type="date" id="tr-new" value="${fmt(new Date(today().getTime()+6*864e5))}"></div>
+    </div>
+    <span class="hint">보통 새 학교 개학일에 전입 처리됩니다. 새 학교에 확인한 날짜를 넣으세요.</span>
+    <div class="out" id="tr-out"></div></div>`;
+  if(type==='athlete') return `<div class="calc" data-calc="athlete">
+    <h3>${svg('i-calc')}학생선수 출석인정 한도 (초등 20일)</h3>
+    <div class="field"><label for="at-days">대회·훈련 참가 일수</label><input type="number" id="at-days" min="0" value="0" inputmode="numeric"><span class="hint">국가대표·전국(소년)체전 참가분은 학교 심의를 거쳐 제외할 수 있습니다.</span></div>
+    <div class="grid3">
+      <div class="field"><label for="at-late">지각 (시간)</label><input type="number" id="at-late" min="0" value="0" inputmode="numeric"></div>
+      <div class="field"><label for="at-early">조퇴 (시간)</label><input type="number" id="at-early" min="0" value="0" inputmode="numeric"></div>
+      <div class="field"><label for="at-skip">결과 (시간)</label><input type="number" id="at-skip" min="0" value="0" inputmode="numeric"></div>
+    </div>
+    <div class="out" id="at-out"></div></div>`;
+  return '';
+}
+function runCalc(){
+  const dl=$('#dl-start'); if(dl){
+    const s=dl.value?parse(dl.value):today(); const d=new Date(s); d.setDate(d.getDate()+5);
+    const n=$('#dl-days').value; const left=Math.round((d-today())/864e5);
+    const wk=d.getDay(); let safe=null; if(wk===0||wk===6||HOLIDAYS.has(fmt(d))){safe=new Date(d); while(safe.getDay()===0||safe.getDay()===6||HOLIDAYS.has(fmt(safe))) safe.setDate(safe.getDate()-1);}
+    $('#dl-out').innerHTML=`<span class="sm">결석신고서 제출 기한 (결석 시작일 + 5일)</span><span class="big ${left<0?'no':'ok'}">${kfmt(d)}까지</span>
+      <span class="sm">${left<0?`기한이 ${-left}일 지났습니다. 학교에 바로 연락해 학교장이 정한 기한을 확인하세요.`:left===0?'오늘이 마지막 날입니다.':`오늘부터 ${left}일 남았습니다.`}</span>
+      ${safe?`<span class="sm">마감일이 주말·공휴일이라 학교가 쉽니다. 그 전 등교일인 <b>${kfmt(safe)}</b>까지 내는 것이 안전합니다.</span>`:''}
+      <span class="sm">${n==='3'?'의사 진단서 또는 의견서(병명·진료기간 기재)가 필요합니다.':'상습적이지 않은 2일 이내 결석이면 학부모 의견서·처방전·담임 확인서 중 하나로 됩니다.'}</span>
+      <span class="sm">학교장이 따로 정한 기한이 있으면 그 기한이 우선합니다.</span>`;
+  }
+  const fw=$('#fm-who'); if(fw){
+    const f=FAMILY.find(x=>x.v===fw.value); $('#fm-nextwrap').hidden=!f.death; if(!f.death) $('#fm-next').checked=false;
+    const start=$('#fm-date').value?parse($('#fm-date').value):today();
+    const extra=new Set($('#fm-extra').value.split(/[,\s]+/).filter(x=>/^\d{4}-\d{2}-\d{2}$/.test(x)));
+    const d=new Date(start); if($('#fm-next').checked) d.setDate(d.getDate()+1);
+    const days=[]; let cnt=0, guard=0;
+    while(cnt<f.d && guard<60){ const key=fmt(d); const wk=d.getDay(); const skip=wk===0||wk===6||HOLIDAYS.has(key)||extra.has(key);
+      days.push({key,label:kfmt(d),skip}); if(!skip) cnt++; d.setDate(d.getDate()+1); guard++; }
+    const used=days.filter(x=>!x.skip); const sw=start.getDay()===0||start.getDay()===6||HOLIDAYS.has(fmt(start));
+    $('#fm-out').innerHTML=`<span class="sm">출석으로 인정되는 ${f.d}일</span><span class="big ok">${used[0].label} ~ ${used[used.length-1].label}</span>
+      <div class="days">${days.map(x=>`<span class="day${x.skip?' skip':''}">${x.key.slice(5).replace('-','/')}</span>`).join('')}</div>
+      ${sw?`<span class="sm">사유가 생긴 날이 학교 쉬는 날이라 그날은 세지 않고 다음 등교일부터 계산했습니다.</span>`:''}
+      <span class="sm">토·일요일과 공휴일은 건너뛰었습니다(2026~2027년 공휴일 기준). 재량휴업일은 학교 공지를 확인해 위에 추가하세요. 기간 안에 등교해도 괜찮습니다.</span>`;
+  }
+  const tr=$('#tr-cur'); if(tr){
+    const cur=tr.value?parse(tr.value):today(), nw=$('#tr-new').value?parse($('#tr-new').value):cur;
+    const gap=[]; const d=new Date(cur);
+    while(d<nw && gap.length<120){ const wk=d.getDay(); if(wk!==0&&wk!==6&&!HOLIDAYS.has(fmt(d))) gap.push(new Date(d)); d.setDate(d.getDate()+1); }
+    const safe=new Date(cur); safe.setDate(safe.getDate()-1);
+    if(nw<=cur) $('#tr-out').innerHTML=`<span class="sm">결과</span><span class="big ok">결석이 생기지 않습니다</span><span class="sm">지금 학교 개학일 전에 전입 처리가 끝나므로 공백이 없습니다.</span>`;
+    else $('#tr-out').innerHTML=`<span class="sm">지금 학교 결석으로 남는 기간</span><span class="big no">${kfmt(gap[0]||cur)} ~ ${kfmt(gap[gap.length-1]||cur)} · 수업일 ${gap.length}일</span>
+      <div class="days">${gap.map(x=>`<span class="day" style="background:var(--no-bg);color:var(--no)">${fmt(x).slice(5).replace('-','/')}</span>`).join('')}</div>
+      <span class="sm">전입 처리를 <b>${kfmt(safe)}</b>까지 마치면 결석이 생기지 않습니다. 어렵다면 지금 학교 개학일에 등교하거나 학교와 처리 방법을 상의하세요.</span>
+      <span class="sm">토·일요일과 공휴일은 뺐습니다. 재량휴업일은 포함되어 있을 수 있습니다.</span>`;
+  }
+  const at=$('#at-days'); if(at){
+    const days=+at.value||0, h=(+$('#at-late').value||0)+(+$('#at-early').value||0)+(+$('#at-skip').value||0);
+    const conv=Math.floor(h/6), used=days+conv, left=20-used, pct=Math.min(100,used/20*100);
+    $('#at-out').innerHTML=`<span class="sm">사용한 출석인정 일수</span><span class="big ${left<0?'no':'ok'}">${used}일 <span style="font-size:15px;font-weight:400;color:var(--ink-2)">/ 20일</span></span>
+      <div class="meter"><i class="${left<0?'over':left<=3?'warn':''}" style="width:${pct}%"></i></div>
+      <span class="sm">참가 ${days}일 + 지각·조퇴·결과 ${h}시간 → ${conv}일 환산 (6시간마다 1일, 나머지 ${h%6}시간)</span>
+      <span class="sm">${left<0?`한도를 ${-left}일 넘었습니다. 초과분은 출석인정이 되지 않습니다.`:`${left}일 남았습니다.`}</span>`;
+  }
+}
+
+/* ---------- 검색 ---------- */
+function search(q){
+  q=q.trim(); const box=$('#results'); $('#qclr').hidden=!q;
+  if(!q){box.innerHTML='';return;}
+  /* 단어마다 원형·조사 뗀 형태·동의어를 후보로 만들고, 하나라도 맞으면 보여주되 많이 맞을수록 위로 */
+  const raw=q.toLowerCase().replace(/[?.!,]/g,' ').split(/\s+/).filter(Boolean);
+  const cands=raw.map(t=>{const s=new Set([t]);
+    t=t.replace(/(했어요|했는데|해서|인데|이라서|때문에|이에요|예요|어요|아요|세요|했|해요)$/,''); if(t.length>=2)s.add(t);
+    t=t.replace(/(으로|에서|에게|께서|부터|까지|이|가|을|를|은|는|에|로|와|과|도|의|요)$/,''); if(t.length>=2)s.add(t);
+    for(const k in SYN){ if([...s].some(x=>x.startsWith(k))) s.add(SYN[k]); }
+    if(t.length>=3) s.add(t.slice(0,2));
+    return [...s];});
+  const scored=CASES.map(c=>{const hay=(c.title+' '+c.sub+' '+c.kw.join(' ')).toLowerCase(); const hay2=c.summary.toLowerCase();
+    let score=0; cands.forEach(cs=>{ if(cs.some(x=>hay.includes(x))) score+=3; else if(cs.some(x=>hay2.includes(x))) score+=1; });
+    return {c,score};}).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,8);
+  const hl=raw.filter(t=>t.length>=2)[0]||q;
+  box.innerHTML=scored.length?`<div class="rows">${scored.map(x=>rowHTML(x.c,hl)).join('')}</div>`:`<div class="empty">"${esc(q)}"에 맞는 사유를 찾지 못했습니다. 아래 버튼에서 가까운 경우를 골라보세요.</div>`;
+  bindRows();
+}
+
+/* ---------- 이벤트 ---------- */
+function bindRows(){ document.querySelectorAll('[data-case]').forEach(b=>b.onclick=()=>go({v:'case',id:b.dataset.case})); }
+function bind(){
+  bindRows();
+  document.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>go({v:'group',g:b.dataset.g}));
+  document.querySelectorAll('[data-home]').forEach(b=>b.onclick=()=>go({v:'home'}));
+  document.querySelectorAll('[data-today]').forEach(b=>b.onclick=()=>go({v:'today'}));
+  document.querySelectorAll('[data-seg]').forEach(b=>b.onclick=()=>{const t=b.dataset.seg==='t'; document.querySelectorAll('[data-seg]').forEach(x=>x.classList.toggle('on',x===b)); const r=$('#caseroot'); if(r) r.classList.toggle('teacher',t); try{localStorage.setItem('teacherOpen',t?'1':'0')}catch(e){}});
+  const sh=$('#share'); if(sh) sh.onclick=()=>{
+    const url=withSc(location.origin+location.pathname+'?case='+sh.dataset.id);
+    const done=()=>{sh.classList.add('done'); sh.innerHTML=svg('i-out')+'주소를 복사했어요'; setTimeout(()=>{sh.classList.remove('done'); sh.innerHTML=svg('i-out')+'이 안내 주소 복사해서 보내기';},2200);};
+    const fallback=()=>{const ta=document.createElement('textarea'); ta.value=url; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy'); done();}catch(e){ sh.innerHTML=svg('i-out')+'복사 실패: '+url; } document.body.removeChild(ta);};
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done).catch(fallback); else fallback();
+  };
+  const q=$('#q'); if(q){
+    q.oninput=()=>{state.q=q.value; history.replaceState(state,'',location.pathname+location.search); search(q.value);};
+    $('#qclr').onclick=()=>{q.value='';state.q='';search('');q.focus();};
+    document.querySelectorAll('[data-chip]').forEach(c=>c.onclick=()=>{q.value=c.dataset.chip;state.q=q.value;search(q.value);q.scrollIntoView({block:'start',behavior:'smooth'});});
+    if(state.q) search(state.q);
+  }
+  document.querySelectorAll('.calc input,.calc select').forEach(el=>{el.oninput=runCalc; el.onchange=runCalc;});
+  runCalc();
+}
+$('#brand').onclick=()=>go({v:'home'});
+/* 오픈소스 라이선스 팝업 */
+(function(){const m=$('#licmodal'); let last=null;
+  const open=()=>{m.hidden=false; document.body.style.overflow='hidden'; $('#licclose').focus();};
+  const close=()=>{m.hidden=true; document.body.style.overflow=''; if(last) last.focus();};
+  document.addEventListener('click',e=>{const t=e.target.closest('[data-lic]'); if(t){last=t; open();}});
+  $('#licclose').onclick=close;
+  m.addEventListener('click',e=>{if(e.target===m) close();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!m.hidden) close();});
+})();
+
+
+/* 시작: 뒤로가기 한 번에 사이트가 닫히지 않도록 홈 상태를 두 번 쌓음 */
+const params=new URLSearchParams(location.search); const pre=params.get('case');
+history.replaceState({v:'home'},'',location.pathname+location.search);
+if(pre && CASES.some(c=>c.id===pre)){ state={v:'case',id:pre}; history.pushState(state,'',location.pathname+location.search); render(); }
+else { history.pushState({v:'home'},'',location.pathname+location.search); render(); }
+</script>
+
+</body>
+</html>
