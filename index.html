@@ -607,7 +607,7 @@ const GROUPS = [
   {id:'fam',   ico:'i-fam',   name:'가족 일',          desc:'장례·결혼·입양, 가족 간병·집안일'},
   {id:'trip',  ico:'i-trip',  name:'여행·체험학습',    desc:'가족여행, 교환학습, 해외 어학연수'},
   {id:'dis',   ico:'i-virus', name:'감염병·날씨',      desc:'독감·수두 등 감염병, 등교중지, 폭우·폭설'},
-  {id:'pub',   ico:'i-flag',  name:'운동부·학폭·교권', desc:'대회·훈련 참가, 학교폭력·교권 조치, 선도프로그램'},
+  {id:'pub',   ico:'i-flag',  name:'대회·진학·공적 일', desc:'대회·훈련, 중학교 면접, 학교폭력·교권 조치'},
   {id:'etc',   ico:'i-dots',  name:'학원·무단·그 밖',  desc:'학원 수업, 방학 중 전학, 그냥 안 감, 공납금'},
 ];
 const SC = new URLSearchParams(location.search).get('sc') || '';
@@ -620,7 +620,7 @@ const KIND = {
 };
 const LINK_DISEASE = {href:'https://infectious-diseases.vercel.app/', title:'감염병 등교중지 안내', sub:'병명 검색 · 등교중지 기간 · 출석인정 절차'};
 const LINK_TRIP = {href:withSc('https://educational-travel.vercel.app/'), title:'교외체험학습 안내', sub:'신청 기한 계산 · 사유 적절성 자가진단'};
-const SYN = {'돌아가':'사망','돌아가셨':'사망','상을':'사망','초상':'사망','상가':'사망','장례식':'장례','열':'감기','아파':'질병','아프':'질병','아픔':'질병','놀러':'여행','해외여행':'여행','친가':'조부모','외가':'외조부모','코로나':'감염병','독감':'감염병','입원':'병원','다쳐':'치료','다쳤':'치료','안가':'출석 거부','안감':'출석 거부','결혼식':'결혼','무단':'태만','학폭':'학교폭력','운동':'선수','시합':'대회','경기':'대회','이사':'전학','전출':'전학','전입':'전학'};
+const SYN = {'돌아가':'사망','돌아가셨':'사망','상을':'사망','초상':'사망','상가':'사망','장례식':'장례','열':'감기','아파':'질병','아프':'질병','아픔':'질병','놀러':'여행','해외여행':'여행','친가':'조부모','외가':'외조부모','코로나':'감염병','독감':'감염병','입원':'병원','다쳐':'치료','다쳤':'치료','안가':'출석 거부','안감':'출석 거부','결혼식':'결혼','무단':'태만','학폭':'학교폭력','운동':'선수','시합':'대회','경기':'대회','이사':'전학','전출':'전학','전입':'전학','입시':'입학시험','진학':'상급학교','국제중':'중학교','예술중':'중학교','체육중':'중학교','실기':'실기고사','면접':'면접'};
 
 const CASES = [
  {id:'illness', g:['ill'], kind:'ill', title:'아파서 결석했어요', sub:'감기, 수술, 입원 등 일반 질병',
@@ -731,6 +731,15 @@ const CASES = [
   record:'출석인정 결석으로 사유를 적지 않습니다. 교외 대회 참가 내용은 생활기록부에 입력할 수 없습니다.',
   calc:'athlete',
   deep:{law:'별표 8 제2호 나목 3) 학생선수', note:'지각·조퇴·결과는 6시간(수업시간) 누적 시 1일로 환산. 20일 한도는 출석인정 산정용이며 진급·수료용 출석일수 산정과는 무관. 체험학습으로 대체 처리 불가.', remark:'사유 미기재.', nice:'일일출결관리(담임용) › 출석인정 결석'}},
+ {id:'entrance', g:['pub'], kind:'ok', title:'중학교 입학 면접·실기고사에 가요', sub:'상급학교 요청에 따른 면접·실기·신체검사, 조퇴 포함',
+  kw:['면접','실기','실기고사','입학시험','입시','진학','상급학교','중학교','국제중','예술중','체육중','신체검사','조퇴','입학전형'],
+  summary:'진학할 중학교가 입학전형으로 실시하는 면접·실기고사에 참가한 시간은 출석으로 인정됩니다. 하루 종일 빠지면 출석인정 결석, 일부 시간만 빠지면 출석인정 조퇴·지각·결과가 됩니다.',
+  docs:['사전: 해당 중학교의 전형 안내문 또는 수험표','사후: 응시(참가) 확인서 (받을 수 없으면 수험표 사본)'],
+  deadline:'면접·시험 전에 담임에게 알리고 학교장 허가',
+  record:'출석인정으로 처리되어 결석·조퇴 횟수에 들어가지 않고 특기사항에 사유도 적지 않습니다.',
+  tip:'학원 입학시험·레벨테스트, 학교 설명회·견학처럼 진학할 학교가 요청하지 않은 일정은 해당되지 않습니다. 이런 일정은 교외체험학습 신청 대상인지 따로 확인하세요.',
+  rel:['academy','trip'],
+  deep:{law:'별표 8 제2호 나목 중 상급학교 학교장의 요청에 따른 실기고사·면접 등 참가 (해당 호 번호는 2026 기재요령 원문에서 확인)', note:'상급학교의 입학전형 일정만 해당. 조퇴 시각은 이동 시간을 합리적으로 포함해 정함. 출석인정 사유로 인한 지각·조퇴·결과는 질병·미인정·기타 횟수에 넣지 않음.', remark:'사유 미기재.', nice:'일일출결관리(담임용) › 출석인정 조퇴(또는 결석)'}},
  {id:'bully-victim', g:['pub'], kind:'ok', title:'학교폭력 피해로 못 갔어요', sub:'피해학생 보호, 심의위원회 참석',
   kw:['학교폭력','학폭','피해','심의위원회','보호조치','의견진술'],
   summary:'학교폭력 피해로 못 간 것을 학교가 전담기구를 거쳐 확인하면 출석으로 인정됩니다. 보호조치 기간, 심의위원회 참석일도 같습니다.',
@@ -878,8 +887,10 @@ function render(){
 function seasonBanner(){
   const m=new Date().getMonth()+1, d=new Date().getDate();
   const on=(m===6&&d>=20)||m===7||m===8||(m===12&&d>=15)||m===1||m===2;
-  if(!on) return '';
-  return `<button class="season" data-case="transfer"><span class="sico">!</span><span class="st"><b>방학 중에 전학하나요?</b><small>두 학교 개학일이 다르면 그 사이가 결석으로 남을 수 있어요</small></span>${svg('i-chev')}</button>`;
+  const iv=m>=10&&m<=12;
+  const ent=iv?`<button class="season" data-case="entrance"><span class="sico">!</span><span class="st"><b>중학교 면접·실기고사로 조퇴하나요?</b><small>진학할 학교가 요청한 전형이면 출석으로 인정돼요</small></span>${svg('i-chev')}</button>`:'';
+  if(!on) return ent;
+  return ent+`<button class="season" data-case="transfer"><span class="sico">!</span><span class="st"><b>방학 중에 전학하나요?</b><small>두 학교 개학일이 다르면 그 사이가 결석으로 남을 수 있어요</small></span>${svg('i-chev')}</button>`;
 }
 function doorHTML(g){
   const order=['ok','ill','etc','no'];
@@ -895,7 +906,7 @@ function homeHTML(){
       <input id="q" type="search" placeholder="말하듯 적어보세요 · 열이 나요" autocomplete="off" value="${esc(state.q||'')}">
       <button class="clr" id="qclr" aria-label="지우기" ${state.q?'':'hidden'}>${svg('i-x')}</button>
     </div>
-    <div class="chiprow"><span class="lbl">예시</span>${['할머니 장례','독감','가족여행','학원','미세먼지','대회 참가','생리통'].map(c=>`<button class="chip" data-chip="${c}">${c}</button>`).join('')}</div>
+    <div class="chiprow"><span class="lbl">예시</span>${['할머니 장례','독감','가족여행','학원','미세먼지','대회 참가','중학교 면접','생리통'].map(c=>`<button class="chip" data-chip="${c}">${c}</button>`).join('')}</div>
     <div id="results" class="results"></div>
     ${seasonBanner()}
   </div></section>
@@ -952,7 +963,7 @@ function homeHTML(){
       <details class="ac g-doc"><summary><span class="ah">기타 결석은 하루라도<br>사유가 적힙니다</span><span class="aq">특기사항에는 무엇이 적히나요?</span><span class="ao">펼치기</span></summary><div class="a">기타 결석은 <b>하루라도 사유가 적힙니다</b>. 질병·미인정 결석과 횟수가 많은 지각·조퇴·결과는 학교가 정한 기준(예: 연속 5일 이상, 10회 이상)에 따라 적을 수 있습니다. 출석인정 결석은 사유를 적지 않습니다. 해외 봉사·어학연수·교외 대회 참가처럼 생활기록부에 쓸 수 없는 내용은 특기사항에도 쓸 수 없습니다.</div></details>
       <details class="ac g-day"><summary><span class="ah">결석·지각·조퇴·결과<br>모두 0이면 개근</span><span class="aq">개근은 어떤 기준인가요?</span><span class="ao">펼치기</span></summary><div class="a">한 해 동안 <b>결석·지각·조퇴·결과가 한 번도 없는</b> 경우입니다. 출석인정 결석은 출석으로 보므로 개근에 영향이 없습니다. 개근상·정근상 수상 기준은 교육청과 학교 방침에 따라 다를 수 있습니다.</div></details>
       <details class="ac g-day"><summary><span class="ah">수업일수의 2/3<br>출석이 기준입니다</span><span class="aq">며칠 이상 결석하면 유급이 되나요?</span><span class="ao">펼치기</span></summary><div class="a">학년 수료에는 그 학년 수업일수(초등 190일 이상)의 <b>3분의 2 이상</b> 출석이 필요합니다. 출석인정 결석은 출석으로 계산됩니다. 지각·조퇴·결과는 횟수와 관계없이 수료에 영향을 주지 않습니다.</div></details>
-      <details class="ac g-day"><summary><span class="ah">지각·조퇴·결과도<br>사유별로 나뉩니다</span><span class="aq">지각·조퇴·결과도 질병·미인정으로 나뉘나요?</span><span class="ao">펼치기</span></summary><div class="a">네. 결석과 똑같이 사유에 따라 질병·미인정·기타로 나누어 횟수를 셉니다. 병원 진료로 늦으면 질병 지각, 학원 때문에 일찍 가면 미인정 조퇴입니다. 출석인정 사유(경조사, 체험학습 등)로 인한 지각·조퇴·결과는 횟수에 넣지 않습니다.</div></details>
+      <details class="ac g-day"><summary><span class="ah">조퇴·지각도<br>사유별로 나뉩니다</span><span class="aq">면접·병원·장례 때문에 조퇴하면 어떻게 처리되나요?</span><span class="ao">펼치기</span></summary><div class="a">네. 결석과 똑같이 사유에 따라 질병·미인정·기타로 나누어 횟수를 셉니다. 병원 진료로 늦으면 질병 지각, 학원 때문에 일찍 가면 미인정 조퇴입니다. <b>출석인정 사유로 일부 시간만 빠지면 출석인정 지각·조퇴·결과</b>가 되어 횟수에 넣지 않습니다. 예를 들어 진학할 중학교의 면접·실기고사, 경조사, 체험학습 때문에 조퇴한 경우입니다.<button class="calc-cta" data-case="entrance"><span class="ci"><svg aria-hidden="true"><use href="#i-flag"/></svg></span><span class="ct"><b>중학교 면접·실기고사 안내</b><small>인정되는 경우와 안 되는 경우, 낼 서류</small></span><svg class="ar" aria-hidden="true"><use href="#i-chev"/></svg></button></div></details>
       <details class="ac g-tr"><summary><span class="ah">전입 처리 전까진<br>지금 학교 학생입니다</span><span class="aq">방학 중 전학하면 개학일이 다른 기간은 어떻게 되나요?</span><span class="ao">펼치기</span></summary><div class="a">새 학교가 전입 처리를 하기 전까지는 지금 학교 학생입니다. 지금 학교 개학일부터 전출 처리 전날까지 안 나오면 지금 학교의 결석(사유 없으면 미인정)으로 남습니다. 전입 처리를 지금 학교 개학일 전에 마치도록 새 학교와 미리 날짜를 맞추세요.<button class="calc-cta" data-case="transfer"><span class="ci"><svg aria-hidden="true"><use href="#i-calc"/></svg></span><span class="ct"><b>전학 공백 계산기</b><small>두 학교 날짜를 넣으면 결석으로 남는 날이 바로 나옵니다</small></span><svg class="ar" aria-hidden="true"><use href="#i-chev"/></svg></button></div></details>
       <details class="ac g-tr"><summary><span class="ah">두 학교 기록을<br>합산합니다</span><span class="aq">전학 온 아이의 출결은 어떻게 합산되나요?</span><span class="ao">펼치기</span></summary><div class="a">전출교와 전입교의 수업일수·결석·지각·조퇴·결과를 합산하되 <b>겹치는 기간은 뺍니다</b>. 전출일과 전입일이 같으면 전입일만 수업일수로 계산합니다.</div></details>
       <button class="ac more" data-tosearch><span class="ah">다른 질문이<br>있으신가요?</span><span class="aq">사유를 말하듯 검색하면 해당 안내로 바로 갑니다</span><span class="ao">검색창으로 ↑</span></button>
@@ -1089,6 +1100,7 @@ function caseHTML(id){
       <div class="seg" role="tablist"><button class="${tmode?'':'on'}" data-seg="p">학부모용</button><button class="${tmode?'on':''}" data-seg="t">선생님용</button></div></div>
     <h1 class="ctitle">${esc(c.title)}</h1>
     <div class="verdict-face ${k.cls}"><b>${k.full}</b><span>${verdictSub}</span></div>
+    ${c.kind==='ok'&&!['hospital','exchange','protect'].includes(c.id)?`<p class="hint">일부 시간만 빠지면 출석인정 지각·조퇴·결과로 처리되어 횟수에 들어가지 않아요.</p>`:''}
   </div></section>
 
   <section class="band"><div class="wrap cbody">
