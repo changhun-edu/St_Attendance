@@ -458,6 +458,8 @@ body.hide-bar main{padding-bottom:0}
 .tlink{border:0;background:none;padding:0;margin-top:8px;font:inherit;font-size:14px;font-weight:600;color:var(--accent);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .back{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:8px 14px 8px 10px;font-size:14px;cursor:pointer}
 .back svg{width:16px;height:16px}
+.faq-h{margin:14px 2px 8px;font-size:13px;font-weight:600;color:var(--ink-3)}
+.row.k-faq .bar{background:var(--line)}
 .empty{padding:28px;text-align:center;color:var(--ink-3);font-size:14.5px;border:1px dashed var(--line);border-radius:14px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -625,14 +627,14 @@ const SYN = {'돌아가':'사망','돌아가셨':'사망','상을':'사망','초
 
 const CASES = [
  {id:'illness', g:['ill'], kind:'ill', title:'아파서 결석했어요', sub:'감기, 수술, 입원 등 일반 질병',
-  kw:['감기','수술','입원','병원','아픔','질병','진단서','의견서','처방전','독감','열','몸살'],
+  kw:['감기','수술','입원','병원','아픔','질병','진단서','의견서','처방전','독감','열','몸살','결석신고서','신고서','나이스','학부모 서비스','전자화문서','종이','원본','출력','확인서','담임 확인서','학부모 의견서','제출 기한','기한','5일'],
   summary:'아파서 못 간 날은 질병 결석입니다. 결석을 시작한 날부터 5일 안에 서류를 내고 학교장 승인을 받으면 됩니다.',
   docs:['3일 이상 또는 자주 결석: 의사 진단서 또는 의견서(병명·진료기간이 적힌 소견서, 진료확인서)','2일 이내 가끔 결석: 학부모 의견서, 처방전, 담임교사 확인서 중 하나'],
   deadline:'결석을 시작한 날부터 5일 이내 (부득이한 경우 학교장이 정한 기한)',
-  record:'결석일수 "질병"란에 일수가 기록됩니다. 사유는 학교 기준에 따라 적을 수 있지만, 병명은 개인정보 보호를 위해 적지 않는 것이 원칙입니다.',
-  tip:'나이스 학부모 서비스(parents.neis.go.kr)로 결석신고서를 내면 학부모 의견서는 따로 쓰지 않고 신청 화면의 해당란에 적는 것으로 갈음할 수 있습니다. 학교에 따라 종이 서류는 받지 않는 곳도 있으니 학교 안내를 먼저 확인하세요.',
+  record:'결석일수 "질병"란에 일수가 기록됩니다. 사유는 출결상황을 이해하는 데 필요한 경우 적을 수 있지만, 병명은 개인정보 보호를 위해 적지 않는 것이 원칙입니다.',
+  tip:'나이스 학부모 서비스(parents.neis.go.kr)로 결석신고서를 내면 학부모 의견서나 담임교사 확인서는 따로 쓰지 않고 신청 화면의 해당란에 적는 것으로 갈음할 수 있습니다. 학교마다 받는 방식이 다를 수 있으니 학교 안내를 먼저 확인하세요.',
   calc:'deadline',
-  deep:{law:'별표 8 제2호 다목 1)·2)', note:'"5일 이내"는 결석을 시작한 날 기준. 질병 지각·조퇴·결과도 같은 기준으로 질병 처리.', remark:'학교가 정한 기준(예: 연속 5일 이상)에 해당하면 특기사항에 "감기(5일)"처럼 입력. 병명 노출 주의.', nice:'학적 › 출결관리 › 출결관리 › 일일출결관리(담임용)'}},
+  deep:{law:'별표 8 제2호 다목 1)·2)', note:'"5일 이내"는 결석을 시작한 날 기준(이 사이트는 첫날을 1일로 셈). 나이스 학부모 서비스로 받은 결석신고서·증빙은 「전자정부법」 제2조제8호의 전자화문서로 별도 출력·보관이나 원본 제출 불필요. 학부모 의견서·담임교사 확인서는 신청·접수 시 해당란 작성으로 갈음 가능. 질병 지각·조퇴·결과도 같은 기준으로 질병 처리.', remark:'출결상황 이해에 필요한 경우 입력 가능(2026: 장기결석 기준 삭제). 예: "질병으로 인한 입원 치료(5일)". 병명은 적지 않음.', nice:'학적 › 출결관리 › 출결관리 › 일일출결관리(담임용)'}},
  {id:'disease', g:['ill','dis'], kind:'ok', title:'법정 감염병에 걸렸어요', sub:'독감, 수두, 유행성 눈병, 코로나19 등',
   kw:['감염병','독감','인플루엔자','수두','코로나','눈병','수족구','장염','등교중지','전염'],
   summary:'법정 감염병(학교장이 확산 방지를 위해 인정한 비법정 감염병 포함)으로 못 간 날은 출석으로 인정됩니다.',
@@ -644,7 +646,7 @@ const CASES = [
   kw:['미세먼지','초미세먼지','천식','아토피','알레르기','호흡기','민감군','나쁨'],
   summary:'기저질환(천식, 아토피, 알레르기, 호흡기·심혈관 질환 등)이 있는 민감군 학생이 조건을 모두 갖추면 질병 결석으로 처리됩니다.',
   docs:['학기 초: 미세먼지와의 관련성이 적힌 의사 진단서(소견서) 1회 제출','결석 당일: 등교 전 학교에 전화·문자로 미리 연락'],
-  deadline:'결석한 날부터 5일 이내 결석신고서 (학기 초 낸 진단서로 증빙 갈음 가능)',
+  deadline:'결석을 시작한 날부터 5일 이내 결석신고서 (학기 초 낸 진단서로 증빙 갈음 가능)',
   record:'결석일수 "질병"란에 기록됩니다.',
   checks:['의사 진단서로 민감군(기저질환) 확인됨','등교시간대 거주지나 학교 주변 미세먼지·초미세먼지가 "나쁨" 이상','학부모가 학교에 사전 연락함'],
   tip:'실시간 농도는 에어코리아(airkorea.or.kr)에서 확인할 수 있습니다.',
@@ -653,10 +655,19 @@ const CASES = [
   kw:['만성','장기','치료','통원','암','투석','정기진료'],
   summary:'의사 진단서로 장기 치료가 필요하다고 확인되면, 진단서를 붙인 결석신고서로 질병 결석 처리됩니다. 학기 초에 낸 진단서로 그 학기 증빙을 갈음할 수 있습니다.',
   docs:['의사 진단서 또는 의견서(학기 초 1회)','결석 시마다 결석신고서'],
-  deadline:'결석한 날부터 5일 이내',
+  deadline:'결석을 시작한 날부터 5일 이내',
   record:'결석일수 "질병"란에 기록됩니다. 병원 정기진료로 인한 지각·조퇴도 질병으로 처리됩니다.',
   rel:['hospital'],
   deep:{law:'별표 8 제2호 다목 5)', note:'3개월 이상 장기결석이 예상되면 병원학교·원격수업(위탁학생) 전환을 검토.', remark:'"병원 정기진료로 인한 질병지각(12회)"처럼 기재 가능.', nice:'일일출결관리(담임용) › 질병'}},
+ {id:'humidifier', g:['ill'], kind:'ill', title:'가습기살균제 피해로 요양·치료해요', sub:'건강피해자 증명서를 받은 학생',
+  kw:['가습기','살균제','가습기살균제','피해자','건강피해','증명서','마음건강','마음건강 프로그램','프로그램','정신건강','모니터링','호흡곤란','편두통','요양','기후에너지환경부'],
+  summary:'기후에너지환경부로부터 가습기살균제 건강피해자 증명서를 받은 학생이 아파서 빠진 날은 질병 결석입니다. 호흡곤란·편두통 같은 기저질환으로 집에서 요양하거나, 정신건강 모니터링(마음건강 프로그램)에 참여한 날도 질병 결석으로 처리됩니다.',
+  docs:['가습기살균제 건강피해자 증명서(기후에너지환경부 발급)','의사의 진단서(소견서)','위 서류를 첨부한 결석신고서'],
+  deadline:'결석을 시작한 날부터 5일 이내 (학교장 승인)',
+  record:'결석일수 "질병"란에 기록됩니다. 병명이나 피해 사실은 개인정보이므로 특기사항에 드러나지 않게 다룹니다.',
+  tip:'증명서는 한 번 내 두면 이후 결석 때마다 다시 내지 않아도 되는지 학교에 확인해 보세요.',
+  rel:['chronic','illness'],
+  deep:{law:'별표 8 제2호 다목 6) (2026 신설)', note:'요양뿐 아니라 정신건강 모니터링(마음건강 프로그램) 참여도 질병결석. 증명서와 진단서(소견서) 모두 첨부.', remark:'출결상황 이해에 필요한 경우 입력 가능. 피해 사실·병명 노출 주의.', nice:'일일출결관리(담임용) › 질병'}},
  {id:'hospital', g:['ill'], kind:'ok', title:'병원학교·원격수업을 받고 있어요', sub:'건강장애 학생, 3개월 이상 입원·요양',
   kw:['병원학교','원격수업','건강장애','입원','장기결석','위탁','화상','교통사고'],
   summary:'건강장애로 선정되어 병원학교나 원격수업을 받는 기간은 출석으로 인정됩니다. 건강장애 선정 대상이 아니어도 3개월 이상 치료가 필요한 큰 부상이면 교육청 허가로 같은 처리가 가능합니다.',
@@ -726,12 +737,12 @@ const CASES = [
   deep:{law:'별표 8 제2호 나목 3)', note:'감염병별 등교중지 기간은 연결 사이트 참조.', remark:'사유 미기재.', nice:'일일출결관리(담임용) › 출석인정 결석'}},
 
  {id:'athlete', g:['pub'], kind:'ok', title:'대회·훈련에 참가해요', sub:'학교·시도·국가 대표 학생선수',
-  kw:['대회','훈련','선수','운동부','체육','국가대표','소년체전','경기','전지훈련'],
-  summary:'학교장 허가를 받은 학생선수의 대회·훈련 결석은 한 해 20일(초등학교)까지 출석으로 인정됩니다. 국가대표·전국(소년)체육대회는 학업성적관리위원회 심의를 거쳐 20일에 넣지 않을 수 있습니다.',
+  kw:['대회','훈련','선수','운동부','체육','국가대표','소년체전','경기','전지훈련','꿈나무','청소년대표','국가대표후보','지역 예선','예선','체전','전국체전','전국체육대회','소년체육대회','학생선수','학업성적관리위원회'],
+  summary:'학교장 허가를 받은 학생선수의 대회·훈련 결석은 한 해 20일(초등학교)까지 출석으로 인정됩니다. 국가대표(꿈나무·청소년대표·국가대표후보 포함)의 국제대회·국가대표 훈련, 전국(소년)체육대회(지역 예선 포함) 참가는 학업성적관리위원회 심의를 거쳐 20일에 포함하지 않고 따로 처리합니다.',
   docs:['대한체육회 등에서 인정하는 공문(기간·장소·명단)'], deadline:'참가 전 학교장 허가',
   record:'출석인정 결석으로 사유를 적지 않습니다. 교외 대회 참가 내용은 생활기록부에 입력할 수 없습니다.',
   calc:'athlete',
-  deep:{law:'별표 8 제2호 나목 3) 학생선수', note:'지각·조퇴·결과는 6시간(수업시간) 누적 시 1일로 환산. 20일 한도는 출석인정 산정용이며 진급·수료용 출석일수 산정과는 무관. 체험학습으로 대체 처리 불가.', remark:'사유 미기재.', nice:'일일출결관리(담임용) › 출석인정 결석'}},
+  deep:{law:'별표 8 제2호 나목 3) 학생선수', note:'2026 개정: 국가대표(꿈나무·청소년대표·후보 포함) 국제대회·훈련, 전국(소년)체육대회(지역 예선 포함)는 학업성적관리위원회 심의(학습권·교육적 목적 종합 고려)를 거쳐 20일에 포함하지 않고 예외 처리(2025의 "초과 허용"에서 변경). 지각·조퇴·결과는 6시간(수업시간) 누적 시 1일로 환산. 20일 한도는 출석인정 산정용이며 진급·수료용 출석일수 산정과는 무관. 체험학습으로 대체 처리 불가.', remark:'사유 미기재.', nice:'일일출결관리(담임용) › 출석인정 결석'}},
  {id:'entrance', g:['pub'], kind:'ok', title:'중학교 입학 면접·실기고사에 가요', sub:'상급학교 요청에 따른 면접·실기·신체검사, 조퇴 포함',
   kw:['면접','실기','실기고사','입학시험','입시','진학','상급학교','중학교','국제중','예술중','체육중','신체검사','조퇴','입학전형'],
   summary:'진학할 중학교가 입학전형으로 실시하는 면접·실기고사에 참가한 시간은 출석으로 인정됩니다. 하루 종일 빠지면 출석인정 결석, 일부 시간만 빠지면 출석인정 조퇴·지각·결과가 됩니다.',
@@ -958,9 +969,9 @@ function homeHTML(){
     <span class="sec-label">참고</span>
     <h2 class="sec-title">자주 받는 질문, 결론부터</h2>
     <div class="akit">
-      <details class="ac g-doc"><summary><span class="ah">종이 없이<br>나이스로 냅니다</span><span class="aq">결석신고서는 꼭 종이로 내야 하나요?</span><span class="ao">펼치기</span></summary><div class="a">아니요. <a href="https://parents.neis.go.kr/" target="_blank" rel="noopener">나이스 학부모 서비스</a>로 낸 결석신고서와 증빙은 전자화문서로 인정되어 따로 출력·원본 제출이 필요 없습니다. 학부모 의견서나 담임 확인서는 신청 화면 해당란에 적는 것으로 갈음할 수 있습니다.<br><b>학교에 따라 종이 서류는 받지 않고 나이스 학부모 서비스로만 받는 곳도 있습니다.</b> 종이로 내기 전에 학교의 안내를 먼저 확인하세요.<div class="neis"><a href="https://parents.neis.go.kr/" target="_blank" rel="noopener">나이스 학부모 서비스 열기 ↗</a><span>parents.neis.go.kr · 로그인 후 「출결 신고」</span></div></div></details>
-      <details class="ac g-doc"><summary><span class="ah">기타 결석은 하루라도<br>사유가 적힙니다</span><span class="aq">특기사항에는 무엇이 적히나요?</span><span class="ao">펼치기</span></summary><div class="a">기타 결석은 <b>하루라도 사유가 적힙니다</b>. 질병·미인정 결석과 횟수가 많은 지각·조퇴·결과는 학교가 정한 기준(예: 연속 5일 이상, 10회 이상)에 따라 적을 수 있습니다. 출석인정 결석은 사유를 적지 않습니다. 해외 봉사·어학연수·교외 대회 참가처럼 생활기록부에 쓸 수 없는 내용은 특기사항에도 쓸 수 없습니다.</div></details>
-      <details class="ac g-day"><summary><span class="ah">결석·지각·조퇴·결과<br>모두 0이면 개근</span><span class="aq">개근은 어떤 기준인가요?</span><span class="ao">펼치기</span></summary><div class="a">한 해 동안 <b>결석·지각·조퇴·결과가 한 번도 없는</b> 경우입니다. 출석인정 결석은 출석으로 보므로 개근에 영향이 없습니다. 개근상·정근상 수상 기준은 교육청과 학교 방침에 따라 다를 수 있습니다.</div></details>
+      <details class="ac g-doc"><summary><span class="ah">종이 없이<br>나이스로 냅니다</span><span class="aq">결석신고서는 꼭 종이로 내야 하나요?</span><span class="ao">펼치기</span></summary><div class="a">아니요. <a href="https://parents.neis.go.kr/" target="_blank" rel="noopener">나이스 학부모 서비스</a>로 낸 결석신고서와 증빙은 전자화문서로 인정되어 따로 출력·원본 제출이 필요 없습니다. 학부모 의견서나 담임 확인서는 신청 화면 해당란에 적는 것으로 갈음할 수 있습니다.<br><b>학교마다 받는 방식이 다를 수 있으니</b> 내기 전에 학교의 안내를 먼저 확인하세요.<div class="neis"><a href="https://parents.neis.go.kr/" target="_blank" rel="noopener">나이스 학부모 서비스 열기 ↗</a><span>parents.neis.go.kr · 로그인 후 「출결 신고」</span></div></div></details>
+      <details class="ac g-doc"><summary><span class="ah">기타 결석은 하루라도<br>사유가 적힙니다</span><span class="aq">특기사항에는 무엇이 적히나요?</span><span class="ao">펼치기</span></summary><div class="a">기타 결석은 <b>하루라도 사유가 적힙니다</b>. 질병·미인정 결석은 학생의 출결상황을 이해하는 데 필요한 경우 적을 수 있고, 지각·조퇴·결과는 적지 않지만 횟수가 많으면 적을 수 있습니다. 출석인정 결석은 사유를 적지 않습니다. 해외 봉사·어학연수·교외 대회 참가처럼 생활기록부에 쓸 수 없는 내용은 특기사항에도 쓸 수 없습니다.</div></details>
+      <details class="ac g-day"><summary><span class="ah">결석·지각·조퇴·결과<br>모두 0이면 개근</span><span class="aq">개근은 어떤 기준인가요?</span><span class="ao">펼치기</span></summary><div class="a">해당 학년 동안 <b>결석·지각·조퇴·결과가 한 번도 없는</b> 경우입니다. 출석인정 결석은 출석으로 처리되므로 개근에 영향이 없습니다. 개근이면 학년 말 생활기록부 마감 때 출결 특기사항에 <b>'개근'</b>으로 적힙니다. 개근상·정근상 수상 기준은 교육청과 학교 방침에 따라 다를 수 있습니다.</div></details>
       <details class="ac g-day"><summary><span class="ah">수업일수의 2/3<br>출석이 기준입니다</span><span class="aq">며칠 이상 결석하면 유급이 되나요?</span><span class="ao">펼치기</span></summary><div class="a">학년 수료에는 그 학년 수업일수(초등 190일 이상)의 <b>3분의 2 이상</b> 출석이 필요합니다. 출석인정 결석은 출석으로 계산됩니다. 지각·조퇴·결과는 횟수와 관계없이 수료에 영향을 주지 않습니다.</div></details>
       <details class="ac g-day"><summary><span class="ah">조퇴·지각도<br>사유별로 나뉩니다</span><span class="aq">면접·병원·장례 때문에 조퇴하면 어떻게 처리되나요?</span><span class="ao">펼치기</span></summary><div class="a">네. 결석과 똑같이 사유에 따라 질병·미인정·기타로 나누어 횟수를 셉니다. 병원 진료로 늦으면 질병 지각, 학원 때문에 일찍 가면 미인정 조퇴입니다. <b>출석인정 사유로 일부 시간만 빠지면 출석인정 지각·조퇴·결과</b>가 되어 횟수에 넣지 않습니다. 예를 들어 진학할 중학교의 면접·실기고사, 경조사, 체험학습 때문에 조퇴한 경우입니다.<br><button class="tlink" data-case="entrance">중학교 면접·실기고사 안내 보기 ›</button></div></details>
       <details class="ac g-tr"><summary><span class="ah">전입 처리 전까진<br>지금 학교 학생입니다</span><span class="aq">방학 중 전학하면 개학일이 다른 기간은 어떻게 되나요?</span><span class="ao">펼치기</span></summary><div class="a">새 학교가 전입 처리를 하기 전까지는 지금 학교 학생입니다. 지금 학교 개학일부터 전출 처리 전날까지 안 나오면 지금 학교의 결석(사유 없으면 미인정)으로 남습니다. 전입 처리를 지금 학교 개학일 전에 마치도록 새 학교와 미리 날짜를 맞추세요.<button class="calc-cta" data-case="transfer"><span class="ci"><svg aria-hidden="true"><use href="#i-calc"/></svg></span><span class="ct"><b>전학 공백 계산기</b><small>두 학교 날짜를 넣으면 결석으로 남는 날이 바로 나옵니다</small></span><svg class="ar" aria-hidden="true"><use href="#i-chev"/></svg></button></div></details>
@@ -1039,7 +1050,7 @@ function todayHTML(){
     <ol class="tline">
       <li class="now"><span class="n">1</span><div class="b"><span class="when">지금</span><h3>아침에 담임 선생님께 알립니다</h3><p>등교 시각 전에 전화나 문자, 학급 소통앱으로 결석 사실과 사유를 알립니다. 미세먼지로 인한 결석은 이 사전 연락이 있어야 질병 결석으로 인정됩니다.</p></div></li>
       <li><span class="n">2</span><div class="b"><span class="when">오늘 중</span><h3>어떤 결석인지 확인합니다</h3><p>사유에 따라 출석인정·질병·기타·미인정으로 나뉘고 필요한 서류가 다릅니다. 아래 사유 목록이나 처음 화면의 검색에서 찾아보세요.</p></div></li>
-      <li><span class="n">3</span><div class="b"><span class="when">오늘 중</span><h3>결석신고서를 냅니다</h3><p><a href="https://parents.neis.go.kr/" target="_blank" rel="noopener">나이스 학부모 서비스</a>에서 내면 전자문서로 인정되어 종이 출력이나 원본 제출이 필요 없습니다. 학부모 의견서가 필요한 경우도 신청 화면의 해당란에 적는 것으로 갈음됩니다. <b>학교에 따라 종이 서류는 받지 않는 곳도 있으니</b> 학교 안내를 먼저 확인하세요.</p><div class="neis"><a href="https://parents.neis.go.kr/" target="_blank" rel="noopener">나이스 학부모 서비스 열기 ↗</a><span>parents.neis.go.kr</span></div></div></li>
+      <li><span class="n">3</span><div class="b"><span class="when">오늘 중</span><h3>결석신고서를 냅니다</h3><p><a href="https://parents.neis.go.kr/" target="_blank" rel="noopener">나이스 학부모 서비스</a>에서 내면 전자화문서로 인정되어 종이 출력이나 원본 제출이 필요 없습니다. 학부모 의견서나 담임교사 확인서가 필요한 경우도 신청 화면의 해당란에 적는 것으로 갈음할 수 있습니다. <b>학교마다 받는 방식이 다를 수 있으니</b> 학교 안내를 먼저 확인하세요.</p><div class="neis"><a href="https://parents.neis.go.kr/" target="_blank" rel="noopener">나이스 학부모 서비스 열기 ↗</a><span>parents.neis.go.kr</span></div></div></li>
       <li><span class="n">4</span><div class="b"><span class="when">5일 안에</span><h3>증빙 서류를 냅니다</h3><p>질병 결석은 결석을 시작한 날부터 5일 안에 서류를 내야 합니다. 2일 이내의 가끔 있는 결석은 학부모 의견서·처방전·담임 확인서 중 하나면 되고, 그보다 길면 의사 진단서나 의견서가 필요합니다.</p>${calcHTML('deadline')}</div></li>
     </ol>
   </div></section>
@@ -1155,7 +1166,8 @@ function calcHTML(type){
     <div class="out" id="tr-out"></div></div>`;
   if(type==='athlete') return `<div class="calc" data-calc="athlete">
     <h3>${svg('i-calc')}학생선수 출석인정 한도 (초등 20일)</h3>
-    <div class="field"><label for="at-days">대회·훈련 참가 일수</label><input type="number" id="at-days" min="0" value="0" inputmode="numeric"><span class="hint">국가대표·전국(소년)체전 참가분은 학교 심의를 거쳐 제외할 수 있습니다.</span></div>
+    <div class="field"><label for="at-days">대회·훈련 참가 일수</label><input type="number" id="at-days" min="0" value="0" inputmode="numeric"><span class="hint">예외 대상까지 포함한 전체 참가 일수를 넣으세요.</span></div>
+    <div class="field"><label for="at-ex">그중 예외 대상 일수</label><input type="number" id="at-ex" min="0" value="0" inputmode="numeric"><span class="hint">국가대표(꿈나무·청소년대표·후보 포함) 국제대회·훈련, 전국(소년)체육대회(지역 예선 포함) 참가로 학업성적관리위원회 심의를 거친 일수. 20일 계산에서 뺍니다.</span></div>
     <div class="grid3">
       <div class="field"><label for="at-late">지각 (시간)</label><input type="number" id="at-late" min="0" value="0" inputmode="numeric"></div>
       <div class="field"><label for="at-early">조퇴 (시간)</label><input type="number" id="at-early" min="0" value="0" inputmode="numeric"></div>
@@ -1166,10 +1178,10 @@ function calcHTML(type){
 }
 function runCalc(){
   const dl=$('#dl-start'); if(dl){
-    const s=dl.value?parse(dl.value):today(); const d=new Date(s); d.setDate(d.getDate()+5);
+    const s=dl.value?parse(dl.value):today(); const d=new Date(s); d.setDate(d.getDate()+4);
     const n=$('#dl-days').value; const left=Math.round((d-today())/864e5);
     const wk=d.getDay(); let safe=null; if(wk===0||wk===6||HOLIDAYS.has(fmt(d))){safe=new Date(d); while(safe.getDay()===0||safe.getDay()===6||HOLIDAYS.has(fmt(safe))) safe.setDate(safe.getDate()-1);}
-    $('#dl-out').innerHTML=`<span class="sm">결석신고서 제출 기한 (결석 시작일 + 5일)</span><span class="big ${left<0?'no':'ok'}">${kfmt(d)}까지</span>
+    $('#dl-out').innerHTML=`<span class="sm">결석신고서 제출 기한 (결석 시작일을 1일로 세어 5일째)</span><span class="big ${left<0?'no':'ok'}">${kfmt(d)}까지</span>
       <span class="sm">${left<0?`기한이 ${-left}일 지났습니다. 학교에 바로 연락해 학교장이 정한 기한을 확인하세요.`:left===0?'오늘이 마지막 날입니다.':`오늘부터 ${left}일 남았습니다.`}</span>
       ${safe?`<span class="sm">마감일이 주말·공휴일이라 학교가 쉽니다. 그 전 등교일인 <b>${kfmt(safe)}</b>까지 내는 것이 안전합니다.</span>`:''}
       <span class="sm">${n==='3'?'의사 진단서 또는 의견서(병명·진료기간 기재)가 필요합니다.':'상습적이지 않은 2일 이내 결석이면 학부모 의견서·처방전·담임 확인서 중 하나로 됩니다.'}</span>
@@ -1201,10 +1213,11 @@ function runCalc(){
       <span class="sm">토·일요일과 공휴일은 뺐습니다. 재량휴업일은 포함되어 있을 수 있습니다.</span>`;
   }
   const at=$('#at-days'); if(at){
-    const days=+at.value||0, h=(+$('#at-late').value||0)+(+$('#at-early').value||0)+(+$('#at-skip').value||0);
+    const all=+at.value||0, ex=Math.min(all,+$('#at-ex').value||0), days=all-ex, h=(+$('#at-late').value||0)+(+$('#at-early').value||0)+(+$('#at-skip').value||0);
     const conv=Math.floor(h/6), used=days+conv, left=20-used, pct=Math.min(100,used/20*100);
     $('#at-out').innerHTML=`<span class="sm">사용한 출석인정 일수</span><span class="big ${left<0?'no':'ok'}">${used}일 <span style="font-size:15px;font-weight:400;color:var(--ink-2)">/ 20일</span></span>
       <div class="meter"><i class="${left<0?'over':left<=3?'warn':''}" style="width:${pct}%"></i></div>
+      ${ex?`<span class="sm">전체 참가 ${all}일 중 예외 처리 ${ex}일은 20일에 포함하지 않고 따로 출석인정합니다.</span>`:''}
       <span class="sm">참가 ${days}일 + 지각·조퇴·결과 ${h}시간 → ${conv}일 환산 (6시간마다 1일, 나머지 ${h%6}시간)</span>
       <span class="sm">${left<0?`한도를 ${-left}일 넘었습니다. 초과분은 출석인정이 되지 않습니다.`:`${left}일 남았습니다.`}</span>`;
   }
@@ -1226,8 +1239,16 @@ function search(q){
     let score=0; cands.forEach(cs=>{ if(cs.some(x=>hay.includes(x))) score+=3; else if(cs.some(x=>hay2.includes(x))) score+=1; });
     return {c,score};}).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,8);
   const hl=raw.filter(t=>t.length>=2)[0]||q;
-  box.innerHTML=scored.length?`<div class="rows">${scored.map(x=>rowHTML(x.c,hl)).join('')}</div>`:`<div class="empty">"${esc(q)}"에 맞는 사유를 찾지 못했습니다. 아래 버튼에서 가까운 경우를 골라보세요.</div>`;
+  /* 자주 묻는 질문도 함께 찾기 (조사만 뗀 단어로) */
+  const fw=raw.map(t=>t.replace(/(했어요|했는데|해서|인데|이라서|때문에|이에요|예요|어요|아요|세요|했|해요)$/,'').replace(/(으로|에서|에게|께서|부터|까지|이|가|을|를|은|는|에|로|와|과|도|의|요)$/,'')).map(t=>({'기재':'적힙','입력':'적힙','기록':'적힙'})[t]||t).filter(t=>t.length>=2);
+  const faqs=[...document.querySelectorAll('details.ac')].map((d,i)=>{const tx=d.textContent.replace(/\s+/g,'').toLowerCase();
+    return {d,i,n:fw.filter(t=>tx.includes(t.replace(/\s+/g,''))).length};}).filter(x=>x.n>0&&x.n>=Math.ceil(fw.length/2)).sort((a,b)=>b.n-a.n).slice(0,3);
+  const faqHTML=faqs.length?`<div class="faq-h">자주 묻는 질문</div><div class="rows">${faqs.map(x=>`<button class="row k-faq" data-faq="${x.i}"><span class="bar"></span><span class="t"><b>${esc(x.d.querySelector('.aq').textContent)}</b><span>${esc(x.d.querySelector('.ah').innerHTML.replace(/<br\s*\/?>/g,' ').replace(/<[^>]+>/g,''))}</span></span><span class="arr">${svg('i-chev')}</span></button>`).join('')}</div>`:'';
+  const caseHTML=scored.length?`<div class="rows">${scored.map(x=>rowHTML(x.c,hl)).join('')}</div>`:'';
+  const faqFirst=faqs.length&&(!scored.length||scored[0].score<3);
+  box.innerHTML=(scored.length||faqs.length)?(faqFirst?faqHTML.replace('class="faq-h"','class="faq-h" style="margin-top:0"')+(caseHTML?`<div class="faq-h">관련 사유</div>`+caseHTML:''):caseHTML+faqHTML):`<div class="empty">"${esc(q)}"에 맞는 사유를 찾지 못했습니다. 아래 버튼에서 가까운 경우를 골라보세요.</div>`;
   bindRows();
+  box.querySelectorAll('[data-faq]').forEach(b=>b.onclick=()=>{const d=document.querySelectorAll('details.ac')[+b.dataset.faq]; if(!d)return; d.open=true; d.scrollIntoView({block:'start',behavior:'smooth'});});
 }
 
 /* ---------- 이벤트 ---------- */
