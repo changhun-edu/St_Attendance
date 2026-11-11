@@ -57,8 +57,19 @@ p{margin:0}
 .hdr .sub{font-size:12px;color:var(--ink-3);letter-spacing:.04em}
 .hdr .today-pill{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--accent);color:var(--accent);background:none;border-radius:999px;padding:6px 12px 6px 10px;font-size:13.5px;font-weight:600;cursor:pointer}
 .hdr .today-pill svg{width:15px;height:15px}
+/* 보기 전환 */
 .hdr .today-pill:hover{background:var(--accent);color:var(--accent-ink)}
+.hdr .hright{display:flex;align-items:center;gap:10px}
+.tband{background:var(--accent-soft);color:var(--ink-2);font-size:13px;border-top:1px solid var(--line)}
+.tband .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;height:auto;min-height:34px;padding-top:5px;padding-bottom:5px}
+.tband b{color:var(--accent)}
+.tband button{border:0;background:none;color:var(--accent);text-decoration:underline;text-underline-offset:3px;padding:4px 0;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.tquiet{align-self:flex-start;margin-top:-4px;border:0;background:none;padding:2px 0;font-size:13px;color:var(--ink-3);cursor:pointer;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+.tquiet:hover{color:var(--accent)}
+.tlink{display:inline-flex;align-items:center;gap:6px;margin-top:10px;border:1.5px dashed var(--accent);background:none;color:var(--accent);border-radius:999px;padding:6px 14px;font-size:14px;font-weight:600;cursor:pointer}
+.row .t .ttag,.ttag{display:inline-block;color:var(--accent-ink);background:var(--accent);font-size:11.5px;margin-right:6px;padding:1px 8px;border-radius:999px;background:var(--accent);color:var(--accent-ink);font-size:11.5px;font-weight:700;vertical-align:1px}
 .todaybar{display:none}
+@media (max-width:600px){ .tband .wrap{flex-wrap:wrap} .tband span{flex:1 1 200px} }
 @media (max-width:600px){
   .hdr .today-pill{display:none}
   .todaybar{display:flex;gap:8px;position:fixed;left:0;right:0;bottom:0;z-index:30;padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(10px);border-top:1px solid var(--line-2)}
@@ -509,8 +520,10 @@ body.hide-bar main{padding-bottom:0}
 <body>
 <header class="hdr"><div class="wrap">
   <button class="brand" id="brand" aria-label="홈으로"><span class="mark"><svg viewBox="0 0 26 26" aria-hidden="true"><rect x="1" y="1" width="24" height="24" rx="6" fill="none" stroke="var(--accent)" stroke-width="1.6"/><circle cx="8.5" cy="8.5" r="3.4" fill="var(--ok)"/><circle cx="17.5" cy="8.5" r="3.4" fill="var(--ill)"/><circle cx="8.5" cy="17.5" r="3.4" fill="var(--etc)"/><circle cx="17.5" cy="17.5" r="3.4" fill="var(--no)"/></svg></span><span class="txt"><span class="name">출결 한눈에</span><span class="tag">초등 출결, 묻기 전에 한눈에</span></span></button>
-  <button class="today-pill" data-today><svg aria-hidden="true"><use href="#i-calc"/></svg>오늘 결석했어요</button>
-</div></header>
+  <div class="hright">
+  <button class="today-pill" data-today><svg aria-hidden="true"><use href="#i-calc"/></svg>오늘 결석했어요</button></div>
+</div>
+<div class="tband" id="tband" hidden><div class="wrap"><span><b>선생님용 보기</b> · 근거 조항·나이스 입력 경로, 선생님용 질문까지 함께 보여요</span><button type="button" data-seg="p">학부모용으로 돌아가기</button></div></div></header>
 
 <main><div id="app"></div></main>
 
@@ -1047,7 +1060,7 @@ function homeHTML(){
       <button class="clr" id="qclr" aria-label="지우기" ${state.q?'':'hidden'}>${svg('i-x')}</button>
     </div>
     <div class="chiprow"><span class="lbl">예시</span>${['할머니 장례','독감','가족여행','학원','미세먼지','대회 참가','생리통'].map(c=>`<button class="chip" data-chip="${c}">${c}</button>`).join('')}</div>
-    <label class="tmode"><input type="checkbox" id="tmode"${isT()?' checked':''}><span>선생님용 질문도 함께 검색</span></label>
+    ${isT()?'':`<button type="button" class="tquiet" data-seg="t">선생님이세요? 선생님용 보기</button>`}
     <div id="results" class="results"></div>
     ${seasonBanner()}
   </div></section>
@@ -1148,7 +1161,7 @@ function rowHTML(c,q,hint,best){
   let t=esc(c.title), s=esc(c.sub);
   if(q){const re=new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'); t=t.replace(re,'<mark>$1</mark>'); s=s.replace(re,'<mark>$1</mark>');}
   if(hint) s=`<em class="qh">“${esc(hint)}”</em>`;
-  return `<button class="row k-${KIND[c.kind].cls}${best?' best':''}" data-case="${c.id}"><span class="bar"></span><span class="t">${best?'<span class="bestlab">가장 가까운 답</span>':''}<b>${t}</b><span>${s}</span></span>${badge(c.kind)}<span class="arr">${svg('i-chev')}</span></button>`;
+  return `<button class="row k-${KIND[c.kind].cls}${best?' best':''}" data-case="${c.id}"><span class="bar"></span><span class="t">${best?'<span class="bestlab">가장 가까운 답</span>':''}<b>${c.tOnly?'<span class="ttag">선생님용</span>':''}${t}</b><span>${s}</span></span>${badge(c.kind)}<span class="arr">${svg('i-chev')}</span></button>`;
 }
 const KORDER=['ok','ill','etc','no','guide'];
 function groupHTML(gid){
@@ -1250,6 +1263,7 @@ function caseHTML(id){
     ${fromS?'':`<div class="crumb-row">${crumbHTML([{label:'처음',go:'data-home'},{label:g.name,go:`data-g="${g.id}"`},{label:c.title}])}</div>`}
     <h1 class="ctitle">${esc(c.title)}</h1>
     <div class="verdict-face ${k.cls}"><b>${k.full}</b><span>${verdictSub}</span></div>
+    ${tmode?'':`<button type="button" class="tlink" data-seg="t">선생님이세요? 근거 조항·나이스 입력 경로 보기</button>`}
     ${c.kind==='ok'&&!['hospital','exchange','protect'].includes(c.id)?`<p class="infoline">${svg('i-info')}<span>일부 시간만 빠지면 출석인정 지각·조퇴·결과로 처리되어 횟수에 들어가지 않아요.</span></p>`:''}
   </div></section>
 
@@ -1269,7 +1283,6 @@ function caseHTML(id){
     ${c.tip?`<div class="note prose">${svg('i-info')}<span>${esc(c.tip)}</span></div>`:''}
     ${c.example?`<figure class="example"><figcaption>실제 사례</figcaption><blockquote>${esc(c.example)}</blockquote></figure>`:''}
     <button class="share primary" id="share" data-id="${c.id}">${svg('i-out')}이 안내 주소 복사해서 보내기</button>
-    <div class="modebar"><span>선생님이세요? 근거 조항과 나이스 입력 경로도 함께 봅니다.</span><div class="seg" role="tablist"><button class="${tmode?'':'on'}" data-seg="p">학부모용</button><button class="${tmode?'on':''}" data-seg="t">선생님용</button></div></div>
   </div></section>
 
   ${c.calc?`<section class="band sand"><div class="wrap">${calcHTML(c.calc)}</div></section>`:''}
@@ -1495,7 +1508,6 @@ function bind(){
   document.querySelectorAll('[data-today]').forEach(b=>b.onclick=()=>go({v:'today'}));
   document.querySelectorAll('[data-tosearch],[data-gosearch]').forEach(b=>b.onclick=focusSearch);
   document.querySelectorAll('[data-backsearch]').forEach(b=>b.onclick=()=>{try{history.go(-(state.depth||1))}catch(e){go({v:'home'})}});
-  document.querySelectorAll('[data-seg]').forEach(b=>b.onclick=()=>{const t=b.dataset.seg==='t'; document.querySelectorAll('[data-seg]').forEach(x=>x.classList.toggle('on',x===b)); const r=$('#caseroot'); if(r) r.classList.toggle('teacher',t); setT(t);});
   const sh=$('#share'); if(sh) sh.onclick=()=>{
     const url=withSc(location.origin+location.pathname+'?case='+sh.dataset.id);
     const done=()=>{sh.classList.add('done'); sh.innerHTML=svg('i-out')+'주소를 복사했어요'; setTimeout(()=>{sh.classList.remove('done'); sh.innerHTML=svg('i-out')+'이 안내 주소 복사해서 보내기';},2200);};
@@ -1508,10 +1520,22 @@ function bind(){
     document.querySelectorAll('[data-chip]').forEach(c=>c.onclick=()=>{q.value=c.dataset.chip;lastQ=state.q=q.value;hRep(state,'',location.pathname+location.search);search(q.value);q.scrollIntoView({block:'start',behavior:'smooth'});});
     if(state.q) search(state.q);
   }
-  const tm=$('#tmode'); if(tm) tm.onchange=()=>{ setT(tm.checked); const qq=$('#q'); if(qq) search(qq.value); };
   document.querySelectorAll('.calc input,.calc select').forEach(el=>{el.oninput=runCalc; el.onchange=runCalc;});
   runCalc();
 }
+function syncMode(){
+  const t=isT();
+  const tb=$('#tband'); if(tb) tb.hidden=!t;
+  document.body.classList.toggle('teacher-mode',t);
+}
+function applyMode(t){
+  if(isT()===t) return;
+  setT(t); syncMode();
+  if(!t && state.v==='case'){ const c=CASES.find(x=>x.id===state.id); if(c&&c.tOnly){ go({v:'home'},true); return; } }
+  const y=window.scrollY; render(); window.scrollTo(0,y);
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-seg]'); if(b) applyMode(b.dataset.seg==='t');});
+syncMode();
 $('#brand').onclick=()=>{lastQ='';go({v:'home',q:''});};
 /* 오픈소스 라이선스 팝업 */
 (function(){const m=$('#licmodal'); let last=null;
