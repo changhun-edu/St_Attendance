@@ -8,8 +8,8 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Crect x='1' y='1' width='24' height='24' rx='6' fill='%23fff' stroke='%232a4a73' stroke-width='1.6'/%3E%3Ccircle cx='8.5' cy='8.5' r='3.4' fill='%231f7a4d'/%3E%3Ccircle cx='17.5' cy='8.5' r='3.4' fill='%232b5fa6'/%3E%3Ccircle cx='8.5' cy='17.5' r='3.4' fill='%239a6400'/%3E%3Ccircle cx='17.5' cy='17.5' r='3.4' fill='%23b8342a'/%3E%3C/svg%3E">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>출결 한눈에</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 /* Layout: one 720px column; header and body share it. Home = search + 6 doors + reference. Case = one card, parent summary on top, teacher detail folded. */
 :root{
@@ -18,8 +18,8 @@
   --sand:#f3eee4; --sand-2:#e9e2d3; --sand-ink:#5c5141; --hero:#f7f3ea; --foot:#e8eaef;
   --t-ill:#eef3fa; --t-fam:#f6f0e8; --t-trip:#eef5ef; --t-dis:#f3eff8; --t-pub:#eef4f5; --t-etc:#f3f1ee;
   --ok:#1f7a4d; --ok-bg:#e3f3ea; --ill:#2b5fa6; --ill-bg:#e4ecf8; --no:#b8342a; --no-bg:#f9e5e2; --etc:#9a6400; --etc-bg:#f8efd9;
-  --display:"Gowun Batang","Nanum Myeongjo","Apple Myungjo","AppleMyungjo",Batang,"Noto Serif KR",Georgia,serif;
-  --body:"IBM Plex Sans KR","Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --display:"Pretendard Variable",Pretendard,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;
+  --body:"Pretendard Variable",Pretendard,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;
   --shadow:0 1px 2px rgba(27,35,48,.06),0 6px 18px -8px rgba(27,35,48,.14);
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
@@ -534,13 +534,12 @@ body.hide-bar main{padding-bottom:0}
       <h3>안내 내용의 출처</h3>
       <div class="lic-item"><b>2026학년도 학교생활기록부 기재요령(초등학교) 07 출결상황</b><span class="meta">「학교생활기록 작성 및 관리지침」 별표 8 · 교육부</span></div>
       <p class="lic-note">등교·하교시각, 체험학습 허용 일수, 특기사항 기재 기준은 학교마다 다릅니다. 최종 판단은 학교장이 합니다.</p>
-      <p>이 사이트는 외부 자바스크립트 라이브러리 없이 작성되었으며, 아래 글꼴 두 종을 Google Fonts를 통해 불러옵니다. 아이콘은 직접 그린 SVG입니다.</p>
+      <p>이 사이트는 외부 자바스크립트 라이브러리 없이 작성되었으며, 아래 글꼴 한 종을 공개 CDN(jsDelivr)을 통해 불러옵니다. 아이콘은 직접 그린 SVG입니다.</p>
       <h3>사용한 오픈소스</h3>
-      <div class="lic-item"><b>고운바탕 (Gowun Batang)</b><span class="meta">저작권자: The Gowun Batang Project Authors (양희재) · 라이선스: <code>SIL Open Font License 1.1</code></span></div>
-      <div class="lic-item"><b>IBM Plex Sans KR</b><span class="meta">저작권자: IBM Corp. · 라이선스: <code>SIL Open Font License 1.1</code></span></div>
+      <div class="lic-item"><b>Pretendard</b><span class="meta">저작권자: Kil Hyung-jin (https://github.com/orioncactus/pretendard) · 라이선스: <code>SIL Open Font License 1.1</code> · Inter, Source Han Sans, M+ FONTS 기반</span></div>
       <h3>SIL Open Font License 1.1 전문</h3>
-      <pre class="lic-full">Copyright 2020 The Gowun Batang Project Authors (https://github.com/yangheeryu/Gowun-Batang)
-Copyright 2020 IBM Corp. (IBM Plex Sans KR)
+      <pre class="lic-full">Copyright (c) 2021 Kil Hyung-jin (https://github.com/orioncactus/pretendard), with Reserved Font Name 'Pretendard'.
+Pretendard is based on Inter (Copyright 2020 The Inter Project Authors), Source Han Sans (Copyright 2014-2021 Adobe) and M+ FONTS (Copyright 2002-2016 M+ FONTS PROJECT).
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:
