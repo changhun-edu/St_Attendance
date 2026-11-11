@@ -13,7 +13,7 @@
 <style>
 /* Layout: one 720px column; header and body share it. Home = search + 6 doors + reference. Case = one card, parent summary on top, teacher detail folded. */
 :root{
-  --bg:#f4f5f8; --paper:#ffffff; --ink:#1b2330; --ink-2:#4b5566; --ink-3:#7c8595; --line:#dde1e8; --line-2:#eceef3;
+  --bg:#f4f5f8; --paper:#ffffff; --ink:#1b2330; --ink-2:#4b5566; --ink-3:#5f6878; --line:#dde1e8; --line-2:#eceef3;
   --accent:#2a4a73; --accent-ink:#ffffff; --accent-soft:#e6ecf5;
   --sand:#f3eee4; --sand-2:#e9e2d3; --sand-ink:#5c5141; --hero:#f7f3ea; --foot:#e8eaef;
   --t-ill:#eef3fa; --t-fam:#f6f0e8; --t-trip:#eef5ef; --t-dis:#f3eff8; --t-pub:#eef4f5; --t-etc:#f3f1ee;
@@ -61,9 +61,12 @@ p{margin:0}
 .todaybar{display:none}
 @media (max-width:600px){
   .hdr .today-pill{display:none}
-  .todaybar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(10px);border-top:1px solid var(--line-2)}
+  .todaybar{display:flex;gap:8px;position:fixed;left:0;right:0;bottom:0;z-index:30;padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(10px);border-top:1px solid var(--line-2)}
   .todaybar button{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;height:48px;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font-size:15.5px;font-weight:600;cursor:pointer;box-shadow:var(--shadow)}
   .todaybar button svg{width:18px;height:18px}
+  .todaybar button.sbtn{flex:0 0 36%;background:var(--paper);color:var(--accent);border:1.5px solid var(--accent);box-shadow:none}
+  body.hide-today .todaybar [data-today]{display:none}
+  body.hide-today .todaybar button.sbtn{flex:1}
   main{padding-bottom:72px}
 }
 .hdr button:focus-visible,button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
@@ -456,12 +459,50 @@ body.hide-bar main{padding-bottom:0}
 .neis a:hover{text-decoration:underline}
 .neis span{font-size:12.5px;color:var(--ink-3)}
 .tlink{border:0;background:none;padding:0;margin-top:8px;font:inherit;font-size:14px;font-weight:600;color:var(--accent);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
-.back{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:8px 14px 8px 10px;font-size:14px;cursor:pointer}
+.back{max-width:100%;color:var(--accent);font-weight:600;align-self:flex-start;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:8px 14px 8px 10px;font-size:14px;cursor:pointer}
 .back svg{width:16px;height:16px}
 .faq-h{margin:14px 2px 8px;font-size:13px;font-weight:600;color:var(--ink-3)}
 .row.k-faq .bar{background:var(--line)}
 .empty{padding:28px;text-align:center;color:var(--ink-3);font-size:14.5px;border:1px dashed var(--line);border-radius:14px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* 가독성 개선: 최소 글자 크기·대비, 서류 목록, 보기 전환 */
+.hint{font-size:14px}
+.crumb,.crumb button{font-size:14px}
+.row .t span{font-size:14px}
+.field label{font-size:14px}
+.out .sm{font-size:14px}
+.disclaim{font-size:13.5px}
+.todo-due .k,.recbox .k,.sec-label{font-size:13px}
+.hchip{font-size:14px}
+.calc-cta small{font-size:13.5px}
+.legend span{font-size:14px}
+.infoline{display:flex;gap:8px;align-items:flex-start;margin:0;font-size:14.5px;line-height:1.55;color:var(--ink-2)}
+.infoline svg{width:18px;height:18px;flex:none;margin-top:2px;color:var(--ink-3)}
+.chk li::after{display:none}
+.chk .cond{font-weight:700;color:var(--ink)}
+.chk .cond::after{content:" · ";font-weight:400;color:var(--ink-3)}
+.ddet{display:block;font-size:14px;color:var(--ink-2);margin-top:2px;line-height:1.5}
+.optlead{margin:0;padding:12px 14px 0;font-size:14.5px;font-weight:700;color:var(--accent)}
+.opts{list-style:none;margin:0;padding:6px 14px 8px;display:flex;flex-direction:column}
+.opts li{display:flex;flex-direction:column;gap:2px;padding:10px 0;font-size:15px;line-height:1.55;position:relative}
+.opts li+li{margin-top:14px;border-top:1px dashed var(--line);padding-top:16px}
+.opts li+li::before{content:"또는";position:absolute;top:-11px;left:0;background:var(--paper);padding-right:8px;font-size:13px;font-weight:700;color:var(--ink-3)}
+.opts .cond{font-size:14px;font-weight:700;color:var(--accent)}
+.opts .dmain{font-size:16px;font-weight:600;color:var(--ink)}
+.modebar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:16px;border-top:1px solid var(--line);font-size:14px;color:var(--ink-2)}
+.modebar .seg{margin-top:0}
+.tmode{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;margin-top:-6px;font-size:14px;color:var(--ink-2);cursor:pointer}
+.tmode input{width:18px;height:18px;accent-color:var(--accent)}
+.faq-h{font-size:13.5px}
+.qh{font-style:normal;color:var(--ink-2)}
+.row .t .bestlab{align-self:flex-start;font-size:12.5px;font-weight:700;color:var(--accent-ink);background:var(--accent);border-radius:999px;padding:1px 9px;margin-bottom:3px}
+.row.best{background:var(--accent-soft)}
+.kwline{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:14px;color:var(--ink-2)}
+.kwchip{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--accent);background:var(--paper);color:var(--accent);border-radius:999px;padding:3px 6px 3px 11px;font-size:14px;font-weight:600;cursor:pointer}
+.kwchip svg{width:14px;height:14px}
+.lownote{display:flex;gap:8px;align-items:flex-start;font-size:14px;line-height:1.55;color:var(--ink-2);padding:10px 12px;border-radius:10px;background:var(--etc-bg)}
+.lownote svg{width:18px;height:18px;flex:none;margin-top:2px;color:var(--etc)}
 </style>
 
 </head>
@@ -584,7 +625,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.</pre>
     </div>
   </div>
 </div>
-<div class="todaybar"><button data-today><svg aria-hidden="true"><use href="#i-calc"/></svg>오늘 결석했어요</button></div>
+<div class="todaybar"><button type="button" class="sbtn" data-gosearch><svg aria-hidden="true"><use href="#i-search"/></svg>검색</button><button data-today><svg aria-hidden="true"><use href="#i-calc"/></svg>오늘 결석했어요</button></div>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
@@ -604,6 +645,14 @@ OTHER DEALINGS IN THE FONT SOFTWARE.</pre>
 </svg>
 
 <script>
+/* 미리보기(샌드박스 프레임)에서 history 호출이 막혀도 화면이 멈추지 않게 감쌈 */
+const hRep=(s,t,u)=>{try{history.replaceState(s,t,u)}catch(e){}};
+const hPush=(s,t,u)=>{try{history.pushState(s,t,u)}catch(e){}};
+/* 선생님용 보기 상태: 저장소가 막혀 있어도 이 화면 안에서는 유지 */
+let tFlag=null;
+const isT=()=>{ if(tFlag===null){ try{tFlag=localStorage.getItem('teacherOpen')==='1'}catch(e){tFlag=false} } return tFlag; };
+const setT=v=>{ tFlag=!!v; try{localStorage.setItem('teacherOpen',v?'1':'0')}catch(e){} };
+const vis=c=>!c.tOnly||isT();   /* tOnly:true 인 사유는 선생님용에서만 보임 */
 /* ---------- 데이터 ---------- */
 const GROUPS = [
   {id:'ill',   ico:'i-sick',  name:'아파요',           desc:'감기·수술, 병원 통원, 미세먼지, 생리통'},
@@ -620,10 +669,11 @@ const KIND = {
   ill:{label:'질병 결석으로 처리돼요', full:'질병 결석',  cls:'ill', short:'질병'},
   no:{label:'미인정 결석으로 처리돼요', full:'미인정 결석', cls:'no',  short:'미인정'},
   etc:{label:'기타 결석으로 처리돼요', full:'기타 결석',  cls:'etc', short:'기타'},
+  guide:{label:'처리 기준이에요', full:'처리 기준·정정', cls:'ill', short:'기준'},
 };
 const LINK_DISEASE = {href:'https://infectious-diseases.vercel.app/', title:'감염병 등교중지 안내', sub:'병명 검색 · 등교중지 기간 · 출석인정 절차'};
 const LINK_TRIP = {href:withSc('https://educational-travel.vercel.app/'), title:'교외체험학습 안내', sub:'신청 기한 계산 · 사유 적절성 자가진단'};
-const SYN = {'돌아가':'사망','돌아가셨':'사망','상을':'사망','초상':'사망','상가':'사망','장례식':'장례','열':'감기','아파':'질병','아프':'질병','아픔':'질병','놀러':'여행','해외여행':'여행','친가':'조부모','외가':'외조부모','코로나':'감염병','독감':'감염병','입원':'병원','다쳐':'치료','다쳤':'치료','안가':'출석 거부','안감':'출석 거부','결혼식':'결혼','무단':'태만','학폭':'학교폭력','운동':'선수','시합':'대회','경기':'대회','이사':'전학','전출':'전학','전입':'전학','입시':'입학시험','진학':'상급학교','국제중':'중학교','예술중':'중학교','체육중':'중학교','실기':'실기고사','면접':'면접'};
+const SYN = {'돌아가':'사망','돌아가셨':'사망','상을':'사망','초상':'사망','상가':'사망','장례식':'장례','열':'감기','아파':'질병','아프':'질병','아픔':'질병','놀러':'여행','해외여행':'여행','친가':'조부모','외가':'외조부모','코로나':'감염병','독감':'감염병','입원':'병원','다쳐':'치료','다쳤':'치료','안가':'출석 거부','안감':'출석 거부','결혼식':'결혼','무단':'태만','학폭':'학교폭력','운동':'선수','시합':'대회','경기':'대회','이사':'전학','전출':'전학','전입':'전학','입시':'입학시험','진학':'상급학교','국제중':'중학교','예술중':'중학교','체육중':'중학교','실기':'실기고사','면접':'면접','늦게':'지각','일찍':'조퇴','귀가':'조퇴','보건실':'결과','결석계':'결석신고서','진료확인서':'진단서','소견서':'진단서','엔이아이에스':'나이스'};
 
 const CASES = [
  {id:'illness', g:['ill'], kind:'ill', title:'아파서 결석했어요', sub:'감기, 수술, 입원 등 일반 질병',
@@ -633,15 +683,15 @@ const CASES = [
   deadline:'결석을 시작한 날부터 5일 이내 (부득이한 경우 학교장이 정한 기한)',
   record:'결석일수 "질병"란에 일수가 기록됩니다. 사유는 출결상황을 이해하는 데 필요한 경우 적을 수 있지만, 병명은 개인정보 보호를 위해 적지 않는 것이 원칙입니다.',
   tip:'나이스 학부모 서비스(parents.neis.go.kr)로 결석신고서를 내면 학부모 의견서나 담임교사 확인서는 따로 쓰지 않고 신청 화면의 해당란에 적는 것으로 갈음할 수 있습니다. 학교마다 받는 방식이 다를 수 있으니 학교 안내를 먼저 확인하세요.',
-  calc:'deadline',
-  deep:{law:'별표 8 제2호 다목 1)·2)', note:'"5일 이내"는 결석을 시작한 날 기준(이 사이트는 첫날을 1일로 셈). 나이스 학부모 서비스로 받은 결석신고서·증빙은 「전자정부법」 제2조제8호의 전자화문서로 별도 출력·보관이나 원본 제출 불필요. 학부모 의견서·담임교사 확인서는 신청·접수 시 해당란 작성으로 갈음 가능. 질병 지각·조퇴·결과도 같은 기준으로 질병 처리.', remark:'출결상황 이해에 필요한 경우 입력 가능(2026: 장기결석 기준 삭제). 예: "질병으로 인한 입원 치료(5일)". 병명은 적지 않음.', nice:'학적 › 출결관리 › 출결관리 › 일일출결관리(담임용)'}},
+  calc:'deadline', docsMode:'one',
+  deep:{law:'별표 8 제2호 다목 1)·2)', note:'결석 기간과 진단서 발급일이 다른 경우(예: 발급일 이후에 결석)의 인정 여부는 기재요령에 규정이 없고, 학교생활기록부 종합지원센터는 증빙서류의 종류·인정 범위를 시도교육청 지침과 학교 규정에 따라 학교장이 승인 여부로 판단하도록 안내함(2025.9.13 답변). "5일 이내"는 결석을 시작한 날 기준(이 사이트는 첫날을 1일로 셈). 나이스 학부모 서비스로 받은 결석신고서·증빙은 「전자정부법」 제2조제8호의 전자화문서로 별도 출력·보관이나 원본 제출 불필요. 학부모 의견서·담임교사 확인서는 신청·접수 시 해당란 작성으로 갈음 가능. 질병 지각·조퇴·결과도 같은 기준으로 질병 처리.', remark:'출결상황 이해에 필요한 경우 입력 가능(2026: 장기결석 기준 삭제). 예: "질병으로 인한 입원 치료(5일)". 병명은 적지 않음.', nice:'학적 › 출결관리 › 출결관리 › 일일출결관리(담임용)'}},
  {id:'disease', g:['ill','dis'], kind:'ok', title:'법정 감염병에 걸렸어요', sub:'독감, 수두, 유행성 눈병, 코로나19 등',
   kw:['감염병','독감','인플루엔자','수두','코로나','눈병','수족구','장염','등교중지','전염'],
   summary:'법정 감염병(학교장이 확산 방지를 위해 인정한 비법정 감염병 포함)으로 못 간 날은 출석으로 인정됩니다.',
   docs:['진단서 또는 의사 소견서 (병명·격리기간 확인)'], deadline:'학교 안내에 따라 제출',
   record:'출석인정 결석은 출석으로 처리되며 특기사항에 사유를 적지 않습니다.',
   link:LINK_DISEASE,
-  deep:{law:'별표 8 제2호 나목 1)', note:'병명별 등교중지 기간과 절차는 연결된 사이트에서 확인.', remark:'사유 미기재(출석인정 결석 공통).', nice:'학적 › 출결관리 › 출결관리 › 일일출결관리(담임용) › 출석인정 결석'}},
+  deep:{law:'별표 8 제2호 나목 1)', note:'병명별 등교중지 기간과 절차는 연결된 사이트에서 확인. 기재요령에는 확진 전 "의심 증상·검사 결과 대기" 단계의 출결을 따로 정한 규정이 없음: 아파서 쉬었다면 질병 결석 절차, 학교장이 감염 확산 방지를 위해 필요하다고 인정하면(비법정 감염병 포함) 출석인정(별표 8 제2호 나목 1), 49쪽).', remark:'사유 미기재(출석인정 결석 공통).', nice:'학적 › 출결관리 › 출결관리 › 일일출결관리(담임용) › 출석인정 결석'}},
  {id:'dust', g:['ill'], kind:'ill', title:'미세먼지가 나빠서 못 갔어요', sub:'천식·아토피 등 기저질환이 있는 민감군',
   kw:['미세먼지','초미세먼지','천식','아토피','알레르기','호흡기','민감군','나쁨'],
   summary:'기저질환(천식, 아토피, 알레르기, 호흡기·심혈관 질환 등)이 있는 민감군 학생이 조건을 모두 갖추면 질병 결석으로 처리됩니다.',
@@ -702,9 +752,9 @@ const CASES = [
   docs:['사전: 신청서 + 학습계획서','사후: 교외체험학습 보고서'], deadline:'출발 며칠 전까지 신청 (학교마다 다름 · 아래 사이트에서 계산)',
   record:'출석인정 결석으로 사유를 적지 않습니다. 생활기록부 어느 항목에도 체험학습 내용을 입력하지 않습니다.',
   link:LINK_TRIP, rel:['tripover'],
-  deep:{law:'별표 8 제2호 나목 3)', note:'절차: 신청 → 학교장 심사·승인 통보 → 실시 → 보고서 제출 → 면담 등 사실 확인 → 출석인정. 감염병 위기경보 "심각" 단계에서만 가정학습 사유 허용.', remark:'사유 미기재. 학생선수 훈련·대회를 체험학습으로 출석인정 처리하는 것은 불가.', nice:'일일출결관리(담임용) › 출석인정 결석'}},
+  deep:{law:'별표 8 제2호 나목 3)', note:'절차: 신청 → 학교장 심사·승인 통보 → 실시 → 보고서 제출 → 면담 등 사실 확인 → 출석인정. 감염병 위기경보 "심각" 단계에서만 가정학습 사유 허용. 신청서를 내기 전에 다녀온 경우를 따로 정한 규정은 기재요령에 없어 학칙과 학교장 판단에 따름(절차: 51쪽).', remark:'사유 미기재. 학생선수 훈련·대회를 체험학습으로 출석인정 처리하는 것은 불가.', nice:'일일출결관리(담임용) › 출석인정 결석'}},
  {id:'tripover', g:['trip'], kind:'no', title:'허용 일수를 넘겨 여행했어요', sub:'학칙 기간 초과',
-  kw:['초과','넘겨','허용일수','기간 초과'],
+  kw:['초과','넘겨','허용일수','기간 초과','체험학습','교외체험학습'],
   summary:'학칙으로 정한 교외체험학습 일수를 넘긴 날은 미인정 결석으로 처리됩니다.',
   docs:['따로 낼 서류는 없습니다'], deadline:'낼 서류가 없으니 기한도 없습니다',
   record:'결석일수 "미인정"란에 기록됩니다. 학교 기준에 따라 특기사항에 사유가 적힐 수 있습니다.',
@@ -851,7 +901,83 @@ const CASES = [
   docs:['결석신고서 + 사정을 확인할 수 있는 자료'], deadline:'학교 안내에 따라 제출',
   record:'결석일수 "기타"란에 기록되고 특기사항에 사유가 반드시 적힙니다.',
   deep:{law:'별표 8 제2호 마목 4)', note:'상위 법령·행정규칙에서 출석으로 인정하도록 한 경우는 출석인정 결석으로 처리 가능(나목 12).', remark:'기타결석은 1일이라도 사유 입력.', nice:'출결특기사항등록'}},
+ {id:'inschool', g:['ill'], kind:'ill', title:'수업 중에 병원에 다녀왔어요', sub:'학교에 있다가 병원 진료를 받고 돌아온 날',
+  kw:['병원','진료','다녀','돌아','결과','조퇴','지각','통원','치료','수업 중','보건실','일부 시간'],
+  summary:'하루 종일 빠진 것이 아니면 결석이 아니라 지각·조퇴·결과로 처리하고, 아파서 그런 것이면 "질병"으로 기록합니다. 병원에 다녀와 다시 학교에 왔다면 수업 일부에 빠진 것이므로 "결과"가 됩니다.',
+  checks:['병원에 다녀와서 다시 학교로 돌아옴 → 결과 (수업시간의 일부에 빠짐)','병원에 가서 학교로 돌아오지 않음 → 조퇴','병원에 들렀다가 등교시각보다 늦게 등교함 → 지각'],
+  docs:['증빙과 서류는 학교 규정에 따라 학교장이 정합니다'], deadline:'학교 규정에 따라 학교장이 정함',
+  record:'지각·조퇴·결과는 횟수로만 기록되고 특기사항에는 입력하지 않습니다(횟수가 많으면 학교 기준에 따라 사유를 적을 수 있음). 횟수와 관계없이 그 학년 수료에는 영향이 없습니다.',
+  tip:'같은 날 지각·조퇴·결과가 함께 생기면 학교장이 판단해 한 가지로만 처리하고, 같은 날 결과가 여러 번이어도 1회로 셉니다. 감염병처럼 출석인정 사유로 빠진 시간은 횟수에 들어가지 않습니다.',
+  rel:['illness','chronic'],
+  deep:{law:'별표 8 제3호 가·나·다·라·마·바·사목 (55쪽)', note:'구체적인 기준과 절차는 관련 학교 규정에 따라 학교장이 정함. 등교·하교시각도 학교마다 다를 수 있음.', remark:'지각·조퇴·결과는 입력하지 않음. 횟수가 많은 경우 사유 입력 여부는 학교장이 정해 학교 안에서 동일하게 적용(58쪽).', nice:'학적 › 출결관리 › 출결관리 › 일일출결관리'}},
+ {id:'mind', g:['ill'], kind:'ill', title:'마음이 힘들어 학교에 가기 어려워요', sub:'불안·우울 등 심리·정서적 어려움',
+  kw:['심리','정서','불안','우울','마음','스트레스','상담','학교 가기 싫','등교 거부','출석 거부','학업 중단','숙려','정신'],
+  summary:'기재요령에는 심리·정서적 어려움만을 따로 정한 규정이 없어서, 일반 질병 결석 기준에 따라 증빙을 갖춘 결석신고서를 학교장이 승인하면 질병 결석이 됩니다. 증빙의 종류와 인정 범위는 시도교육청 지침과 학교 규정에 따라 학교가 정합니다. 진료 없이 학교장이 부득이한 사정이라고 인정하면 기타 결석, 합당한 사유로 보지 않으면 미인정 결석이 될 수 있습니다.',
+  checks:['2일 이내이고 상습적이지 않은 결석 → 학부모 의견서·처방전·담임교사 확인서 등을 붙인 결석신고서를 5일 이내에 내고 학교장이 승인하면 질병 결석','그보다 길거나 반복되는 결석 → 병원 진료 후 의사 진단서·의견서(병명·진료기간이 적힌 소견서, 진료확인서)를 붙여 같은 절차','진료 없이 부득이한 개인사정이라고 학교장이 인정 → 기타 결석 (사유가 특기사항에 적힘)','학업을 그만둘 징후가 있거나 그만두겠다고 밝힌 경우 → 학교가 숙려 기회를 주고, 그 기간을 출석인정 결석으로 처리할 수 있음 (기간과 범위는 시도교육감이 정함)'],
+  docs:['2일 이내 가끔: 학부모 의견서, 처방전, 담임교사 확인서 중 하나','그보다 길거나 자주: 의사 진단서 또는 의견서(병명·진료기간이 적힌 소견서, 진료확인서)','진료 없이 기타 결석: 결석신고서와 사정을 확인할 수 있는 자료(학교 안내에 따름)'], docsMode:'one',
+  deadline:'질병 결석은 결석을 시작한 날부터 5일 이내 (부득이한 경우 학교장이 정한 기한)',
+  record:'질병 결석이면 "질병"란, 기타 결석이면 "기타"란에 기록됩니다. 기타 결석은 하루라도 특기사항에 사유가 적히고, 질병 결석의 사유는 학교 기준에 따라 적되 병명은 개인정보 보호가 필요하면 적지 않습니다.',
+  tip:'처리 방법에 학교장 판단이 들어가므로 먼저 담임 선생님과 상의해 보세요.',
+  rel:['illness','other'],
+  deep:{law:'별표 8 제2호 다목 1)(53쪽), 나목 5)(51쪽), 라목 6)·7)(54~55쪽), 마목 1)·4)(55쪽)', note:'심리·정서 문제 자체를 출결 사유로 정한 조항은 없음. 학교생활기록부 종합지원센터는 질병결석이 증빙서류를 붙인 결석신고서를 학교장이 승인해야 인정되며, 증빙서류의 종류·인정 범위·세부 절차는 시도교육청 지침과 학교 규정에 따라 학교가 정한다고 안내함(2025.9.13 답변, 2025 기재요령 63쪽 기준 = 2026 기재요령 53쪽 다목). 숙려제의 판단기준·기간·인정 범위는 시도교육감이 정함(초·중등교육법 제28조제8항).', remark:'기타 결석은 1일이라도 사유 입력. 질병·미인정 결석의 사유 입력은 학교장이 정한 기준에 따르되 개인정보 보호가 필요한 병명은 쓰지 않음(58쪽).', nice:'일일출결관리 › 비고등록 (결석 사유 보조부), 출결특기사항등록'}},
+ {id:'outside', g:['pub','etc'], kind:'ok', title:'교육청이 정한 다른 기관에서 수업을 들어요', sub:'학교장이 지원한 외부 교육기관 수강',
+  kw:['외부 기관','교육기관','교육감 지정','지정 기관','전문교육','심화교육','위탁','외부 교육','외부 행사','행사','교육 참여','프로그램'],
+  summary:'학교장이 학생에게 필요한 전문·심화교육을 지원하려고 수업 일부를 교육감이 지정한 교육기관에서 듣게 한 경우에는 위탁학생에 준해 출결을 처리합니다. 그 기관에 출석하면 출석으로 반영됩니다.',
+  checks:['하루 중 일부 교시는 학교에, 일부는 지정 기관에 출석하면 두 곳의 출결을 모두 합쳐 그날 출결을 처리','지정 기관에서 보내온 출결 상황을 학교가 그대로 반영'],
+  docs:['기재요령에는 학부모가 따로 내는 서류가 정해져 있지 않습니다. 학교 안내를 확인하세요'], deadline:'학교 안내에 따름',
+  record:'지정 기관에서의 출결이 소속 학교의 출결에 합산되어 반영됩니다.',
+  tip:'학교장이 지원한 경우가 아니라 가정에서 따로 보낸 외부 교육·행사는 여기에 해당하지 않습니다. 학원 수강으로 인한 결석은 미인정(예술·체육계 포함)이고, 학교 대표 대회·훈련은 「대회·훈련에 참가해요」, 학교장이 허가한 체험학습은 「가족 여행·체험학습을 가요」를 보세요.',
+  rel:['athlete','trip','academy'],
+  deep:{law:'별표 8 제5호 가·나목(56쪽) 및 같은 호 다목(57쪽)', note:'위탁학생의 수업일수와 출결은 위탁기관과 소속교를 합산해 입력(58쪽 ➊ 나).', remark:'별도 입력 지침 없음. 출석인정 결석으로 처리되는 경우 사유는 입력하지 않음.', nice:'학적 › 위탁학생관리 › 위탁학생관리 › 출결관리'}},
+ {id:'distinguish', g:['etc'], kind:'guide', tOnly:true, title:'출석인정·기타·미인정 결석, 어떻게 가르나요', sub:'학교장 허가·인정 사유와 사유가 애매할 때',
+  kw:['학교장 허가','학교장 인정','출석인정','기타결석','미인정','사유 불명확','애매','판단','구분','합당','불분명'],
+  summary:'출석인정 결석은 기재요령이 사유를 열거해 둔 것이고, 학교장 판단이 들어가는 곳은 두 군데입니다. 학교장의 "허가"가 요건인 출석인정(대회·체험학습·교환학습·등교중지, 생리통 등)과 학교장이 "인정"하는 기타 결석(부득이한 개인사정, 합당한 사유)입니다. 사유가 불명확할 때의 별도 확인 절차는 기재요령에 없습니다.',
+  checks:['출석인정 결석: 별표 8 제2호 나목 1)~12)에 열거된 사유(천재지변·법정 감염병, 공적의무, 대회·체험학습 등, 경조사, 투표 등). 다른 법령·행정규칙이 출석으로 인정하는 경우도 포함(12))','학교장의 "허가"가 요건인 출석인정: 대회·훈련·교환학습·교외체험학습·등교중지(3)), 극심한 생리통 월 1일(7))','기타 결석: 가족 봉양·가사 조력·간병 등 부득이한 개인사정(마목 1)) 또는 그 밖의 합당한 사유(마목 4))를 학교장이 인정한 경우 → 사유를 특기사항에 입력','미인정 결석: 태만·가출·출석 거부 등 고의 결석(라목 6)), 학원 수강·학칙 기간을 넘긴 체험학습·해외 어학연수 등 합당하지 않은 사유(라목 7))'],
+  docs:['사유별 증빙은 각 사유 카드를 참고하세요'], deadline:'사유별로 다름',
+  record:'어느 쪽으로 판단하느냐에 따라 출석(사유 미기재), 기타 결석(사유 필수 기재), 미인정 결석으로 갈립니다.',
+  tip:'사유가 불명확할 때 확인하는 절차나 서류를 정한 조항은 기재요령에 없으므로 학칙·학교 규정과 학교장 판단에 따릅니다. 질병·미인정 결석의 사유 입력 기준은 학교장이 정해 학교 안에서 동일하게 적용합니다.',
+  rel:['other','truancy','academy'],
+  deep:{law:'별표 8 제2호 나·다·라·마목 (49~55쪽)', note:'출석인정 결석은 출석으로 처리하며 사유를 입력하지 않음(58쪽 가.4)).', remark:'기타 결석은 1일이라도 사유 입력, 출석인정 결석은 입력하지 않음(58쪽 가.1)·4)).', nice:'학적 › 출결관리 › 출결관리 › 일일출결관리(담임용) › 출석인정 결석'}},
+ {id:'fix', g:['etc'], kind:'guide', tOnly:true, title:'출결을 잘못 입력했어요 · 마감 후 정정', sub:'오입력 정정, 학년도 마감 이후 수정, 이의 제기가 들어왔을 때',
+  kw:['정정','정정대장','오입력','잘못 입력','수정','마감','마감 후','이의','이의제기','이의 제기','민원','출결 처리 결과','학업성적관리위원회','오탈자','증빙자료','나이스'],
+  summary:'학년도 종료일까지 작성을 마감하고, 마감 이후 이전 입력 자료의 정정은 원칙적으로 금지입니다. 객관적인 증빙자료가 있을 때만 학업성적관리위원회 심의를 거쳐 정정대장 결재 절차로 정정합니다. 내용의 의미가 바뀌지 않는 단순 오·탈자는 정정할 수 있습니다.',
+  steps:['객관적 증빙자료를 확인합니다 (단순 오·탈자는 정정 전 출력물이 증빙)','학교 학업성적관리위원회가 증빙의 객관성·정정 사유·정정 내용을 심의합니다 (인적·학적사항의 학생정보는 심의 생략 가능)','교육정보시스템 정정대장 결재 절차에 따라 재학생은 발견 학년도 학급담임교사, 졸업생은 업무담당자가 정정합니다','정정 입력 후 출력물을 보조자료와 대조·확인합니다'],
+  docs:['정정 사유를 확인할 수 있는 증빙자료'], deadline:'마감 이후에는 증빙자료가 있을 때만 가능',
+  record:'정정 전 내용·정정 후 내용·정정 사유가 정정대장에 남습니다. 정정대장은 학년도 단위로 작성해 증빙자료와 합철하고, 학년도 말에 출력해 준영구 보관합니다.',
+  tip:'학부모가 출결 처리 결과에 이의를 제기했을 때의 확인 절차를 따로 정한 조항은 기재요령에 없습니다(이의신청 절차는 성적 평가에만 규정). 정정을 요구하는 내용이라면 위 정정 절차를 따르고, 졸업생은 정정 요구 민원이 있으면 학교장이 정정대장 서식에 따라 증빙을 첨부해 정정합니다. 그 밖의 절차는 학교 규정을 확인하세요. 당해 학년도 입력이 끝나면 학교생활기록부Ⅱ·출력물·보조부를 3회 이상 대조·확인하도록 하고 있습니다.',
+  deep:{law:'학교생활기록 작성 및 관리지침 제19조, 별표 10 (109~112쪽)', note:'출결 보조부에 오류가 있으면 학교 규정에 따라 보조부 정정 결재부터 하되, 교육정보시스템의 정정 결재를 거쳤다면 보조부 결재를 한 것으로 봄(111쪽). 학생 본인·가족의 질병명 삭제는 증빙 없이 사유를 "개인정보 보호"로 학교장 결재를 받아 정정할 수 있음.', remark:'출결 특기사항도 같은 정정 절차를 따릅니다.', nice:'학생부 › 정정대장관리 › 정정대장작성'}},
 ];
+
+/* 예상 질문: 검색어와 비교하는 용도. 해당 카드가 실제로 답하는 질문만 연결 */
+const CASE_Q={
+ illness:['학생이 단순 감기나 복통으로 하루 결석한 경우에도 진단서를 제출해야 하나요?','질병결석을 인정받기 위해 제출해야 하는 증빙서류에는 어떤 것들이 있나요?','학부모의 결석계만으로 질병결석을 인정할 수 있는 경우는 언제인가요?','결석 후 증빙서류를 늦게 제출한 경우에도 출결 처리가 가능한가요?','열이 나서 학교에 못 갔어요','감기로 하루 쉬었는데 병원에 안 가도 되나요','결석신고서는 언제까지 내야 하나요','병원 진료확인서에 기재된 날짜와 실제 결석한 날짜가 다르면 어떻게 처리해야 하나요?','진단서 발급일과 결석 기간이 다른데 질병결석 되나요','아파서 결석하면 무슨 서류가 필요해요'],
+ disease:['학생이 독감이나 코로나19 등 감염병에 걸린 경우 출석인정결석으로 처리할 수 있나요?','법정 감염병으로 결석한 학생이 출석 인정을 받으려면 어떤 서류를 제출해야 하나요?','아이가 독감 진단을 받았는데 출석으로 인정되나요','수두나 눈병 때문에 학교에 못 가요','코로나에 걸렸을 때 결석 처리','감염병 의심 증상으로 검사 결과를 기다리며 등교하지 않은 경우 출결은 어떻게 처리하나요?','독감 검사 결과 나올 때까지 쉬었어요'],
+ dust:['학생이 미세먼지와 관련된 건강상의 이유로 결석하는 경우 출석으로 인정받을 수 있나요?','미세먼지가 심한 날 아이를 학교에 안 보내도 되나요','천식이 있는 아이가 미세먼지 나쁨일 때 결석'],
+ chronic:['학생이 만성질환으로 정기적인 병원 진료를 받는 경우 출결은 어떻게 처리하나요?','장기간 결석하는 학생의 출결은 어떤 기준과 절차에 따라 관리해야 하나요?','정기 진료 때문에 자주 조퇴해요','오래 치료받는 아이의 출결'],
+ hospital:['장기간 결석하는 학생의 출결은 어떤 기준과 절차에 따라 관리해야 하나요?','병원학교는 출석으로 인정되나요','오래 입원해야 해서 학교에 못 가요'],
+ period:['생리통 때문에 결석하면 어떻게 처리되나요','여학생 생리통 결석 한 달에 하루 인정'],
+ family:['학생이 가족의 사망으로 결석한 경우 출석으로 인정되는 기간은 며칠인가요?','할머니가 돌아가셨어요 며칠 쉬어도 되나요','가족 결혼식 때문에 결석','장례 때문에 학교에 못 갔어요'],
+ care:['학생이 개인적인 가정 사정으로 결석한 경우 기타결석으로 처리할 수 있나요?','가족 간병 때문에 결석','동생을 돌보느라 학교에 못 갔어요'],
+ other:['학생이 개인적인 가정 사정으로 결석한 경우 기타결석으로 처리할 수 있나요?','다른 사유에 없는 결석은 어떻게 처리되나요'],
+ trip:['가족여행을 위해 교외체험학습을 신청한 경우 출석으로 인정받을 수 있나요?','교외체험학습 결과보고서를 제출하지 않으면 출결은 어떻게 처리되나요?','학생이 해외여행을 다녀오는 경우에도 교외체험학습으로 출석을 인정받을 수 있나요?','가족여행을 가려면 어떻게 신청해요','체험학습 보고서는 언제 내요','교외체험학습 신청서를 사전에 제출하지 못한 경우에도 출석을 인정받을 수 있나요?','체험학습 신청 없이 다녀왔어요'],
+ tripover:['학교장이 허가한 교외체험학습 기간을 초과하여 결석한 경우 어떻게 처리해야 하나요?','교외체험학습으로 인정받을 수 있는 연간 최대 일수는 어떻게 결정되나요?','체험학습 일수를 넘겨서 다녀왔어요'],
+ abroad:['학생이 해외여행을 다녀오는 경우에도 교외체험학습으로 출석을 인정받을 수 있나요?','해외 어학연수를 가면 결석 처리는 어떻게 되나요'],
+ athlete:['학생이 학교 대표로 대회에 참가한 경우 출결은 어떻게 처리하나요?','운동부 대회 때문에 결석','전국소년체전에 출전하면 출석인정','대회에 나가면 며칠까지 출석으로 인정돼요'],
+ entrance:['중학교 입학 면접 때문에 조퇴해요','국제중 면접을 보러 가는 날 출결 처리'],
+ disaster:['학생이 천재지변이나 교통 두절로 등교하지 못한 경우 출결은 어떻게 처리하나요?','폭설로 학교에 못 갔어요','태풍 때문에 결석'],
+ 'bully-victim':['학교폭력 피해 학생이 피해 회복이나 보호를 위해 학교에 나오지 못한 경우 출결은 어떻게 처리하나요?','학폭 피해로 학교에 못 가요'],
+ truancy:['미인정결석이 지속적으로 발생하는 학생에 대해 학교는 어떤 조치를 취해야 하나요?','아이가 학교에 안 가려고 해요','무단결석을 하면 어떻게 되나요'],
+ academy:['학원 때문에 빠지면 결석 처리는 어떻게 되나요','학원 수업 때문에 일찍 가면 조퇴인가요'],
+ inschool:['학생이 수업 중 병원에 다녀온 뒤 다시 학교로 돌아왔다면 출결은 어떻게 처리하나요?','수업 중에 병원 다녀왔는데 결석인가요','병원 갔다가 학교에 다시 오면 조퇴인가요 결과인가요','병원 진료 받고 늦게 등교하면 지각이에요'],
+ mind:['학생이 심리적·정서적 어려움으로 등교하지 못하는 경우 출결을 인정받을 수 있나요?','아이가 불안해서 학교에 못 가요 결석 처리','마음이 힘들어서 학교에 안 가면 어떻게 되나요','우울증으로 학교에 못 가는 경우 출결'],
+ outside:['학생이 외부 기관에서 실시하는 교육이나 행사에 참여한 경우 출석으로 인정받을 수 있나요?','교육청 지정 기관에서 수업을 들으면 출결은 어떻게 되나요','외부 교육기관에서 일부 수업을 들어요'],
+ distinguish:['학교장 허가 결석과 출석인정 결석은 어떻게 다른가요','결석 사유가 불명확하면 어떤 절차로 처리하나요','기타결석과 출석인정은 어떻게 구분하나요','학교장이 허가하면 출석인정인가요'],
+ fix:['학생의 출결 사항을 나이스(NEIS)에 잘못 입력한 경우 어떤 절차로 정정해야 하나요?','이미 학년도 출결 마감이 완료된 이후에도 출결 기록을 수정할 수 있나요?','학부모가 학교의 출결 처리 결과에 이의를 제기한 경우 어떤 절차에 따라 확인하고 처리해야 하나요?','출결 오입력 정정대장 작성','마감 후 출결 수정'],
+ transfer:['방학 중에 전학 가는데 개학일이 서로 달라요','전학 가는 학교 개학 전에 지금 학교가 개학하면 결석인가요']
+};
+CASES.forEach(c=>{c.q=CASE_Q[c.id]||[];});
+/* 사유 카드가 아닌 화면도 검색 결과로 */
+const PAGES=[{type:'today',q:'오늘 결석했어요',h:'지금 할 일부터 5일 안에 할 일까지',qs:['학생이 결석한 사실을 학부모가 사전에 알리지 않았다면 어떻게 처리해야 하나요?','오늘 아이가 아파서 결석했는데 학교에 뭐라고 해야 하나요','학교에 연락을 못 하고 결석했어요','결석하면 가장 먼저 무엇을 해야 하나요'],body:'아침에 담임 선생님께 알립니다 결석신고서를 냅니다 증빙 서류를 냅니다'}];
 
 /* 2026~2027 공휴일 (대체공휴일 포함) */
 const HOLIDAYS = new Set(['2026-01-01','2026-02-16','2026-02-17','2026-02-18','2026-03-01','2026-03-02','2026-05-01','2026-05-05','2026-05-24','2026-05-25','2026-06-03','2026-06-06','2026-08-15','2026-08-17','2026-09-24','2026-09-25','2026-09-26','2026-09-28','2026-10-03','2026-10-05','2026-10-09','2026-12-25',
@@ -877,13 +1003,17 @@ const today=()=>{const d=new Date();d.setHours(0,0,0,0);return d};
 
 /* ---------- 라우팅 (URL 변경 없음, 뒤로가기 지원) ---------- */
 let state={v:'home'};
+let lastQ='';
+try{history.scrollRestoration='manual'}catch(e){}
 function go(next,replace){
+  if(!replace){ state.sy=window.scrollY; try{hRep(state,'',location.pathname+location.search)}catch(e){} }
+  if(next.v==='home' && next.q===undefined) next.q=lastQ;
   state=next;
-  if(replace) history.replaceState(next,'' ,location.pathname+location.search);
-  else history.pushState(next,'',location.pathname+location.search);
+  if(replace) hRep(next,'' ,location.pathname+location.search);
+  else hPush(next,'',location.pathname+location.search);
   render(); window.scrollTo({top:0});
 }
-window.addEventListener('popstate',e=>{ state=e.state||{v:'home'}; render(); });
+window.addEventListener('popstate',e=>{ state=e.state||{v:'home'}; render(); window.scrollTo(0,state.sy||0); });
 
 /* ---------- 렌더 ---------- */
 function render(){
@@ -892,7 +1022,7 @@ function render(){
   else if(state.v==='group') app.innerHTML=groupHTML(state.g);
   else if(state.v==='case') app.innerHTML=caseHTML(state.id);
   else if(state.v==='today') app.innerHTML=todayHTML();
-  document.body.classList.toggle('hide-bar', state.v==='case'||state.v==='today');
+  document.body.classList.toggle('hide-today', state.v==='today');
   bind();
 }
 
@@ -903,8 +1033,8 @@ function seasonBanner(){
   return `<button class="season" data-case="transfer"><span class="sico">!</span><span class="st"><b>방학 중에 전학하나요?</b><small>두 학교 개학일이 다르면 그 사이가 결석으로 남을 수 있어요</small></span>${svg('i-chev')}</button>`;
 }
 function doorHTML(g){
-  const order=['ok','ill','etc','no'];
-  const kinds=[...new Set(CASES.filter(c=>c.g.includes(g.id)).map(c=>c.kind))].sort((a,b)=>order.indexOf(a)-order.indexOf(b));
+  const order=['ok','ill','etc','no','guide'];
+  const kinds=[...new Set(CASES.filter(c=>c.g.includes(g.id)&&vis(c)).map(c=>c.kind))].sort((a,b)=>order.indexOf(a)-order.indexOf(b));
   return `<button class="door" data-g="${g.id}" style="--t:var(--t-${g.id})"><span class="ico">${svg(g.ico)}</span><b>${g.name}</b><small>${g.desc}</small><span class="dots">${kinds.map(k=>`<i class="d-${KIND[k].cls}">${KIND[k].short}</i>`).join('')}</span></button>`;
 }
 function homeHTML(){
@@ -917,6 +1047,7 @@ function homeHTML(){
       <button class="clr" id="qclr" aria-label="지우기" ${state.q?'':'hidden'}>${svg('i-x')}</button>
     </div>
     <div class="chiprow"><span class="lbl">예시</span>${['할머니 장례','독감','가족여행','학원','미세먼지','대회 참가','생리통'].map(c=>`<button class="chip" data-chip="${c}">${c}</button>`).join('')}</div>
+    <label class="tmode"><input type="checkbox" id="tmode"${isT()?' checked':''}><span>선생님용 질문도 함께 검색</span></label>
     <div id="results" class="results"></div>
     ${seasonBanner()}
   </div></section>
@@ -940,8 +1071,7 @@ function homeHTML(){
   <details class="basics">
     <summary><div class="st"><h2>출결 기본 상식 <span class="fourdots"><i style="background:var(--ok)"></i><i style="background:var(--ill)"></i><i style="background:var(--etc)"></i><i style="background:var(--no)"></i></span></h2><span>결석 네 가지 구분 · 지각·조퇴·결과의 차이</span></div><span class="open-btn">펼치기${svg('i-down')}</span></summary>
     <div class="bbody">
-    <div class="sec">
-    <h3>결석은 네 가지로 나뉩니다</h3>
+    <div class="sec" data-q="초등학교에서 출석과 결석을 구분하는 기준은 무엇인가요?|질병결석, 미인정결석, 기타결석은 각각 어떤 경우에 해당하나요?|초등학교에서 출석인정결석으로 처리할 수 있는 대표적인 사례에는 어떤 것들이 있나요?|출석인정 결석과 질병 결석은 뭐가 달라요|결석 종류"><h3>결석은 네 가지로 나뉩니다</h3>
     <p class="lead">같은 "빠진 날"이라도 사유에 따라 생활기록부에 남는 방식이 다릅니다.</p>
     <div class="fourway">
       <div class="fw ok"><b>출석인정 결석</b><span>출석한 것으로 봅니다. 결석일수에 들어가지 않고 사유도 적지 않습니다. 감염병, 경조사, 체험학습, 대회 참가 등.</span></div>
@@ -950,8 +1080,7 @@ function homeHTML(){
       <div class="fw no"><b>미인정 결석</b><span>학원, 어학연수, 기간 초과 여행, 무단결석, 출석정지. 결석일수 "미인정"란에 남습니다.</span></div>
     </div>
     </div>
-    <div class="sec">
-    <h3>지각·조퇴·결과는 무엇이 다른가요?</h3>
+    <div class="sec" data-q="초등학교에서 지각을 판단하는 기준 시각은 언제인가요?|학생이 1교시 시작 후 등교했지만 수업에 참여했다면 지각으로 처리해야 하나요?|학생이 하루 중 일부 수업에만 참여한 경우 출석으로 인정할 수 있나요?|학생이 학교에 등교했지만 특정 수업에 참여하지 않은 경우 출결은 어떻게 처리하나요?|학생이 몸이 아파 보건실에서 휴식을 취한 경우 결과로 처리해야 하나요?|지각과 조퇴가 같은 날 발생했을 경우 출결은 어떻게 기록해야 하나요?|학생이 정규 수업에는 참여했지만 창의적 체험활동에 참여하지 않았다면 결과로 처리할 수 있나요?|지각 조퇴 결과 차이|몇 시까지 가야 지각이에요"><h3>지각·조퇴·결과는 무엇이 다른가요?</h3>
     <div class="tl">${timelineSVG()}
       <div class="legend">
         <div><b>지각</b><span>등교시각 이후, 하교시각 전에 학교에 온 경우</span></div>
@@ -969,13 +1098,13 @@ function homeHTML(){
     <span class="sec-label">참고</span>
     <h2 class="sec-title">자주 받는 질문, 결론부터</h2>
     <div class="akit">
-      <details class="ac g-doc"><summary><span class="ah">종이 없이<br>나이스로 냅니다</span><span class="aq">결석신고서는 꼭 종이로 내야 하나요?</span><span class="ao">펼치기</span></summary><div class="a">아니요. <a href="https://parents.neis.go.kr/" target="_blank" rel="noopener">나이스 학부모 서비스</a>로 낸 결석신고서와 증빙은 전자화문서로 인정되어 따로 출력·원본 제출이 필요 없습니다. 학부모 의견서나 담임 확인서는 신청 화면 해당란에 적는 것으로 갈음할 수 있습니다.<br><b>학교마다 받는 방식이 다를 수 있으니</b> 내기 전에 학교의 안내를 먼저 확인하세요.<div class="neis"><a href="https://parents.neis.go.kr/" target="_blank" rel="noopener">나이스 학부모 서비스 열기 ↗</a><span>parents.neis.go.kr · 로그인 후 「출결 신고」</span></div></div></details>
-      <details class="ac g-doc"><summary><span class="ah">기타 결석은 하루라도<br>사유가 적힙니다</span><span class="aq">특기사항에는 무엇이 적히나요?</span><span class="ao">펼치기</span></summary><div class="a">기타 결석은 <b>하루라도 사유가 적힙니다</b>. 질병·미인정 결석은 학생의 출결상황을 이해하는 데 필요한 경우 적을 수 있고, 지각·조퇴·결과는 적지 않지만 횟수가 많으면 적을 수 있습니다. 출석인정 결석은 사유를 적지 않습니다. 해외 봉사·어학연수·교외 대회 참가처럼 생활기록부에 쓸 수 없는 내용은 특기사항에도 쓸 수 없습니다.</div></details>
-      <details class="ac g-day"><summary><span class="ah">결석·지각·조퇴·결과<br>모두 0이면 개근</span><span class="aq">개근은 어떤 기준인가요?</span><span class="ao">펼치기</span></summary><div class="a">해당 학년 동안 <b>결석·지각·조퇴·결과가 한 번도 없는</b> 경우입니다. 출석인정 결석은 출석으로 처리되므로 개근에 영향이 없습니다. 개근이면 학년 말 생활기록부 마감 때 출결 특기사항에 <b>'개근'</b>으로 적힙니다. 개근상·정근상 수상 기준은 교육청과 학교 방침에 따라 다를 수 있습니다.</div></details>
-      <details class="ac g-day"><summary><span class="ah">수업일수의 2/3<br>출석이 기준입니다</span><span class="aq">며칠 이상 결석하면 유급이 되나요?</span><span class="ao">펼치기</span></summary><div class="a">학년 수료에는 그 학년 수업일수(초등 190일 이상)의 <b>3분의 2 이상</b> 출석이 필요합니다. 출석인정 결석은 출석으로 계산됩니다. 지각·조퇴·결과는 횟수와 관계없이 수료에 영향을 주지 않습니다.</div></details>
-      <details class="ac g-day"><summary><span class="ah">조퇴·지각도<br>사유별로 나뉩니다</span><span class="aq">면접·병원·장례 때문에 조퇴하면 어떻게 처리되나요?</span><span class="ao">펼치기</span></summary><div class="a">네. 결석과 똑같이 사유에 따라 질병·미인정·기타로 나누어 횟수를 셉니다. 병원 진료로 늦으면 질병 지각, 학원 때문에 일찍 가면 미인정 조퇴입니다. <b>출석인정 사유로 일부 시간만 빠지면 출석인정 지각·조퇴·결과</b>가 되어 횟수에 넣지 않습니다. 예를 들어 진학할 중학교의 면접·실기고사, 경조사, 체험학습 때문에 조퇴한 경우입니다.<br><button class="tlink" data-case="entrance">중학교 면접·실기고사 안내 보기 ›</button></div></details>
-      <details class="ac g-tr"><summary><span class="ah">전입 처리 전까진<br>지금 학교 학생입니다</span><span class="aq">방학 중 전학하면 개학일이 다른 기간은 어떻게 되나요?</span><span class="ao">펼치기</span></summary><div class="a">새 학교가 전입 처리를 하기 전까지는 지금 학교 학생입니다. 지금 학교 개학일부터 전출 처리 전날까지 안 나오면 지금 학교의 결석(사유 없으면 미인정)으로 남습니다. 전입 처리를 지금 학교 개학일 전에 마치도록 새 학교와 미리 날짜를 맞추세요.<button class="calc-cta" data-case="transfer"><span class="ci"><svg aria-hidden="true"><use href="#i-calc"/></svg></span><span class="ct"><b>전학 공백 계산기</b><small>두 학교 날짜를 넣으면 결석으로 남는 날이 바로 나옵니다</small></span><svg class="ar" aria-hidden="true"><use href="#i-chev"/></svg></button></div></details>
-      <details class="ac g-tr"><summary><span class="ah">두 학교 기록을<br>합산합니다</span><span class="aq">전학 온 아이의 출결은 어떻게 합산되나요?</span><span class="ao">펼치기</span></summary><div class="a">전출교와 전입교의 수업일수·결석·지각·조퇴·결과를 합산하되 <b>겹치는 기간은 뺍니다</b>. 전출일과 전입일이 같으면 전입일만 수업일수로 계산합니다.</div></details>
+      <details class="ac g-doc" data-q="결석계는 종이로 내야 하나요|나이스로 결석신고서 내는 방법|학부모 서비스로 결석 신고|결석계 제출 방법"><summary><span class="ah">종이 없이<br>나이스로 냅니다</span><span class="aq">결석신고서는 꼭 종이로 내야 하나요?</span><span class="ao">펼치기</span></summary><div class="a">아니요. <a href="https://parents.neis.go.kr/" target="_blank" rel="noopener">나이스 학부모 서비스</a>로 낸 결석신고서와 증빙은 전자화문서로 인정되어 따로 출력·원본 제출이 필요 없습니다. 학부모 의견서나 담임 확인서는 신청 화면 해당란에 적는 것으로 갈음할 수 있습니다.<br><b>학교마다 받는 방식이 다를 수 있으니</b> 내기 전에 학교의 안내를 먼저 확인하세요.<div class="neis"><a href="https://parents.neis.go.kr/" target="_blank" rel="noopener">나이스 학부모 서비스 열기 ↗</a><span>parents.neis.go.kr · 로그인 후 「출결 신고」</span></div></div></details>
+      <details class="ac g-doc" data-q="학교생활기록부에 기재되는 출결 사항에는 어떤 내용이 포함되나요?|생기부 출결상황에 어떤 내용이 적히나요|결석 사유가 생활기록부에 남나요|특기사항에 뭐라고 적혀요"><summary><span class="ah">기타 결석은 하루라도<br>사유가 적힙니다</span><span class="aq">특기사항에는 무엇이 적히나요?</span><span class="ao">펼치기</span></summary><div class="a">기타 결석은 <b>하루라도 사유가 적힙니다</b>. 질병·미인정 결석은 학생의 출결상황을 이해하는 데 필요한 경우 적을 수 있고, 지각·조퇴·결과는 적지 않지만 횟수가 많으면 적을 수 있습니다. 출석인정 결석은 사유를 적지 않습니다. 해외 봉사·어학연수·교외 대회 참가처럼 생활기록부에 쓸 수 없는 내용은 특기사항에도 쓸 수 없습니다.</div></details>
+      <details class="ac g-day" data-q="개근 기준이 무엇인가요|개근상을 받으려면|출석인정 결석은 개근에 영향이 있나요"><summary><span class="ah">결석·지각·조퇴·결과<br>모두 0이면 개근</span><span class="aq">개근은 어떤 기준인가요?</span><span class="ao">펼치기</span></summary><div class="a">해당 학년 동안 <b>결석·지각·조퇴·결과가 한 번도 없는</b> 경우입니다. 출석인정 결석은 출석으로 처리되므로 개근에 영향이 없습니다. 개근이면 학년 말 생활기록부 마감 때 출결 특기사항에 <b>'개근'</b>으로 적힙니다. 개근상·정근상 수상 기준은 교육청과 학교 방침에 따라 다를 수 있습니다.</div></details>
+      <details class="ac g-day" data-q="지각·조퇴·결과가 여러 번 발생하면 결석 일수로 환산되나요?|지각 조퇴가 많으면 수료에 영향이 있나요|며칠 결석하면 유급인가요|수료하려면 출석을 며칠 해야 하나요"><summary><span class="ah">수업일수의 2/3<br>출석이 기준입니다</span><span class="aq">며칠 이상 결석하면 유급이 되나요?</span><span class="ao">펼치기</span></summary><div class="a">학년 수료에는 그 학년 수업일수(초등 190일 이상)의 <b>3분의 2 이상</b> 출석이 필요합니다. 출석인정 결석은 출석으로 계산됩니다. 지각·조퇴·결과는 횟수와 관계없이 수료에 영향을 주지 않습니다.</div></details>
+      <details class="ac g-day" data-q="학생이 아침에 등교했다가 몸이 아파 바로 귀가한 경우 출결은 어떻게 처리하나요?|학생이 병원 진료를 받고 늦게 등교한 경우 질병지각으로 처리할 수 있나요?|학부모의 개인적인 사정으로 학생이 늦게 등교한 경우 출결은 어떻게 처리하나요?|학생이 급식 후 개인적인 사정으로 귀가한 경우 조퇴로 처리해야 하나요?|병원에 갔다 늦게 오면 질병 지각인가요|학원 때문에 일찍 가면 미인정 조퇴인가요"><summary><span class="ah">조퇴·지각도<br>사유별로 나뉩니다</span><span class="aq">면접·병원·장례 때문에 조퇴하면 어떻게 처리되나요?</span><span class="ao">펼치기</span></summary><div class="a">네. 결석과 똑같이 사유에 따라 질병·미인정·기타로 나누어 횟수를 셉니다. 병원 진료로 늦으면 질병 지각, 학원 때문에 일찍 가면 미인정 조퇴입니다. <b>출석인정 사유로 일부 시간만 빠지면 출석인정 지각·조퇴·결과</b>가 되어 횟수에 넣지 않습니다. 예를 들어 진학할 중학교의 면접·실기고사, 경조사, 체험학습 때문에 조퇴한 경우입니다.<br><button class="tlink" data-case="entrance">중학교 면접·실기고사 안내 보기 ›</button></div></details>
+      <details class="ac g-tr" data-q="방학 중에 전학 가는데 개학일이 달라요|전학 가는 학교가 아직 개학 전이에요|전학 가면 그 사이 결석이 되나요"><summary><span class="ah">전입 처리 전까진<br>지금 학교 학생입니다</span><span class="aq">방학 중 전학하면 개학일이 다른 기간은 어떻게 되나요?</span><span class="ao">펼치기</span></summary><div class="a">새 학교가 전입 처리를 하기 전까지는 지금 학교 학생입니다. 지금 학교 개학일부터 전출 처리 전날까지 안 나오면 지금 학교의 결석(사유 없으면 미인정)으로 남습니다. 전입 처리를 지금 학교 개학일 전에 마치도록 새 학교와 미리 날짜를 맞추세요.<button class="calc-cta" data-case="transfer"><span class="ci"><svg aria-hidden="true"><use href="#i-calc"/></svg></span><span class="ct"><b>전학 공백 계산기</b><small>두 학교 날짜를 넣으면 결석으로 남는 날이 바로 나옵니다</small></span><svg class="ar" aria-hidden="true"><use href="#i-chev"/></svg></button></div></details>
+      <details class="ac g-tr" data-q="전학 온 학생의 이전 학교 출결 기록은 어떻게 확인하고 관리해야 하나요?|전학 오면 출결을 합산하나요|전학 전 학교 결석은 어떻게 되나요"><summary><span class="ah">두 학교 기록을<br>합산합니다</span><span class="aq">전학 온 아이의 출결은 어떻게 합산되나요?</span><span class="ao">펼치기</span></summary><div class="a">전출교와 전입교의 수업일수·결석·지각·조퇴·결과를 합산하되 <b>겹치는 기간은 뺍니다</b>. 전출일과 전입일이 같으면 전입일만 수업일수로 계산합니다.</div></details>
       <button class="ac more" data-tosearch><span class="ah">다른 질문이<br>있으신가요?</span><span class="aq">사유를 말하듯 검색하면 해당 안내로 바로 갑니다</span><span class="ao">검색창으로 ↑</span></button>
     </div>
   </div></section>
@@ -988,41 +1117,42 @@ function homeHTML(){
 }
 
 function timelineSVG(){
-  return `<svg viewBox="0 0 680 150" role="img" aria-label="하루 등교 시간표 위에 지각·조퇴·결과를 표시한 그림">
-    <defs><style>.tx{font-family:var(--body);font-size:12.5px;fill:var(--ink-2)}.tb{font-family:var(--display);font-size:13.5px;font-weight:700}</style></defs>
-    <line x1="40" y1="78" x2="640" y2="78" stroke="var(--line)" stroke-width="2"/>
-    <rect x="120" y="70" width="440" height="16" rx="8" fill="var(--accent-soft)"/>
-    <line x1="120" y1="58" x2="120" y2="98" stroke="var(--accent)" stroke-width="2"/>
-    <line x1="560" y1="58" x2="560" y2="98" stroke="var(--accent)" stroke-width="2"/>
-    <text x="120" y="46" text-anchor="middle" class="tx" fill="var(--ink)">등교시각</text>
-    <text x="560" y="46" text-anchor="middle" class="tx" fill="var(--ink)">하교시각</text>
-    <text x="340" y="48" text-anchor="middle" class="tx">수업시간</text>
-    <path d="M150 78 L150 116" stroke="var(--ill)" stroke-width="2" stroke-dasharray="3 3"/>
-    <circle cx="150" cy="78" r="6" fill="var(--ill)"/>
-    <text x="150" y="134" text-anchor="middle" class="tb" fill="var(--ill)">지각</text>
-    <text x="150" y="147" text-anchor="middle" class="tx">늦게 등교</text>
-    <path d="M340 78 L340 116" stroke="var(--etc)" stroke-width="2" stroke-dasharray="3 3"/>
-    <rect x="300" y="72" width="80" height="12" rx="6" fill="var(--etc)" opacity=".85"/>
-    <text x="340" y="134" text-anchor="middle" class="tb" fill="var(--etc)">결과</text>
-    <text x="340" y="147" text-anchor="middle" class="tx">수업 일부 빠짐</text>
-    <path d="M500 78 L500 116" stroke="var(--no)" stroke-width="2" stroke-dasharray="3 3"/>
-    <circle cx="500" cy="78" r="6" fill="var(--no)"/>
-    <text x="500" y="134" text-anchor="middle" class="tb" fill="var(--no)">조퇴</text>
-    <text x="500" y="147" text-anchor="middle" class="tx">일찍 하교</text>
+  return `<svg viewBox="0 0 680 196" role="img" aria-label="하루 등교 시간표 위에 지각·조퇴·결과를 표시한 그림">
+    <defs><style>.tx{font-family:var(--body);font-size:25px;fill:var(--ink-2)}.tb{font-family:var(--display);font-size:28px;font-weight:700}</style></defs>
+    <line x1="40" y1="92" x2="640" y2="92" stroke="var(--line)" stroke-width="3"/>
+    <rect x="120" y="82" width="440" height="20" rx="10" fill="var(--accent-soft)"/>
+    <line x1="120" y1="68" x2="120" y2="116" stroke="var(--accent)" stroke-width="3"/>
+    <line x1="560" y1="68" x2="560" y2="116" stroke="var(--accent)" stroke-width="3"/>
+    <text x="120" y="52" text-anchor="middle" class="tx" style="fill:var(--ink)">등교시각</text>
+    <text x="560" y="52" text-anchor="middle" class="tx" style="fill:var(--ink)">하교시각</text>
+    <text x="340" y="52" text-anchor="middle" class="tx">수업시간</text>
+    <path d="M150 92 L150 128" stroke="var(--ill)" stroke-width="3" stroke-dasharray="4 4"/>
+    <circle cx="150" cy="92" r="8" fill="var(--ill)"/>
+    <text x="150" y="156" text-anchor="middle" class="tb" fill="var(--ill)">지각</text>
+    <text x="150" y="186" text-anchor="middle" class="tx">늦게 등교</text>
+    <path d="M340 92 L340 128" stroke="var(--etc)" stroke-width="3" stroke-dasharray="4 4"/>
+    <rect x="296" y="85" width="88" height="14" rx="7" fill="var(--etc)" opacity=".85"/>
+    <text x="340" y="156" text-anchor="middle" class="tb" fill="var(--etc)">결과</text>
+    <text x="340" y="186" text-anchor="middle" class="tx">수업 일부 빠짐</text>
+    <path d="M500 92 L500 128" stroke="var(--no)" stroke-width="3" stroke-dasharray="4 4"/>
+    <circle cx="500" cy="92" r="8" fill="var(--no)"/>
+    <text x="500" y="156" text-anchor="middle" class="tb" fill="var(--no)">조퇴</text>
+    <text x="500" y="186" text-anchor="middle" class="tx">일찍 하교</text>
   </svg>`;
 }
 
 function crumbHTML(parts){ /* parts: [{label, go}] 마지막은 현재 */
   return `<nav class="crumb">${parts.map((x,i)=>i<parts.length-1?`<button ${x.go}>${esc(x.label)}</button>${svg('i-chev')}`:`<span>${esc(x.label)}</span>`).join('')}</nav>`;
 }
-function rowHTML(c,q){
+function rowHTML(c,q,hint,best){
   let t=esc(c.title), s=esc(c.sub);
   if(q){const re=new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'); t=t.replace(re,'<mark>$1</mark>'); s=s.replace(re,'<mark>$1</mark>');}
-  return `<button class="row k-${KIND[c.kind].cls}" data-case="${c.id}"><span class="bar"></span><span class="t"><b>${t}</b><span>${s}</span></span>${badge(c.kind)}<span class="arr">${svg('i-chev')}</span></button>`;
+  if(hint) s=`<em class="qh">“${esc(hint)}”</em>`;
+  return `<button class="row k-${KIND[c.kind].cls}${best?' best':''}" data-case="${c.id}"><span class="bar"></span><span class="t">${best?'<span class="bestlab">가장 가까운 답</span>':''}<b>${t}</b><span>${s}</span></span>${badge(c.kind)}<span class="arr">${svg('i-chev')}</span></button>`;
 }
-const KORDER=['ok','ill','etc','no'];
+const KORDER=['ok','ill','etc','no','guide'];
 function groupHTML(gid){
-  const g=GROUPS.find(x=>x.id===gid); const list=CASES.filter(c=>c.g.includes(gid));
+  const g=GROUPS.find(x=>x.id===gid); const list=CASES.filter(c=>c.g.includes(gid)&&vis(c));
   let body;
   if(list.length>6){
     body=KORDER.map(k=>{const l=list.filter(c=>c.kind===k); return l.length?`<div class="rel"><h3 class="k-${KIND[k].cls}-t">${KIND[k].full}</h3><div class="rows">${l.map(c=>rowHTML(c)).join('')}</div></div>`:''}).join('');
@@ -1061,56 +1191,66 @@ function todayHTML(){
   </div></section>`;
 }
 
+function docParts(d){
+  let cond='',main=d,det='',m=d.match(/^([^:]{2,22}):\s*(.+)$/);
+  if(m){cond=m[1];main=m[2];}
+  m=main.match(/^(.*?)\s*\(([^()]+)\)\s*$/); if(m&&m[1]){main=m[1];det=m[2];}
+  return {cond,main,det};
+}
+function docsHTML(c){
+  const P=c.docs.map(docParts), det=p=>p.det?`<small class="ddet">${esc(p.det)}</small>`:'';
+  if(c.docsMode==='one'&&P.length>1) return `<p class="optlead">아래 중 해당하는 한 가지만 내면 됩니다</p><ul class="opts">${P.map(p=>`<li>${p.cond?`<span class="cond">${esc(p.cond)}</span>`:''}<span class="dmain">${esc(p.main)}</span>${det(p)}</li>`).join('')}</ul>`;
+  return `<ul class="chk">${P.map(p=>`<li><span class="dmain">${p.cond?`<b class="cond">${esc(p.cond)}</b>`:''}${esc(p.main)}</span>${det(p)}</li>`).join('')}</ul>`;
+}
 function splitLead(t){ const m=t.match(/^(.*?[다요]\.)\s*(.*)$/s); return m?[m[1],m[2]]:[t,'']; }
 function diagramHTML(c){
   const T=(x,y,s,cls,anchor='middle')=>`<text x="${x}" y="${y}" text-anchor="${anchor}" class="${cls}">${s}</text>`;
-  const st=`<defs><style>.dl{font-family:var(--body);font-size:19px;fill:var(--ink-2)}.db{font-family:var(--display);font-size:22px;font-weight:700;fill:var(--ink)}</style></defs>`;
-  if(c.calc==='deadline') return `<svg viewBox="0 0 680 120" role="img" aria-label="결석 시작일부터 5일 안에 서류를 내는 흐름">${st}
-    <line x1="60" y1="64" x2="620" y2="64" stroke="var(--line)" stroke-width="2"/>
-    <rect x="120" y="56" width="400" height="16" rx="8" fill="var(--ill-bg)"/>
-    <circle cx="120" cy="64" r="8" fill="var(--ill)"/><circle cx="520" cy="64" r="8" fill="var(--accent)"/>
-    ${T(120,38,'결석 시작','db')}${T(520,38,'서류 마감','db')}${T(320,46,'5일 이내','dl')}
-    ${T(120,100,'학교에 먼저 알림','dl')}${T(520,100,'나이스 또는 종이 제출','dl')}</svg>`;
-  if(c.calc==='family') return `<svg viewBox="0 0 680 120" role="img" aria-label="경조사 발생일부터 정해진 일수만큼 출석이 인정되는 흐름">${st}
-    <line x1="60" y1="64" x2="620" y2="64" stroke="var(--line)" stroke-width="2"/>
-    ${[0,1,2,3,4,5,6].map(i=>{const x=120+i*70; const skip=i===2||i===3; return `<rect x="${x-28}" y="52" width="56" height="24" rx="6" fill="${skip?'var(--line-2)':'var(--ok-bg)'}"/>${T(x,69,skip?(i===2?'토':'일'):['1일','2일','','','3일','4일','5일'][i],'dl')}`}).join('')}
-    <circle cx="120" cy="64" r="5" fill="var(--ok)"/>
-    ${T(120,36,'사유 발생일','db')}${T(540,36,'인정 일수만큼','db')}
-    ${T(340,104,'토·일·공휴일은 건너뜁니다','dl')}</svg>`;
-  if(c.calc==='transfer') return `<svg viewBox="0 0 680 130" role="img" aria-label="지금 학교 개학일부터 전입 처리일 전까지가 결석으로 남는 흐름">${st}
-    <rect x="60" y="56" width="560" height="18" rx="9" fill="var(--line-2)"/>
-    <rect x="200" y="56" width="260" height="18" rx="9" fill="var(--no-bg)"/>
-    <rect x="460" y="56" width="160" height="18" rx="9" fill="var(--ok-bg)"/>
-    <line x1="200" y1="44" x2="200" y2="86" stroke="var(--no)" stroke-width="2"/>
-    <line x1="460" y1="44" x2="460" y2="86" stroke="var(--ok)" stroke-width="2"/>
-    ${T(200,34,'지금 학교 개학','db')}${T(460,34,'새 학교 전입 처리','db')}
-    <text x="330" y="71" text-anchor="middle" class="db" style="fill:var(--no);font-size:19px">지금 학교의 결석</text>
-    
-    ${T(340,110,'학적은 전입 처리된 날에 넘어갑니다','dl')}</svg>`;
+  const st=`<defs><style>.dl{font-family:var(--body);font-size:26px;fill:var(--ink-2)}.db{font-family:var(--display);font-size:28px;font-weight:700;fill:var(--ink)}</style></defs>`;
+  if(c.calc==='deadline') return `<svg viewBox="0 0 680 150" role="img" aria-label="결석 시작일부터 5일 안에 서류를 내는 흐름">${st}
+    <line x1="60" y1="78" x2="620" y2="78" stroke="var(--line)" stroke-width="3"/>
+    <rect x="120" y="68" width="400" height="20" rx="10" fill="var(--ill-bg)"/>
+    <circle cx="120" cy="78" r="10" fill="var(--ill)"/><circle cx="520" cy="78" r="10" fill="var(--accent)"/>
+    ${T(120,44,'결석 시작','db')}${T(520,44,'서류 마감','db')}${T(320,62,'5일 이내','dl')}
+    ${T(120,130,'학교에 먼저 알림','dl')}${T(520,130,'나이스 또는 종이 제출','dl')}</svg>`;
+  if(c.calc==='family') return `<svg viewBox="0 0 680 150" role="img" aria-label="경조사 발생일부터 정해진 일수만큼 출석이 인정되는 흐름">${st}
+    <line x1="60" y1="80" x2="620" y2="80" stroke="var(--line)" stroke-width="3"/>
+    ${[0,1,2,3,4,5,6].map(i=>{const x=120+i*70; const skip=i===2||i===3; return `<rect x="${x-30}" y="62" width="60" height="36" rx="8" fill="${skip?'var(--line-2)':'var(--ok-bg)'}"${i===0?' stroke="var(--ok)" stroke-width="3"':''}/>${T(x,88,skip?(i===2?'토':'일'):['1일','2일','','','3일','4일','5일'][i],'dl')}`}).join('')}
+    ${T(120,40,'사유 발생일','db')}${T(540,40,'인정 일수만큼','db')}
+    ${T(340,134,'토·일·공휴일은 건너뜁니다','dl')}</svg>`;
+  if(c.calc==='transfer') return `<svg viewBox="0 0 680 170" role="img" aria-label="지금 학교 개학일부터 전입 처리일 전까지가 결석으로 남는 흐름">${st}
+    <rect x="60" y="68" width="560" height="36" rx="18" fill="var(--line-2)"/>
+    <rect x="200" y="68" width="260" height="36" rx="18" fill="var(--no-bg)"/>
+    <rect x="460" y="68" width="160" height="36" rx="18" fill="var(--ok-bg)"/>
+    <line x1="200" y1="54" x2="200" y2="118" stroke="var(--no)" stroke-width="3"/>
+    <line x1="460" y1="54" x2="460" y2="118" stroke="var(--ok)" stroke-width="3"/>
+    ${T(200,40,'지금 학교 개학','db')}${T(460,40,'새 학교 전입 처리','db')}
+    <text x="330" y="94" text-anchor="middle" class="db" style="fill:var(--no);font-size:26px">지금 학교의 결석</text>
+    ${T(340,152,'학적은 전입 처리된 날에 넘어갑니다','dl')}</svg>`;
   return '';
 }
 function caseHTML(id){
   const c=CASES.find(x=>x.id===id); const k=KIND[c.kind]; const g=GROUPS.find(x=>x.id===c.g[0]);
-  const rel=(c.rel||[]).map(r=>CASES.find(x=>x.id===r)).filter(Boolean);
-  const sib=CASES.filter(x=>x.id!==c.id && x.g.includes(g.id) && !rel.includes(x));
-  let tmode=false; try{tmode=localStorage.getItem('teacherOpen')==='1'}catch(e){}
-  const verdictSub = c.kind==='ok'?'출석으로 봅니다 · 결석일수에 들어가지 않아요' : c.kind==='ill'?'결석일수 "질병"란에 남아요' : c.kind==='etc'?'결석일수 "기타"란에 남고, 사유가 적혀요' : '결석일수 "미인정"란에 남아요';
+  const rel=(c.rel||[]).map(r=>CASES.find(x=>x.id===r)).filter(x=>x&&vis(x));
+  const sib=CASES.filter(x=>x.id!==c.id && x.g.includes(g.id) && !rel.includes(x) && vis(x));
+  const tmode=isT();
+  const verdictSub = c.kind==='ok'?'출석으로 봅니다 · 결석일수에 들어가지 않아요' : c.kind==='ill'?'결석일수 "질병"란에 남아요' : c.kind==='etc'?'결석일수 "기타"란에 남고, 사유가 적혀요' : c.kind==='guide'?'결석 종류가 아니라 처리 기준·절차 안내예요' : '결석일수 "미인정"란에 남아요';
   const [lead,rest]=splitLead(c.summary);
   const noDocs=c.docs.length===1 && /따로 낼 서류는 없습니다/.test(c.docs[0]);
   let todo;
   if(c.steps) todo=`<div class="todo act"><div class="todo-h">${svg('i-info')}해야 할 일</div><ol class="stp">${c.steps.map(d=>`<li>${esc(d)}</li>`).join('')}</ol><div class="todo-due"><span class="k">언제까지</span><b>${esc(c.deadline)}</b></div></div>`;
   else if(noDocs) todo=`<p class="nodocs">${svg('i-info')}따로 낼 서류는 없습니다. ${/학교가 처리/.test(c.deadline)?'학교에서 처리합니다.':''}</p>`;
-  else todo=`<div class="todo"><div class="todo-h">${svg('i-info')}내야 할 것</div><ul class="chk">${c.docs.map(d=>`<li>${esc(d)}</li>`).join('')}</ul><div class="todo-due"><span class="k">기한</span><b>${esc(c.deadline)}</b></div></div>`;
+  else todo=`<div class="todo"><div class="todo-h">${svg('i-info')}내야 할 것</div>${docsHTML(c)}<div class="todo-due"><span class="k">기한</span><b>${esc(c.deadline)}</b></div></div>`;
   const tnote=(label,body)=>`<div class="tnote"><span class="tl-k">선생님 메모 · ${label}</span><div>${body}</div></div>`;
   const dia=diagramHTML(c);
+  const fromS=state.from==='search'&&state.q;
   return `
   <div class="case-root${tmode?' teacher':''}" id="caseroot">
   <section class="band tint" style="--t:var(--t-${g.id})"><div class="wrap">
-    <div class="crumb-row">${crumbHTML([{label:'처음',go:'data-home'},{label:g.name,go:`data-g="${g.id}"`},{label:c.title}])}
-      <div class="seg" role="tablist"><button class="${tmode?'':'on'}" data-seg="p">학부모용</button><button class="${tmode?'on':''}" data-seg="t">선생님용</button></div></div>
+    ${fromS?`<button type="button" class="back" data-backsearch>${svg('i-left')}<span>‘${esc(state.q)}’ 검색 결과로 돌아가기${state.n?` (${state.n}건)`:''}</span></button>`:''}
+    ${fromS?'':`<div class="crumb-row">${crumbHTML([{label:'처음',go:'data-home'},{label:g.name,go:`data-g="${g.id}"`},{label:c.title}])}</div>`}
     <h1 class="ctitle">${esc(c.title)}</h1>
     <div class="verdict-face ${k.cls}"><b>${k.full}</b><span>${verdictSub}</span></div>
-    ${c.kind==='ok'&&!['hospital','exchange','protect'].includes(c.id)?`<p class="hint">일부 시간만 빠지면 출석인정 지각·조퇴·결과로 처리되어 횟수에 들어가지 않아요.</p>`:''}
+    ${c.kind==='ok'&&!['hospital','exchange','protect'].includes(c.id)?`<p class="infoline">${svg('i-info')}<span>일부 시간만 빠지면 출석인정 지각·조퇴·결과로 처리되어 횟수에 들어가지 않아요.</span></p>`:''}
   </div></section>
 
   <section class="band"><div class="wrap cbody">
@@ -1129,6 +1269,7 @@ function caseHTML(id){
     ${c.tip?`<div class="note prose">${svg('i-info')}<span>${esc(c.tip)}</span></div>`:''}
     ${c.example?`<figure class="example"><figcaption>실제 사례</figcaption><blockquote>${esc(c.example)}</blockquote></figure>`:''}
     <button class="share primary" id="share" data-id="${c.id}">${svg('i-out')}이 안내 주소 복사해서 보내기</button>
+    <div class="modebar"><span>선생님이세요? 근거 조항과 나이스 입력 경로도 함께 봅니다.</span><div class="seg" role="tablist"><button class="${tmode?'':'on'}" data-seg="p">학부모용</button><button class="${tmode?'on':''}" data-seg="t">선생님용</button></div></div>
   </div></section>
 
   ${c.calc?`<section class="band sand"><div class="wrap">${calcHTML(c.calc)}</div></section>`:''}
@@ -1137,7 +1278,7 @@ function caseHTML(id){
     ${rel.length?`<div class="rel"><h3>함께 보기</h3><div class="rows">${rel.map(r=>rowHTML(r)).join('')}</div></div>`:''}
     ${sib.length?`<div class="rel"><h3>「${g.name}」의 다른 사유</h3><div class="hchips">${sib.map(r=>`<button class="hchip k-${KIND[r.kind].cls}" data-case="${r.id}"><i></i>${esc(r.title)}</button>`).join('')}</div></div>`:''}
   </div></section>
-  <section class="band foot"><div class="wrap"><p class="disclaim" style="padding:0">교육청·학교 공식 안내가 아닌 참고 자료입니다. 학교마다 세부 기준이 다를 수 있으니 최종 처리는 담임 선생님께 확인하세요. <span class="cite" style="border:0;padding:0;display:inline">근거: 2026 학교생활기록부 기재요령(초등학교) 48~60쪽</span></p></div></section>
+  <section class="band foot"><div class="wrap"><p class="disclaim" style="padding:0">교육청·학교 공식 안내가 아닌 참고 자료입니다. 학교마다 세부 기준이 다를 수 있으니 최종 처리는 담임 선생님께 확인하세요. 기재요령 해석이 애매하면 <a href="https://star.moe.go.kr/web/main/index.do" target="_blank" rel="noopener">학교생활기록부 종합지원포털</a>의 기재 문의(Q&A)를 이용할 수 있습니다. <span class="cite" style="border:0;padding:0;display:inline">근거: 2026 학교생활기록부 기재요령(초등학교) 48~60쪽</span></p></div></section>
   </div>`;
 }
 
@@ -1223,43 +1364,138 @@ function runCalc(){
   }
 }
 
-/* ---------- 검색 ---------- */
+/* ---------- 검색 (글자 2개 단위 + 희귀한 말일수록 높은 점수) ---------- */
+const STOPW=new Set(['어떻게','어떤','무엇','무슨','왜','있나요','있는지','있을까요','하나요','인가요','입니까','되나요','되는지','할까요','해야','해도','수','것','때','경우','대해','대한','관련','하면','한','및','등','또는','처리','학생','학교','학부모','선생님','어디','언제','몇','며칠','가능한가요','가능한지','해당하나요','해당','않은','않으면','않았다면','있다면','있으면','처리할','처리해','처리해야','처리하나요','처리되나요','받고','받은','받아','받으면','되는','되면','다시','바로','같은','있는','없는']);
+const SINGLE=new Set(['열','약']);
+const VERB=/(했었는데|했는데|했어요|하셨나요|했나요|했다면|했을|하는|하면|하고|해서|인데|이라서|때문에|이에요|예요|어요|아요|세요|하나요|인가요|있나요|되나요|할까요|하다|한다|하여|한|된|했|해요)$/;
+const PART=/(으로는|으로|에서|에게|께서|부터|까지|이나|이란|에는|에도|은|는|이|가|을|를|에|로|와|과|도|의|만|나|요)$/;
+function stem(w){
+  w=w.replace(/[^가-힣a-z0-9]/gi,'');
+  if(w.length===2&&SINGLE.has(w[0])&&/[이가은는을를도만에로의와과]/.test(w[1])) return w[0];
+  if(w.length>=3) w=w.replace(VERB,'');
+  if(w.length>=3) w=w.replace(PART,'');
+  return w;
+}
+function toks(text){
+  const out=[];
+  String(text).toLowerCase().split(/[\s·,/()「」"'“”‘’~\-:;?!.]+/).forEach(raw=>{
+    const w=stem(raw); if(!w||STOPW.has(w)||STOPW.has(raw)) return;
+    if(w.length===1){ if(SINGLE.has(w)) out.push(w); return; }
+    for(let i=0;i<w.length-1;i++) out.push(w.slice(i,i+2));
+  });
+  return out;
+}
+/* 개념 사전: 같은 뜻으로 읽을 말 묶음 (질문 안에 하나라도 있으면 나머지도 함께 찾음) */
+const CONCEPTS=[
+ ['지각','늦게등교','늦게왔','늦게갔','늦게도착','늦게학교'],
+ ['조퇴','일찍귀가','일찍하교','일찍갔','중간에집','조기귀가','귀가'],
+ ['결과','보건실','수업빠','수업불참','수업에참여하지'],
+ ['결석신고서','결석계','결석신고','결석신청'],
+ ['진단서','소견서','진료확인서','의견서','처방전'],
+ ['나이스','neis'],
+ ['출석인정','출석으로인정','출석인정결석','공결'],
+ ['체험학습','현장학습','교외체험'],
+ ['등교중지','격리'],
+ ['감염병','전염병','독감','코로나','수두','눈병'],
+ ['장례','사망','돌아가','상을당','초상'],
+ ['미인정','무단결석','무단','안가려','가기싫','안보냈','안갔','출석거부','등교거부'],
+ ['천재지변','폭설','폭우','태풍','지진','홍수','눈이많이','눈이와','교통두절','버스가안','버스안'],
+ ['특기사항','생기부','생활기록부']
+];
+let IDX=null;
+function buildIndex(){
+  const docs=[];
+  const mk=(type,ref,fields,core,qs)=>{
+    const all=new Map(), cr=new Map(); let len=0;
+    fields.forEach(([tx,w],fi)=>{ toks(tx).forEach(t=>{ all.set(t,(all.get(t)||0)+w); if(core.includes(fi)) cr.set(t,(cr.get(t)||0)+w); len+=w; }); });
+    docs.push({type,ref,all,core:cr,len,qs:qs||[]});
+  };
+  CASES.forEach(c=>mk('case',c,[
+    [c.title,4],[(c.kw||[]).join(' '),4],[c.sub,3],[(c.q||[]).join(' '),3.5],[c.summary,1.5],
+    [[...c.docs,c.record,c.tip||'',c.deadline||'',c.deep.note||'',c.deep.remark||''].join(' '),.6]],[0,1,2,3],c.q));
+  document.querySelectorAll('details.ac').forEach((d,i)=>{ const q=d.querySelector('.aq'), h=d.querySelector('.ah'), a=d.querySelector('.a'); if(!q||!a) return;
+    const qs=(d.dataset.q||'').split('|').filter(Boolean);
+    mk('faq',{i,q:q.textContent,h:h.innerHTML.replace(/<br\s*\/?>/g,' ').replace(/<[^>]+>/g,'')},[[q.textContent,4],[h.textContent,3],[qs.join(' '),3.5],[a.textContent,1.5]],[0,1,2],qs); });
+  document.querySelectorAll('details.basics .bbody > .sec').forEach((d,i)=>{ const h=d.querySelector('h3'); if(!h) return;
+    const qs=(d.dataset.q||'').split('|').filter(Boolean);
+    mk('basic',{i,q:h.textContent,h:'출결 기본 상식'},[[h.textContent,4],[qs.join(' '),3.5],[d.textContent,1.5]],[0,1],qs); });
+  PAGES.forEach(pg=>mk(pg.type,pg,[[pg.q,4],[pg.h,3],[pg.qs.join(' '),3.5],[pg.body,1.5]],[0,1,2],pg.qs));
+  const df=new Map(); let tot=0; docs.forEach(d=>{ tot+=d.len; d.all.forEach((_,t)=>df.set(t,(df.get(t)||0)+1)); });
+  IDX={docs,df,N:docs.length,avg:tot/docs.length};
+}
+const K1=1.2, BB=.75;
+function searchScore(q){
+  if(!IDX) buildIndex();
+  const raw=q.toLowerCase().replace(/[?.!,]/g,' ').split(/\s+/).filter(Boolean);
+  const lit=new Set(), syn=new Set();
+  raw.forEach(w=>{ toks(w).forEach(t=>lit.add(t)); const st=stem(w);
+    for(const k in SYN){ if(w.startsWith(k)||st.startsWith(k)) toks(SYN[k]).forEach(t=>syn.add(t)); } });
+  const qn=raw.join('').replace(/[^가-힣a-z0-9]/g,'');
+  CONCEPTS.forEach(g=>{ if(g.some(t=>qn.includes(t))) g.forEach(t=>{ if(!qn.includes(t)) toks(t).forEach(x=>syn.add(x)); }); });
+  syn.forEach(t=>{ if(lit.has(t)) syn.delete(t); });
+  const idf=t=>{ const n=IDX.df.get(t)||0; return n?Math.log(1+(IDX.N-n+.5)/(n+.5)):0; };
+  let maxS=0; lit.forEach(t=>maxS+=idf(t));
+  const sat=(tf,len)=>tf*(K1+1)/(tf+K1*(1-BB+BB*len/IDX.avg));
+  const res=IDX.docs.map(d=>{ let s=0, cm=0;
+    lit.forEach(t=>{ const tf=d.all.get(t); if(tf){ s+=idf(t)*sat(tf,d.len); if(d.core.has(t)) cm+=idf(t); } });
+    syn.forEach(t=>{ const tf=d.core.get(t); if(tf) s+=.8*idf(t)*sat(tf,d.len); });
+    return {d,s,core:maxS>0&&cm>=maxS*.5}; }).filter(x=>x.s>0);
+  res.sort((a,b)=>b.s-a.s);
+  return {res,maxS,raw,lit,idf};
+}
+const SEARCH_MIN=1.2, SEARCH_REL=.45, SEARCH_REL_CORE=.25;  /* 제목·키워드에 직접 걸린 것은 기준을 낮춤 */
+const BEST_RATIO=1.5;
 function search(q){
   q=q.trim(); const box=$('#results'); $('#qclr').hidden=!q;
   if(!q){box.innerHTML='';return;}
-  /* 단어마다 원형·조사 뗀 형태·동의어를 후보로 만들고, 하나라도 맞으면 보여주되 많이 맞을수록 위로 */
-  const raw=q.toLowerCase().replace(/[?.!,]/g,' ').split(/\s+/).filter(Boolean);
-  const cands=raw.map(t=>{const s=new Set([t]);
-    t=t.replace(/(했어요|했는데|해서|인데|이라서|때문에|이에요|예요|어요|아요|세요|했|해요)$/,''); if(t.length>=2)s.add(t);
-    t=t.replace(/(으로|에서|에게|께서|부터|까지|이|가|을|를|은|는|에|로|와|과|도|의|요)$/,''); if(t.length>=2)s.add(t);
-    for(const k in SYN){ if([...s].some(x=>x.startsWith(k))) s.add(SYN[k]); }
-    if(t.length>=3) s.add(t.slice(0,2));
-    return [...s];});
-  const scored=CASES.map(c=>{const hay=(c.title+' '+c.sub+' '+c.kw.join(' ')).toLowerCase(); const hay2=c.summary.toLowerCase();
-    let score=0; cands.forEach(cs=>{ if(cs.some(x=>hay.includes(x))) score+=3; else if(cs.some(x=>hay2.includes(x))) score+=1; });
-    return {c,score};}).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,8);
-  const hl=raw.filter(t=>t.length>=2)[0]||q;
-  /* 자주 묻는 질문도 함께 찾기 (조사만 뗀 단어로) */
-  const fw=raw.map(t=>t.replace(/(했어요|했는데|해서|인데|이라서|때문에|이에요|예요|어요|아요|세요|했|해요)$/,'').replace(/(으로|에서|에게|께서|부터|까지|이|가|을|를|은|는|에|로|와|과|도|의|요)$/,'')).map(t=>({'기재':'적힙','입력':'적힙','기록':'적힙'})[t]||t).filter(t=>t.length>=2);
-  const faqs=[...document.querySelectorAll('details.ac')].map((d,i)=>{const tx=d.textContent.replace(/\s+/g,'').toLowerCase();
-    return {d,i,n:fw.filter(t=>tx.includes(t.replace(/\s+/g,''))).length};}).filter(x=>x.n>0&&x.n>=Math.ceil(fw.length/2)).sort((a,b)=>b.n-a.n).slice(0,3);
-  const faqHTML=faqs.length?`<div class="faq-h">자주 묻는 질문</div><div class="rows">${faqs.map(x=>`<button class="row k-faq" data-faq="${x.i}"><span class="bar"></span><span class="t"><b>${esc(x.d.querySelector('.aq').textContent)}</b><span>${esc(x.d.querySelector('.ah').innerHTML.replace(/<br\s*\/?>/g,' ').replace(/<[^>]+>/g,''))}</span></span><span class="arr">${svg('i-chev')}</span></button>`).join('')}</div>`:'';
-  const caseHTML=scored.length?`<div class="rows">${scored.map(x=>rowHTML(x.c,hl)).join('')}</div>`:'';
-  const faqFirst=faqs.length&&(!scored.length||scored[0].score<3);
-  box.innerHTML=(scored.length||faqs.length)?(faqFirst?faqHTML.replace('class="faq-h"','class="faq-h" style="margin-top:0"')+(caseHTML?`<div class="faq-h">관련 사유</div>`+caseHTML:''):caseHTML+faqHTML):`<div class="empty">"${esc(q)}"에 맞는 사유를 찾지 못했습니다. 아래 버튼에서 가까운 경우를 골라보세요.</div>`;
+  const {res,raw,lit,idf,maxS}=searchScore(q);
+  const shown=res.filter(x=>x.d.type!=='case'||vis(x.d.ref));
+  const top=shown.length?shown[0].s:0;
+  const sentence=raw.length>=3;
+  /* 짧은 검색어는 제목·키워드에 직접 걸린 사유를 점수와 상관없이 포함 */
+  const picked=top>=SEARCH_MIN?shown.filter(x=>x.s>=top*SEARCH_REL||(x.core&&(!sentence||x.s>=top*SEARCH_REL_CORE))).slice(0,5):[];
+  const hl=raw.map(stem).find(w=>w.length>=2&&!STOPW.has(w))||q;
+  const best=sentence&&picked.length>0&&(picked.length===1||picked[0].s>=picked[1].s*BEST_RATIO);
+  /* 문장 질문일 때: 가장 비슷한 예상 질문을 보여줌 */
+  const hintOf=x=>{ if(!sentence||!x.d.qs.length||!maxS) return ''; let bq='',br=0;
+    x.d.qs.forEach(qq=>{ const set=new Set(toks(qq)); let m=0; lit.forEach(t=>{ if(set.has(t)) m+=idf(t); }); const r=m/maxS; if(r>br){br=r;bq=qq;} });
+    return br>=.4?bq:''; };
+  const orow=(x,b)=>{ const r=x.d.ref, at=x.d.type==='faq'?`data-faq="${r.i}"`:x.d.type==='basic'?`data-basic="${r.i}"`:`data-today`;
+    const hint=hintOf(x);
+    return `<button class="row k-faq${b?' best':''}" ${at}><span class="bar"></span><span class="t">${b?'<span class="bestlab">가장 가까운 답</span>':''}<b>${esc(hint||r.q)}</b><span>${esc(hint?r.q+' · '+r.h:r.h)}</span></span><span class="arr">${svg('i-chev')}</span></button>`; };
+  /* 이해한 핵심어 칩: 누르면 그 말을 빼고 다시 검색 */
+  const kws=sentence?raw.map((w,i)=>({i,s:stem(w),w})).filter(x=>x.s.length>=2&&!STOPW.has(x.s)&&!STOPW.has(x.w)).slice(0,6):[];
+  const chips=kws.length?`<div class="kwline"><span>이해한 핵심어</span>${kws.map(x=>`<button type="button" class="kwchip" data-rm="${x.i}" aria-label="${esc(x.s)} 빼고 다시 검색">${esc(x.s)}${svg('i-x')}</button>`).join('')}</div>`:'';
+  const low=sentence&&picked.length?`<p class="hint">가장 가까운 안내를 찾았어요. 질문과 다르면 담임 선생님께 확인하거나 <a href="https://star.moe.go.kr/web/main/index.do" target="_blank" rel="noopener">학교생활기록부 종합지원포털</a>의 기재 문의(Q&A)를 이용하세요.</p>`:'';
+  box.innerHTML=chips+low+(picked.length?`<div class="rows">${picked.map((x,i)=>x.d.type==='case'?rowHTML(x.d.ref,hl,hintOf(x),best&&i===0):orow(x,best&&i===0)).join('')}</div>`:`<div class="empty">"${esc(q)}"에 맞는 사유를 찾지 못했습니다. 아래 버튼에서 가까운 경우를 골라보세요. 그래도 애매하면 <a href="https://star.moe.go.kr/web/main/index.do" target="_blank" rel="noopener">학교생활기록부 종합지원포털</a>의 기재 문의(Q&A)에서 확인할 수 있습니다.</div>`);
   bindRows();
   box.querySelectorAll('[data-faq]').forEach(b=>b.onclick=()=>{const d=document.querySelectorAll('details.ac')[+b.dataset.faq]; if(!d)return; d.open=true; d.scrollIntoView({block:'start',behavior:'smooth'});});
+  box.querySelectorAll('[data-basic]').forEach(b=>b.onclick=()=>{const bs=$('details.basics'); if(!bs)return; bs.open=true; const sec=bs.querySelectorAll('.bbody > .sec')[+b.dataset.basic]; (sec||bs).scrollIntoView({block:'start',behavior:'smooth'});});
+  box.querySelectorAll('[data-today]').forEach(b=>b.onclick=()=>go({v:'today'}));
+  box.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{ const inp=$('#q'); const nq=raw.filter((_,j)=>j!==+b.dataset.rm).join(' '); inp.value=nq; lastQ=nq; state.q=nq; hRep(state,'',location.pathname+location.search); search(nq); inp.focus(); });
 }
 
 /* ---------- 이벤트 ---------- */
-function bindRows(){ document.querySelectorAll('[data-case]').forEach(b=>b.onclick=()=>go({v:'case',id:b.dataset.case})); }
+function bindRows(){ document.querySelectorAll('[data-case]').forEach(b=>b.onclick=()=>{
+  const id=b.dataset.case;
+  if(b.closest('#results') && state.v==='home' && state.q) go({v:'case',id,from:'search',q:state.q,n:document.querySelectorAll('#results [data-case]').length,depth:1});
+  else if(state.v==='case' && state.from==='search') go({v:'case',id,from:'search',q:state.q,n:state.n,depth:(state.depth||1)+1});
+  else go({v:'case',id});
+}); }
+function focusSearch(){
+  if(state.v!=='home') go({v:'home'});
+  const q=$('#q'); if(!q) return;
+  q.focus({preventScroll:true}); try{q.select()}catch(e){}
+  q.scrollIntoView({block:'center',behavior:'smooth'});
+}
 function bind(){
   bindRows();
   document.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>go({v:'group',g:b.dataset.g}));
   document.querySelectorAll('[data-home]').forEach(b=>b.onclick=()=>go({v:'home'}));
   document.querySelectorAll('[data-today]').forEach(b=>b.onclick=()=>go({v:'today'}));
-  document.querySelectorAll('[data-tosearch]').forEach(b=>b.onclick=()=>{const q=$('#q'); if(q){q.scrollIntoView({block:'center',behavior:'smooth'}); setTimeout(()=>q.focus(),400);}});
-  document.querySelectorAll('[data-seg]').forEach(b=>b.onclick=()=>{const t=b.dataset.seg==='t'; document.querySelectorAll('[data-seg]').forEach(x=>x.classList.toggle('on',x===b)); const r=$('#caseroot'); if(r) r.classList.toggle('teacher',t); try{localStorage.setItem('teacherOpen',t?'1':'0')}catch(e){}});
+  document.querySelectorAll('[data-tosearch],[data-gosearch]').forEach(b=>b.onclick=focusSearch);
+  document.querySelectorAll('[data-backsearch]').forEach(b=>b.onclick=()=>{try{history.go(-(state.depth||1))}catch(e){go({v:'home'})}});
+  document.querySelectorAll('[data-seg]').forEach(b=>b.onclick=()=>{const t=b.dataset.seg==='t'; document.querySelectorAll('[data-seg]').forEach(x=>x.classList.toggle('on',x===b)); const r=$('#caseroot'); if(r) r.classList.toggle('teacher',t); setT(t);});
   const sh=$('#share'); if(sh) sh.onclick=()=>{
     const url=withSc(location.origin+location.pathname+'?case='+sh.dataset.id);
     const done=()=>{sh.classList.add('done'); sh.innerHTML=svg('i-out')+'주소를 복사했어요'; setTimeout(()=>{sh.classList.remove('done'); sh.innerHTML=svg('i-out')+'이 안내 주소 복사해서 보내기';},2200);};
@@ -1267,15 +1503,16 @@ function bind(){
     if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done).catch(fallback); else fallback();
   };
   const q=$('#q'); if(q){
-    q.oninput=()=>{state.q=q.value; history.replaceState(state,'',location.pathname+location.search); search(q.value);};
-    $('#qclr').onclick=()=>{q.value='';state.q='';search('');q.focus();};
-    document.querySelectorAll('[data-chip]').forEach(c=>c.onclick=()=>{q.value=c.dataset.chip;state.q=q.value;search(q.value);q.scrollIntoView({block:'start',behavior:'smooth'});});
+    q.oninput=()=>{lastQ=q.value; state.q=q.value; hRep(state,'',location.pathname+location.search); search(q.value);};
+    $('#qclr').onclick=()=>{q.value='';lastQ='';state.q='';hRep(state,'',location.pathname+location.search);search('');q.focus();};
+    document.querySelectorAll('[data-chip]').forEach(c=>c.onclick=()=>{q.value=c.dataset.chip;lastQ=state.q=q.value;hRep(state,'',location.pathname+location.search);search(q.value);q.scrollIntoView({block:'start',behavior:'smooth'});});
     if(state.q) search(state.q);
   }
+  const tm=$('#tmode'); if(tm) tm.onchange=()=>{ setT(tm.checked); const qq=$('#q'); if(qq) search(qq.value); };
   document.querySelectorAll('.calc input,.calc select').forEach(el=>{el.oninput=runCalc; el.onchange=runCalc;});
   runCalc();
 }
-$('#brand').onclick=()=>go({v:'home'});
+$('#brand').onclick=()=>{lastQ='';go({v:'home',q:''});};
 /* 오픈소스 라이선스 팝업 */
 (function(){const m=$('#licmodal'); let last=null;
   const open=()=>{m.hidden=false; document.body.style.overflow='hidden'; $('#licclose').focus();};
@@ -1289,9 +1526,9 @@ $('#brand').onclick=()=>go({v:'home'});
 
 /* 시작: 뒤로가기 한 번에 사이트가 닫히지 않도록 홈 상태를 두 번 쌓음 */
 const params=new URLSearchParams(location.search); const pre=params.get('case');
-history.replaceState({v:'home'},'',location.pathname+location.search);
-if(pre && CASES.some(c=>c.id===pre)){ state={v:'case',id:pre}; history.pushState(state,'',location.pathname+location.search); render(); }
-else { history.pushState({v:'home'},'',location.pathname+location.search); render(); }
+hRep({v:'home'},'',location.pathname+location.search);
+if(pre && CASES.some(c=>c.id===pre)){ state={v:'case',id:pre}; hPush(state,'',location.pathname+location.search); render(); }
+else { hPush({v:'home'},'',location.pathname+location.search); render(); }
 </script>
 
 </body>
