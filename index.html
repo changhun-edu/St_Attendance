@@ -1549,8 +1549,12 @@ $('#brand').onclick=()=>{lastQ='';go({v:'home',q:''});};
 
 /* 시작: 뒤로가기 한 번에 사이트가 닫히지 않도록 홈 상태를 두 번 쌓음 */
 const params=new URLSearchParams(location.search); const pre=params.get('case');
+/* 바로가기 주소: ?q=가습기살균제 → 그 말로 검색한 화면으로 엽니다(학교 연장통에서 연결). 주소에서 q만 지웁니다 */
+const preQ=(params.get('q')||'').trim();
+if(preQ){ params.delete('q'); const rest=params.toString(); hRep(null,'',location.pathname+(rest?'?'+rest:'')); }
 hRep({v:'home'},'',location.pathname+location.search);
 if(pre && CASES.some(c=>c.id===pre)){ state={v:'case',id:pre}; hPush(state,'',location.pathname+location.search); render(); }
+else if(preQ){ lastQ=preQ; state={v:'home',q:preQ}; hPush(state,'',location.pathname+location.search); render(); }
 else { hPush({v:'home'},'',location.pathname+location.search); render(); }
 </script>
 
